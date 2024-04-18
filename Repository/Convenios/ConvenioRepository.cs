@@ -75,38 +75,38 @@ public class ConvenioRepository
         try
         {
             var query = _ctx.Convenios.AsQueryable();
-            query = (IQueryable<Convenio>)query
-                .GroupJoin(_ctx.Pacientes, c => c.Id, b => b.ConvenioId, (c, patientsGroup) => new { c, patientsGroup })
-                .SelectMany(x => x.patientsGroup.DefaultIfEmpty(), (x, b) => new
-                {
-                    x.c.Id,
-                    x.c.CEP,
-                    x.c.CNPJ,
-                    x.c.Criado,
-                    x.c.Deletado,
-                    x.c.Desconto,
-                    x.c.Descrição,
-                    x.c.Email,
-                    x.c.Nome,
-                    x.c.Numero,
-                    x.c.Site,
-                    x.c.Telefone,
-                    /* PacientesCount = x.patientsGroup.Count() */
-                });
+            /* query = (IQueryable<Convenio>)query */
+            /*     .GroupJoin(_ctx.Pacientes, c => c.Id, b => b.ConvenioId, (c, patientsGroup) => new { c, patientsGroup }) */
+            /*     .SelectMany(x => x.patientsGroup.DefaultIfEmpty(), (x, b) => new */
+            /*     { */
+            /*         x.c.Id, */
+            /*         x.c.CEP, */
+            /*         x.c.CNPJ, */
+            /*         x.c.Criado, */
+            /*         x.c.Deletado, */
+            /*         x.c.Desconto, */
+            /*         x.c.Descrição, */
+            /*         x.c.Email, */
+            /*         x.c.Nome, */
+            /*         x.c.Numero, */
+            /*         x.c.Site, */
+            /*         x.c.Telefone, */
+            /*         /1* PacientesCount = x.patientsGroup.Count() *1/ */
+            /*     }); */
             // TODO: ir atras de full text search no ef core
             /* if (request.Nome != null) */
             /* { */
             /*     query = query.Where(e => e.Nome.Contains(request.Nome)); */
             /* } */
-            /* if (request.CNPJ != null) */
-            /*     query = query.Where(e => e.CNPJ.Contains(request.CNPJ)); */
+            if (request.CNPJ != null)
+                query = query.Where(e => e.CNPJ.Contains(request.CNPJ));
 
             /* if (request.PessoasCadastradas == true) */
             /*     query = query */
             /*         .Include(e => e.Pacientes).Count(e => e.Pacientes.Count > 0); */
 
             /* if (request.ListaPessoasCadastradas == true) */
-            /*     query = query.Where(e => e.Pacientes.Count > 0); */
+            /*     query = query.Where(e => e.Pacientes.ToList); */
 
             var listString = query
                 .Skip(page)
