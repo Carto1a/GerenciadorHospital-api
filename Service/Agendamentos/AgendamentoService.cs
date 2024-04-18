@@ -27,8 +27,6 @@ public class AgendamentoService<T, TAgendamento, TCreation>
     private readonly IConvenioRepository _convenioRepo;
     private readonly AppDbContext _ctx;
 
-    public object StatusAgendamento { get; private set; }
-
     public AgendamentoService(
         IPacienteRepository paciente,
         IMedicoRepository medico,

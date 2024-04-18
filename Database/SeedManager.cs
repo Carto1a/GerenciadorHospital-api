@@ -41,6 +41,7 @@ public static class SeedManager
                 Nome = "ze",
                 DataNascimento = DateOnly.FromDateTime(DateTime.Now),
                 Genero = false,
+                Cpf = 00000001,
                 Cep = 123,
                 NumeroCasa = "2",
                 Telefone = "44040404",

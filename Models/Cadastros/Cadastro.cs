@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Models.Cadastro;
-public class Cadastro : IdentityUser<Guid>
+public class Cadastro
+: IdentityUser<Guid>
 {
     public string Nome { get; set; }
     public DateOnly DataNascimento { get; set; }

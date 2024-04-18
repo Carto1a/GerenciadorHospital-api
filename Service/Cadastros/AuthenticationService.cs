@@ -190,20 +190,24 @@ public class AuthenticationService
             convenio = convenioResponse.Value;
         }
 
-        Paciente paciente1 = new();
-        paciente1.Create(
+        var paciente1 = Paciente.Create(
             request,
             convenio,
             _configuration["Paths:PacienteDocumentos"]);
+        if (paciente1 == null)
+        {
+            _logger.LogError($"Erro na criação de paciente: {request.Email}");
+            return Result.Fail("Erro na Criação");
+        }
 
         IdentityResult result;
 
         try
         {
             result = await _pacienteManager
-                .CreateAsync(paciente1, request.Password);
+                .CreateAsync(paciente1.Value, request.Password);
             await _pacienteManager
-                .AddToRoleAsync(paciente1, Roles.Paciente);
+                .AddToRoleAsync(paciente1.Value, Roles.Paciente);
         }
         catch (Exception error)
         {
@@ -217,7 +221,7 @@ public class AuthenticationService
             return Result.Fail("Erro na Criação");
         }
 
-        _logger.LogInformation($"Paciente registrado: {paciente1.Id}");
+        _logger.LogInformation($"Paciente registrado: {paciente1.Value.Id}");
         return await Login(
             new LoginRequestPacienteDto
             { Email = request.Email, Password = request.Password });

@@ -485,3 +485,5 @@ $RECYCLE.BIN/
 
 /lixo
 /Database/app.sqlite
+/Database/app.sqlite-shm
+/Database/app.sqlite-wal

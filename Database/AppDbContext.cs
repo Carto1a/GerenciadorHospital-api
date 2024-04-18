@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Database;
+#pragma warning disable CS8618
 public class AppDbContext
 : IdentityDbContext<Cadastro, IdentityRole<Guid>, Guid>
 {

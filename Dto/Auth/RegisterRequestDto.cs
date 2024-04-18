@@ -3,8 +3,6 @@ using System.ComponentModel.DataAnnotations;
 namespace Hospital.Dto;
 public class RegisterRequestDto
 {
-    /* [MinLength(Consts.UsernameMinLength, ErrorMessage = Consts.UsernameLengthValidationError)] */
-    /* public string? Username { get; set; } */
     [Required]
     public string Nome { get; set; }
     public DateTime DataNascimento { get; set; }
@@ -15,7 +13,7 @@ public class RegisterRequestDto
     public string? NumeroCasa { get; set; }
     [Required]
     [EmailAddress(ErrorMessage = Consts.EmailValidationError)]
-    public string? Email { get; set; }
+    public string Email { get; set; }
     [Required]
     [RegularExpression(Consts.PasswordRegex, ErrorMessage = Consts.PasswordValidationError)]
     public string? Password { get; set; }

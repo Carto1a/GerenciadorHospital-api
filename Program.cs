@@ -85,6 +85,9 @@ builder.Services.AddIdentityCore<Medico>()
     .AddDefaultTokenProviders();
 
 // 3. Adding Authentication
+var JWTSecret = configuration["JWT:Secret"] ??
+    throw new InvalidOperationException(
+        "JWT:Secret not found in appsettings.json");
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -101,7 +104,7 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = configuration["JWT:ValidAudience"],
         ValidIssuer = configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
+            Encoding.UTF8.GetBytes(JWTSecret)),
         ClockSkew = TimeSpan.Zero
     };
 });
