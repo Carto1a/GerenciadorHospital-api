@@ -19,6 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // 2. Identity
 builder.Services.AddIdentity<Cadastro, IdentityRole>()
+    .AddRoles<IdentityRole>()
+    .AddRoleManager<RoleManager<IdentityRole>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -40,6 +42,16 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
     };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ElevatedRights", policy =>
+        policy.RequireRole(Roles.Admin)
+    );
+    options.AddPolicy("StandardRigths", policy =>
+        policy.RequireRole(Roles.Admin, Roles.Medico, Roles.Paciente)
+    );
 });
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();

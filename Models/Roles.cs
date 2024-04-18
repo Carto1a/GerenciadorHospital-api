@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Hospital.Models;
 public class Roles
 {
-    public const string Admin = "Admin";
-    public const string Paciente = "Paciente";
-    public const string Medico = "Medico";
+    public const string Admin = "ADMIN";
+    public const string Paciente = "PACIENTE";
+    public const string Medico = "MEDICO";
 }

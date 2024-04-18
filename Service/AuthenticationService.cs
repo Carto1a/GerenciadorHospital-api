@@ -32,11 +32,18 @@ public class AuthenticationService : IAuthenticationService
         Cadastro user = new()
         {
             Email = request.Email,
+            Nome = request.Nome,
+            DataNascimento = DateOnly.FromDateTime(DateTime.Now),
+            Genero = false,
+            Telefone = "40028922",
+            Cep = 123,
+            NumeroCasa = "2",
             UserName = request.Username,
             SecurityStamp = Guid.NewGuid().ToString()
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
+        await _userManager.AddToRoleAsync(user, Roles.Admin);
 
         if(!result.Succeeded) 
             return "";
@@ -57,6 +64,11 @@ public class AuthenticationService : IAuthenticationService
             new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        authClaims.AddRange(userRoles.Select(userRoles =>
+            new Claim(ClaimTypes.Role, userRoles) 
+        ));
 
         var token = GetToken(authClaims);
         
