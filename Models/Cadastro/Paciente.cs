@@ -13,9 +13,9 @@ public class Paciente
     public virtual ICollection<Consulta> Consultas { get; set; }
     public virtual ICollection<Exame> Exames { get; set; }
     public virtual ICollection<Retorno> Retornos { get; set; }
-    public virtual ICollection<ConsultaAgendamento> AgendamentosConsultas { get; set; }
-    public virtual ICollection<ExameAgendamento> AgendamentosExames { get; set; }
-    public virtual ICollection<RetornoAgendamento> AgendamentosRetornos { get; set; }
+    /* public virtual ICollection<ConsultaAgendamento> AgendamentosConsultas { get; set; } */
+    /* public virtual ICollection<ExameAgendamento> AgendamentosExames { get; set; } */
+    /* public virtual ICollection<RetornoAgendamento> AgendamentosRetornos { get; set; } */
 
     public async Task Create(
         RegisterRequestPacienteDto request,

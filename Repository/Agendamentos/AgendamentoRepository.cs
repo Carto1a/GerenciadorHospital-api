@@ -48,7 +48,7 @@ public class AgendamentoRepository<T, TAgendamento>
         }
     }
 
-    public Result<List<TAgendamento>> GetAgendamentoByQuery(
+    public async Task<Result<List<TAgendamento>>> GetAgendamentoByQuery(
         AgendamentoGetByQueryDto query)
     {
         try
@@ -71,10 +71,10 @@ public class AgendamentoRepository<T, TAgendamento>
             if (query.Limit == null || query.Page == null)
                 return Result.Fail("page e limit não deveriam ser nulls");
 
-            var result = queryList
+            var result = await queryList
                 .Skip((int)query.Page)
                 .Take((int)query.Limit)
-                .ToList();
+                .ToListAsync();
 
             return Result.Ok(result);
         }
@@ -102,16 +102,16 @@ public class AgendamentoRepository<T, TAgendamento>
         }
     }
 
-    public Result<List<TAgendamento>> GetAgendamentosByMedico(
+    public async Task<Result<List<TAgendamento>>> GetAgendamentosByMedico(
         string medicoId, int limit, int page = 0)
     {
         try
         {
-            var list = _ctx.Set<TAgendamento>()
-                .Where(e => e.Medico.Id == medicoId)
+            var list = await _ctx.Set<TAgendamento>()
+                .Where(e => e.MedicoId == medicoId)
                 .Skip(page)
                 .Take(limit)
-                .ToList();
+                .ToListAsync();
             return Result.Ok(list);
         }
         catch (Exception error)

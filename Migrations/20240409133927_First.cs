@@ -261,12 +261,12 @@ namespace Hospital.Migrations
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TipoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TipoId = table.Column<int>(type: "INTEGER", nullable: true),
                     MedicoId = table.Column<string>(type: "TEXT", nullable: false),
                     PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
                     Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
                     Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -290,8 +290,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosConsultas_Consultas_TipoId",
                         column: x => x.TipoId,
                         principalTable: "Consultas",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -339,12 +338,12 @@ namespace Hospital.Migrations
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TipoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TipoId = table.Column<int>(type: "INTEGER", nullable: true),
                     MedicoId = table.Column<string>(type: "TEXT", nullable: false),
                     PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
                     Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
                     Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -368,8 +367,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosExames_Exames_TipoId",
                         column: x => x.TipoId,
                         principalTable: "Exames",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -378,12 +376,12 @@ namespace Hospital.Migrations
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TipoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TipoId = table.Column<int>(type: "INTEGER", nullable: true),
                     MedicoId = table.Column<string>(type: "TEXT", nullable: false),
                     PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
                     Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
                     Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -407,8 +405,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosRetornos_Retornos_TipoId",
                         column: x => x.TipoId,
                         principalTable: "Retornos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -424,7 +421,8 @@ namespace Hospital.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosConsultas_TipoId",
                 table: "AgendamentosConsultas",
-                column: "TipoId");
+                column: "TipoId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosExames_MedicoId",
@@ -439,7 +437,8 @@ namespace Hospital.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosExames_TipoId",
                 table: "AgendamentosExames",
-                column: "TipoId");
+                column: "TipoId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosRetornos_MedicoId",
@@ -454,7 +453,8 @@ namespace Hospital.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosRetornos_TipoId",
                 table: "AgendamentosRetornos",
-                column: "TipoId");
+                column: "TipoId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

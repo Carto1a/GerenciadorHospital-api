@@ -1,4 +1,5 @@
 using Hospital.Dto.Atendimento.Create;
+using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento.Interfaces;
 using Hospital.Models.Cadastro;
 
@@ -7,6 +8,7 @@ public class Exame
 : Atendimento, IAtendimento<ExameCreationDto>
 {
     // tipo de exame
+    public ExameAgendamento Agendamento { get; set; }
     public string Resultado { get; set; }
 
     public void Creation(

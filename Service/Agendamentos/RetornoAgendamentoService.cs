@@ -29,10 +29,20 @@ public class RetornoAgendamentoService
         _repo = repository;
     }
 
-    public Task<Result> CancelAgendamento(int id)
+    public async Task<Result> CancelAgendamento(int id)
     {
-        // TODO: repo adicionar update
-        throw new NotImplementedException();
+        var resAgendamendo = await GetAgendamentoById(id);
+        if (resAgendamendo.IsFailed)
+            return Result.Fail("Não foi possivel linkar o agendamento");
+
+        var agendamento = resAgendamendo.Value;
+        agendamento.Cancelar();
+
+        var response = await _repo.UpdateAgentamento(agendamento);
+        if (response.IsFailed)
+            return Result.Fail("Falha a dar update no agendamento");
+
+        return Result.Ok();
     }
     public async Task<Result> CreateAgendamento(
         AgendamentoCreateDto request)
@@ -41,6 +51,7 @@ public class RetornoAgendamentoService
         var medico = _medicoRepo.GetMedicoById(request.MedicoId);
         var paciente = _pacienteRepo.GetPacienteById(request.PacienteId);
 
+        results.Add(request.DataHora < DateTime.Now ? Result.Fail("Data e hora inválida") : Result.Ok());
         results.Add(medico == null ? Result.Fail("Medico não existe") : Result.Ok());
         results.Add(paciente == null ? Result.Fail("Paciente não existe") : Result.Ok());
 
@@ -56,7 +67,6 @@ public class RetornoAgendamentoService
             DataHora = request.DataHora,
             Criação = DateTime.Now,
             Tipo = default,
-            Cancelado = false,
             Custo = request.Custo,
             Convenio = request.Convenio
         };
@@ -106,7 +116,7 @@ public class RetornoAgendamentoService
 
         return respose;
     }
-    public Result<List<RetornoAgendamento>> GetAgendamentosByMedico(
+    public async Task<Result<List<RetornoAgendamento>>> GetAgendamentosByMedico(
         string medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<RetornoAgendamento>>>();
@@ -116,7 +126,7 @@ public class RetornoAgendamentoService
         if (limit < 0)
             results.Add(Result.Fail("limit é negativo"));
 
-        var respose = _repo.GetAgendamentosByMedico(medicoId, limit, page);
+        var respose = await _repo.GetAgendamentosByMedico(medicoId, limit, page);
         if (respose.IsFailed)
             return Result.Fail("Não foi possivel pegar os Agendamentos");
 
@@ -157,7 +167,8 @@ public class RetornoAgendamentoService
         return Result.Ok();
 
     }
-    public Result<List<RetornoAgendamento>> GetAgendamentosByQuery(AgendamentoGetByQueryDto query)
+    public async Task<Result<List<RetornoAgendamento>>> GetAgendamentosByQuery(
+        AgendamentoGetByQueryDto query)
     {
         // TODO: Adiconar pesquisar por criação
         var results = new List<Result<List<Retorno>>>();
@@ -173,10 +184,42 @@ public class RetornoAgendamentoService
         if (query.Page == null)
             query.Page = 0;
 
-        var respose = _repo.GetAgendamentoByQuery(query);
+        var respose = await _repo.GetAgendamentoByQuery(query);
         if (respose.IsFailed)
             return Result.Fail("não foi possivel pegar a atividade");
 
         return respose;
+    }
+    public async Task<Result> EmAndamentoAgendamento(int id)
+    {
+        var resAgendamendo = await GetAgendamentoById(id);
+        if (resAgendamendo.IsFailed)
+            return Result.Fail("Não foi possivel linkar o agendamento");
+
+        var agendamento = resAgendamendo.Value;
+        agendamento.EmAndamento();
+
+        var response = await _repo.UpdateAgentamento(agendamento);
+        if (response.IsFailed)
+            return Result.Fail("Falha a dar update no agendamento");
+
+        return Result.Ok();
+    }
+
+    public async Task<Result> EmEsperaAgendamento(int id)
+    {
+        var resAgendamendo = await GetAgendamentoById(id);
+        if (resAgendamendo.IsFailed)
+            return Result.Fail("Não foi possivel linkar o agendamento");
+
+        var agendamento = resAgendamendo.Value;
+        agendamento.EmEspera();
+
+        var response = await _repo.UpdateAgentamento(agendamento);
+        if (response.IsFailed)
+            return Result.Fail("Falha a dar update no agendamento");
+
+        return Result.Ok();
+        throw new NotImplementedException();
     }
 }

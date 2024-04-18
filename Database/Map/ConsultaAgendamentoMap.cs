@@ -8,12 +8,11 @@ public class ConsultaAgendamentoMap
 {
     public void Configure(EntityTypeBuilder<ConsultaAgendamento> builder)
     {
+        builder.Property(x => x.PacienteId);
         builder.HasOne(x => x.Tipo)
-            .WithMany()
-            .HasForeignKey(x => x.TipoId);
-        builder.HasOne(x => x.Paciente)
-            .WithMany(p => p.AgendamentosConsultas)
-            .HasForeignKey(x => x.PacienteId);
+            .WithOne(t => t.Agendamento)
+            .HasForeignKey<ConsultaAgendamento>(x => x.TipoId);
+        builder.HasOne(x => x.Paciente);
         builder.HasOne(x => x.Medico)
             .WithMany(m => m.AgendamentosConsultas)
             .HasForeignKey(x => x.MedicoId);

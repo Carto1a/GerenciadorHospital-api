@@ -122,7 +122,8 @@ public class ConsultaService
 
         return respose;
     }
-    public Result<List<Consulta>> GetByQuery(AtendimentoGetByQueryDto query)
+    public Result<List<Consulta>> GetByQuery(
+        AtendimentoGetByQueryDto query)
     {
         var results = new List<Result<List<Consulta>>>();
         if (query.Page < 0)

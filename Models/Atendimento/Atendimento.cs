@@ -1,4 +1,5 @@
 using Hospital.Dto.Atendimento.Create;
+using Hospital.Models.Agendamentos;
 using Hospital.Models.Cadastro;
 
 namespace Hospital.Models.Atendimento;

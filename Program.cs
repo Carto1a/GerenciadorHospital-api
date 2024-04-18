@@ -79,7 +79,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ElevatedRights", policy =>
         policy.RequireRole(Roles.Admin)
     );
-    options.AddPolicy("StandardRigths", policy =>
+    options.AddPolicy("StandardRights", policy =>
         policy.RequireRole(Roles.Admin, Roles.Medico, Roles.Paciente)
     );
     options.AddPolicy("OperationalRights", policy =>

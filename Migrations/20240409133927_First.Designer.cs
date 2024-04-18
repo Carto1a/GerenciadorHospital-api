@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240408144352_First")]
+    [Migration("20240409133927_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -26,9 +26,6 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Cancelado")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("Convenio")
                         .HasColumnType("INTEGER");
 
@@ -52,7 +49,10 @@ namespace Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TipoId")
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TipoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
@@ -61,7 +61,8 @@ namespace Hospital.Migrations
 
                     b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoId");
+                    b.HasIndex("TipoId")
+                        .IsUnique();
 
                     b.ToTable("AgendamentosConsultas");
                 });
@@ -72,9 +73,6 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Cancelado")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("Convenio")
                         .HasColumnType("INTEGER");
 
@@ -98,7 +96,10 @@ namespace Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TipoId")
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TipoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
@@ -107,7 +108,8 @@ namespace Hospital.Migrations
 
                     b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoId");
+                    b.HasIndex("TipoId")
+                        .IsUnique();
 
                     b.ToTable("AgendamentosExames");
                 });
@@ -118,9 +120,6 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Cancelado")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("Convenio")
                         .HasColumnType("INTEGER");
 
@@ -144,7 +143,10 @@ namespace Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TipoId")
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TipoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
@@ -153,7 +155,8 @@ namespace Hospital.Migrations
 
                     b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoId");
+                    b.HasIndex("TipoId")
+                        .IsUnique();
 
                     b.ToTable("AgendamentosRetornos");
                 });
@@ -599,10 +602,8 @@ namespace Hospital.Migrations
                         .IsRequired();
 
                     b.HasOne("Hospital.Models.Atendimento.Consulta", "Tipo")
-                        .WithMany()
-                        .HasForeignKey("TipoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("Agendamento")
+                        .HasForeignKey("Hospital.Models.Agendamentos.ConsultaAgendamento", "TipoId");
 
                     b.Navigation("Medico");
 
@@ -626,10 +627,8 @@ namespace Hospital.Migrations
                         .IsRequired();
 
                     b.HasOne("Hospital.Models.Atendimento.Exame", "Tipo")
-                        .WithMany()
-                        .HasForeignKey("TipoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("Agendamento")
+                        .HasForeignKey("Hospital.Models.Agendamentos.ExameAgendamento", "TipoId");
 
                     b.Navigation("Medico");
 
@@ -653,10 +652,8 @@ namespace Hospital.Migrations
                         .IsRequired();
 
                     b.HasOne("Hospital.Models.Atendimento.Retorno", "Tipo")
-                        .WithMany()
-                        .HasForeignKey("TipoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("Agendamento")
+                        .HasForeignKey("Hospital.Models.Agendamentos.RetornoAgendamento", "TipoId");
 
                     b.Navigation("Medico");
 
@@ -785,6 +782,24 @@ namespace Hospital.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Models.Atendimento.Consulta", b =>
+                {
+                    b.Navigation("Agendamento")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Models.Atendimento.Exame", b =>
+                {
+                    b.Navigation("Agendamento")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Models.Atendimento.Retorno", b =>
+                {
+                    b.Navigation("Agendamento")
                         .IsRequired();
                 });
 

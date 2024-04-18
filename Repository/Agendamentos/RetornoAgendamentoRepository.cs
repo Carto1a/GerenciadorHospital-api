@@ -47,7 +47,7 @@ public class RetornoAgendamentoRepository
         }
     }
 
-    public Result<List<RetornoAgendamento>> GetAgendamentoByQuery(
+    public async Task<Result<List<RetornoAgendamento>>> GetAgendamentoByQuery(
         AgendamentoGetByQueryDto query)
     {
         try
@@ -70,10 +70,10 @@ public class RetornoAgendamentoRepository
             if (query.Limit == null || query.Page == null)
                 return Result.Fail("page e limit não deveriam ser nulls");
 
-            var result = queryList
+            var result = await queryList
                 .Skip((int)query.Page)
                 .Take((int)query.Limit)
-                .ToList();
+                .ToListAsync();
 
             return Result.Ok(result);
         }
@@ -101,16 +101,16 @@ public class RetornoAgendamentoRepository
         }
     }
 
-    public Result<List<RetornoAgendamento>> GetAgendamentosByMedico(
+    public async Task<Result<List<RetornoAgendamento>>> GetAgendamentosByMedico(
         string medicoId, int limit, int page = 0)
     {
         try
         {
-            var list = _ctx.AgendamentosRetornos
+            var list = await _ctx.AgendamentosRetornos
                 .Where(e => e.Medico.Id == medicoId)
                 .Skip(page)
                 .Take(limit)
-                .ToList();
+                .ToListAsync();
             return Result.Ok(list);
         }
         catch (Exception error)
