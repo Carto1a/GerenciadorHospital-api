@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Database;
-public class AppDbContext : IdentityDbContext<User>
+public class AppDbContext : IdentityDbContext<Cadastro>
 {
     public DbSet<Cadastro> Cadastros { get; set; }
     public DbSet<Paciente> Pacientes { get; set; }

@@ -14,9 +14,9 @@ using Microsoft.IdentityModel.Tokens;
 namespace Hospital.Service;
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<Cadastro> _userManager;
     private readonly IConfiguration _configuration;
-    public AuthenticationService(UserManager<User> userManager, IConfiguration configuration)
+    public AuthenticationService(UserManager<Cadastro> userManager, IConfiguration configuration)
     {
         _userManager = userManager;
         _configuration = configuration;
@@ -29,7 +29,7 @@ public class AuthenticationService : IAuthenticationService
             return "";
         }
 
-        User user = new()
+        Cadastro user = new()
         {
             Email = request.Email,
             UserName = request.Username,

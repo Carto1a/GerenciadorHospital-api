@@ -18,7 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 // 2. Identity
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<Cadastro, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
