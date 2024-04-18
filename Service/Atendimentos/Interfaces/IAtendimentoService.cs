@@ -1,4 +1,5 @@
 using FluentResults;
+
 using Hospital.Dto.Atendimento.Get;
 
 namespace Hospital.Service.Atendimentos.Interfaces;

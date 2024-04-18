@@ -5,6 +5,7 @@ using Hospital.Dto.Result;
 using Hospital.Extensions;
 using Hospital.Service.Agendamentos.Interfaces;
 using Hospital.Service.Interfaces;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

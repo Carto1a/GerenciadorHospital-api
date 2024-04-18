@@ -3,6 +3,7 @@ using Hospital.Dto.Agendamento.Get;
 using Hospital.Dto.Agendamento.Update;
 using Hospital.Extensions;
 using Hospital.Service.Agendamentos.Interfaces;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

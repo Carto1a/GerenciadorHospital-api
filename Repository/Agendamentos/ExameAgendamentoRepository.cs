@@ -1,10 +1,9 @@
-using FluentResults;
+
 using Hospital.Database;
-using Hospital.Dto.Agendamento.Get;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Hospital.Repository.Agendamentos;
 public class ExameAgendamentoRepository

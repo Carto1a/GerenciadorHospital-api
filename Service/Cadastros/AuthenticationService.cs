@@ -1,13 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
 using FluentResults;
-using Hospital.Dto;
+
 using Hospital.Dto.Auth;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Service.Convenios.Interfaces;
 using Hospital.Service.Interfaces;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 

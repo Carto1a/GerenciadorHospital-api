@@ -1,8 +1,10 @@
 using FluentResults;
+
 using Hospital.Database;
 using Hospital.Dto.Atendimento.Get;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Repository.Atendimentos;

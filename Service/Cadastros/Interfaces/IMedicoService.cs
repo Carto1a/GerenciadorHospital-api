@@ -1,5 +1,6 @@
-using Hospital.Models.Cadastro;
 using FluentResults;
+
+using Hospital.Models.Cadastro;
 
 namespace Hospital.Service.Interfaces;
 public interface IMedicoService

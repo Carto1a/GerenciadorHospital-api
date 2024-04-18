@@ -4,6 +4,7 @@ using Hospital.Dto.Atendimento.Update;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 using Hospital.Service.Agendamentos.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Consultas;

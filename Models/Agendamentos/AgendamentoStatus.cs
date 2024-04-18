@@ -1,5 +1,6 @@
 namespace Hospital.Models.Agendamentos;
-public enum AgendamentoStatus{
+public enum AgendamentoStatus
+{
     Agendado,
     Realizado,
     EmEspera,

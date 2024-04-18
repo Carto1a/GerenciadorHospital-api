@@ -1,5 +1,3 @@
-using Hospital.Models.Atendimento;
-
 namespace Hospital.Dto.Atendimento.Update;
 public class RetornoUpdateDto
 : AtendimentoUpdateDto

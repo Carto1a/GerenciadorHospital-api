@@ -1,11 +1,11 @@
 using FluentResults;
+
 using Hospital.Database;
 using Hospital.Dto.Atendimento.Create;
 using Hospital.Dto.Atendimento.Get;
 using Hospital.Dto.Atendimento.Update;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
-using Hospital.Models.Atendimento.Interfaces;
 using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Service.Agendamentos.Interfaces;
@@ -53,7 +53,7 @@ public class AtendimentoService<T, TAgendamento, TCreation, TUpdate>
             .GetMedicoById(request.MedicoId);
         if (resMedico.IsFailed)
         {
-                _logger.LogError($"Não foi possivel achar o medico: {request.MedicoId} - {typeof(T).Name}");
+            _logger.LogError($"Não foi possivel achar o medico: {request.MedicoId} - {typeof(T).Name}");
             return Result.Fail("Não foi possivel achar o medico");
         }
 

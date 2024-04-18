@@ -1,8 +1,5 @@
-using FluentResults;
+
 using Hospital.Database;
-using Hospital.Dto.Agendamento.Create;
-using Hospital.Dto.Agendamento.Get;
-using Hospital.Dto.Agendamento.Update;
 using Hospital.Dto.Atendimento.Create;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;

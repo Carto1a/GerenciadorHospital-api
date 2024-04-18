@@ -1,4 +1,5 @@
 using FluentResults;
+
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Service.Interfaces;

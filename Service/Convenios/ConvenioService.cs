@@ -1,4 +1,5 @@
 using FluentResults;
+
 using Hospital.Dto.Convenios;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Convenios.Ineterfaces;

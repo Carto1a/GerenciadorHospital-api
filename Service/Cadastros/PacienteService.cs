@@ -1,10 +1,13 @@
 using System.Security.Claims;
+
 using FluentResults;
+
 using Hospital.Database;
 using Hospital.Extensions;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Service.Interfaces;
+
 using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Service.Cadastros;

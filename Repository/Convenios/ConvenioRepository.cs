@@ -1,8 +1,10 @@
 using FluentResults;
+
 using Hospital.Database;
 using Hospital.Dto.Convenios;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Convenios.Ineterfaces;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Repository.Convenios;

@@ -1,5 +1,3 @@
-using Hospital.Models.Cadastro;
-
 namespace Hospital.Dto.Atendimento.Update;
 public class AtendimentoUpdateDto
 {

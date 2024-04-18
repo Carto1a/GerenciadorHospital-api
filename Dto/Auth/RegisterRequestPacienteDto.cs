@@ -1,5 +1,3 @@
-using Hospital.Models.Cadastro;
-
 namespace Hospital.Dto.Auth;
 public class RegisterRequestPacienteDto
 : RegisterRequestDto

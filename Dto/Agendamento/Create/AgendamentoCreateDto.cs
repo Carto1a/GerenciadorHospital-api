@@ -1,6 +1,3 @@
-
-using Hospital.Models.Cadastro;
-
 namespace Hospital.Dto.Agendamento.Create;
 public class AgendamentoCreateDto
 {

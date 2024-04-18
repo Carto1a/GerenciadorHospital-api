@@ -1,9 +1,8 @@
-using FluentResults;
-using Microsoft.EntityFrameworkCore;
-using Hospital.Models.Atendimento;
+
 using Hospital.Database;
+using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
-using Hospital.Dto.Atendimento.Get;
+
 
 namespace Hospital.Repository.Atendimentos;
 public class ConsultaRepository

@@ -1,4 +1,5 @@
 using Hospital.Service.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Generics;

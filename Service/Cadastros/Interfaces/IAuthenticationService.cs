@@ -1,4 +1,5 @@
 using FluentResults;
+
 using Hospital.Dto.Auth;
 
 namespace Hospital.Service.Interfaces;

@@ -1,4 +1,5 @@
 using System.Text;
+
 using Hospital.Database;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Agendamentos;
@@ -17,11 +18,13 @@ using Hospital.Service.Cadastros;
 using Hospital.Service.Convenios;
 using Hospital.Service.Convenios.Interfaces;
 using Hospital.Service.Interfaces;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
 using NLog;
 using NLog.Web;
 

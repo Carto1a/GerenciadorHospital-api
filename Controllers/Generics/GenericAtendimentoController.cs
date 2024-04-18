@@ -4,6 +4,7 @@ using Hospital.Dto.Atendimento.Update;
 using Hospital.Extensions;
 using Hospital.Models.Agendamentos;
 using Hospital.Service.Atendimentos.Interfaces;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

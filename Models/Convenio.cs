@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 using Hospital.Dto.Convenios;
 
 namespace Hospital.Models.Cadastro;

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 using Hospital.Dto.Atendimento.Create;
 using Hospital.Models.Atendimento.Interfaces;
 using Hospital.Models.Cadastro;

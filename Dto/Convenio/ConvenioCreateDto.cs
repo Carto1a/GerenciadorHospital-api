@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Hospital.Dto.Convenios;
 public class ConvenioCreateDto
 {

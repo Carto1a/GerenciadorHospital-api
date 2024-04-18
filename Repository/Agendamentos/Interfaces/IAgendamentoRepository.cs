@@ -1,7 +1,9 @@
 using FluentResults;
+
 using Hospital.Dto.Agendamento.Get;
-using Hospital.Models.Atendimento;
 using Hospital.Models.Agendamentos;
+using Hospital.Models.Atendimento;
+
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Hospital.Repository.Agendamentos.Interfaces;

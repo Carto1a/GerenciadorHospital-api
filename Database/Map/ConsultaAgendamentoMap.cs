@@ -1,4 +1,5 @@
 using Hospital.Models.Agendamentos;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,4 +1,5 @@
 using FluentResults;
+
 using Hospital.Dto.Result;
 
 namespace Hospital.Extensions;

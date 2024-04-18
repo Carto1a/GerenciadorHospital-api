@@ -1,4 +1,5 @@
 using FluentResults;
+
 using Hospital.Database;
 using Hospital.Dto.Agendamento.Create;
 using Hospital.Dto.Agendamento.Get;

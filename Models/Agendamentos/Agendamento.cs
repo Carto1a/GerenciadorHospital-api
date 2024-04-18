@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 using Hospital.Dto.Agendamento.Update;
 using Hospital.Models.Cadastro;
 
