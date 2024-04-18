@@ -1,8 +1,9 @@
 using Hospital.Models.Agendamentos;
-using Hospital.Models;
+using Hospital.Models.Atendimento;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Database.Map;
+using Hospital.Models.Cadastro;
 
 namespace Hospital.Database;
 public class AppDbContext : IdentityDbContext<Cadastro>
@@ -19,7 +20,7 @@ public class AppDbContext : IdentityDbContext<Cadastro>
     public DbSet<ExameAgendamento> AgendamentosExames { get; set; }
     public DbSet<RetornoAgendamento> AgendamentosRetornos { get; set; }
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {}
+    { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -31,6 +32,9 @@ public class AppDbContext : IdentityDbContext<Cadastro>
             .HasIndex(u => u.Cpf)
             .IsUnique();
 
-        builder.ApplyConfiguration(new AtendimentoMap());
+        // builder.ApplyConfiguration(new AtendimentoMap());
+        builder.ApplyConfiguration(new ConsultaMap());
+        builder.ApplyConfiguration(new ExameMap());
+        builder.ApplyConfiguration(new RetornoMap());
     }
 }

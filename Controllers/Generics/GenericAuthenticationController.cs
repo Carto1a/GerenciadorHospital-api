@@ -1,5 +1,6 @@
 using FluentResults;
-using Hospital.Dto;
+using Hospital.Dto.Auth;
+using Hospital.Dto.Result;
 using Hospital.Extensions;
 using Hospital.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;

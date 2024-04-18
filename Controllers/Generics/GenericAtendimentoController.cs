@@ -1,32 +1,42 @@
-using Hospital.Dto.Atividades;
 using Hospital.Extensions;
-using Hospital.Service.Interfaces;
-using Hospital.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Hospital.Models;
 using Hospital.Models.Agendamentos;
-using Hospital.Service.Generics.Interfaces;
-using Hospital.Repository.Generics.Interfaces;
+using Hospital.Service.Atendimentos.Interfaces;
+using Hospital.Dto.Atendimento.Create;
+using Hospital.Dto.Atendimento.Get;
+using Hospital.Dto.Atendimento.Update;
 
-namespace Hospital.Controllers;
-public abstract class GenericAtendimentoController<T, TAgendamento, TCreation> : ControllerBase
+namespace Hospital.Controllers.Generics;
+public abstract class GenericAtendimentoController<
+    T,
+    TAgendamento,
+    TCreation,
+    TUpdate>
+: ControllerBase
     where T : class
     where TAgendamento : Agendamento<T>
-    where TCreation : GenericAtividadesCreationDto
+    where TCreation : AtendimentoCreationDto
+    where TUpdate : AtendimentoUpdateDto
 {
-    private readonly IGenericAtendimentoService<T, TAgendamento, TCreation> _service;
-    private readonly IGenericAtendimentoRepository<T, TAgendamento> _repo;
+    private readonly IAtendimentoService<
+        T,
+        TAgendamento,
+        TCreation> _service;
     public GenericAtendimentoController(
-        IGenericAtendimentoService<T, TAgendamento, TCreation> service,
-        IGenericAtendimentoRepository<T, TAgendamento> repository)
+        IAtendimentoService<
+            T,
+            TAgendamento,
+            TCreation> service)
     {
         _service = service;
-        _repo = repository;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Creation([FromForm] TCreation request)
+    public async Task<IActionResult> Creation(
+        [FromForm] TCreation request)
     {
+        /* var claimsIdentity = this.User.Identity as ClaimsIdentity; */
+        /* var userId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value; */
         var response = await _service.Create(request);
         var result = response.ToResultDto();
         if (result.IsFailed)
@@ -46,7 +56,8 @@ public abstract class GenericAtendimentoController<T, TAgendamento, TCreation> :
         return Ok(result);
     }
     [HttpGet]
-    public IActionResult GetAll([FromQuery] AtendimentoGetQueryDto query)
+    public IActionResult GetByQuery(
+        [FromQuery] AtendimentoGetByQueryDto query)
     {
         var response = _service.GetByQuery(query);
         var result = response.ToResultDto();
@@ -54,5 +65,11 @@ public abstract class GenericAtendimentoController<T, TAgendamento, TCreation> :
             return BadRequest(result);
 
         return Ok(result);
+    }
+    [HttpPut("{id}")]
+    public IActionResult Update(
+        [FromRoute] int id, [FromForm] TUpdate request)
+    {
+        throw new NotImplementedException();
     }
 }

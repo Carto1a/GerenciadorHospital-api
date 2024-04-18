@@ -1,4 +1,4 @@
-using Hospital.Models;
+using Hospital.Models.Cadastro;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,13 +26,13 @@ public static class SeedManager
         var userManager = services.GetRequiredService<UserManager<Cadastro>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        var adminUser = await context.Cadastros.FirstOrDefaultAsync(user => 
+        var adminUser = await context.Cadastros.FirstOrDefaultAsync(user =>
             user.UserName == "AuthenticationAdmin"
         );
 
-        if(adminUser == null)
+        if (adminUser == null)
         {
-            adminUser = new Cadastro 
+            adminUser = new Cadastro
             {
                 UserName = "AuthenticationAdmin",
                 Email = "admin@admin.admin",

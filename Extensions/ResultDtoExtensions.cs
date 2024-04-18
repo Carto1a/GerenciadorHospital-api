@@ -1,5 +1,5 @@
 using FluentResults;
-using Hospital.Dto;
+using Hospital.Dto.Result;
 
 namespace Hospital.Extensions;
 public static class ResultDtoExtensions
