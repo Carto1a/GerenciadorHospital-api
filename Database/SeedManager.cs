@@ -11,6 +11,8 @@ public static class SeedManager
 {
     public static async Task Seed(IServiceProvider services)
     {
+        await SeedRoles(services);
+        await SeedAdminUser(services);
     }
     private static async Task SeedRoles(IServiceProvider services)
     {
@@ -37,7 +39,14 @@ public static class SeedManager
             adminUser = new Cadastro 
             {
                 UserName = "AuthenticationAdmin",
-                Email = "admin@admin.admin"
+                Email = "admin@admin.admin",
+                Nome = "ze",
+                DataNascimento = DateOnly.FromDateTime(DateTime.Now),
+                Genero = false,
+                Cep = 123,
+                NumeroCasa = "2",
+                Telefone = "44040404",
+                SecurityStamp = Guid.NewGuid().ToString()
             };
             await userManager.CreateAsync(adminUser, "123Carlos@");
             await userManager.AddToRoleAsync(adminUser, Roles.Admin);

@@ -22,7 +22,7 @@ public class AuthenticateController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto request, IFormFile file)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
         var response = await _authenticationService.Login(request);
 
