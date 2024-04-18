@@ -234,7 +234,7 @@ namespace Hospital.Migrations
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
                     Duracao = table.Column<TimeOnly>(type: "TEXT", nullable: false),
                     Diagnostico = table.Column<string>(type: "TEXT", nullable: false),
-                    Observacoes = table.Column<string>(type: "TEXT", nullable: false)
+                    Observacoes = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -310,8 +310,9 @@ namespace Hospital.Migrations
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TipoID = table.Column<int>(type: "INTEGER", nullable: false),
+                    TipoID = table.Column<int>(type: "INTEGER", nullable: true),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
                     Cancelado = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -323,8 +324,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosConsultas_Consultas_TipoID",
                         column: x => x.TipoID,
                         principalTable: "Consultas",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                     table.ForeignKey(
                         name: "FK_AgendamentosConsultas_Medicos_MedicoID",
                         column: x => x.MedicoID,
@@ -380,8 +380,9 @@ namespace Hospital.Migrations
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TipoID = table.Column<int>(type: "INTEGER", nullable: false),
+                    TipoID = table.Column<int>(type: "INTEGER", nullable: true),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
                     Cancelado = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -393,8 +394,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosExames_Exames_TipoID",
                         column: x => x.TipoID,
                         principalTable: "Exames",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                     table.ForeignKey(
                         name: "FK_AgendamentosExames_Medicos_MedicoID",
                         column: x => x.MedicoID,
@@ -415,8 +415,9 @@ namespace Hospital.Migrations
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TipoID = table.Column<int>(type: "INTEGER", nullable: false),
+                    TipoID = table.Column<int>(type: "INTEGER", nullable: true),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
                     Cancelado = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -440,8 +441,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosRetornos_Retornos_TipoID",
                         column: x => x.TipoID,
                         principalTable: "Retornos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateIndex(

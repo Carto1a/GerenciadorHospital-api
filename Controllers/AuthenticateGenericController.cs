@@ -9,15 +9,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers;
-[ApiController]
-[Route("api/[controller]")]
-public class AuthenticateController : ControllerBase
+public class AuthenticateGenericController<T> : ControllerBase
 {
     private readonly IAuthenticationService _authenticationService;
-    public AuthenticateController(IAuthenticationService authenticationService)
+    public AuthenticateGenericController(IAuthenticationService authenticationService)
     {
         _authenticationService = authenticationService;
     }
+
     [AllowAnonymous]
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
@@ -31,24 +30,7 @@ public class AuthenticateController : ControllerBase
 
         if(response.IsFailed)
             return BadRequest(resultDto);
-
-        return Ok(resultDto);
-    }
-
-    [AllowAnonymous]
-    [HttpPost("register")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
-    {
-        var response = await _authenticationService.Register(request);
-        var resultDto = response.ToResultDto();
-
-        if(response.IsFailed)
-            return BadRequest(resultDto);
-
+        
         return Ok(resultDto);
     }
 }

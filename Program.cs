@@ -1,6 +1,8 @@
 using System.Text;
 using Hospital.Database;
 using Hospital.Models;
+using Hospital.Repository;
+using Hospital.Repository.Interfaces;
 using Hospital.Service;
 using Hospital.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,6 +57,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 
 // Add services to the container.
 builder.Services.AddControllers();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Dto;
 public class RegisterRequestDto
@@ -11,7 +12,7 @@ public class RegisterRequestDto
     public string? Username { get; set; }
     [Required]
     public string? Nome { get; set; }
-    public DateOnly DataNascimento { get; set; }
+    public string DataNascimento { get; set; }
     public bool Genero { get; set; }
     public string Telefone { get; set; }
     public int Cpf { get; set; }

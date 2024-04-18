@@ -9,6 +9,7 @@ using FluentResults;
 using Flunt.Notifications;
 using Hospital.Dto;
 using Hospital.Models;
+using Hospital.Repository.Interfaces;
 using Hospital.Service.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -18,10 +19,15 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
 {
     private readonly UserManager<Cadastro> _userManager;
     private readonly IConfiguration _configuration;
-    public AuthenticationService(UserManager<Cadastro> userManager, IConfiguration configuration)
+    private readonly IAuthenticationRepository _authRepo;
+    public AuthenticationService(
+        UserManager<Cadastro> userManager,
+        IConfiguration configuration, 
+        IAuthenticationRepository authenticationRepository)
     {
         _userManager = userManager;
         _configuration = configuration;
+        _authRepo = authenticationRepository;
     }
     public async Task<Result<string>> Register(RegisterRequestDto request)
     {
@@ -43,12 +49,13 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
-        await _userManager.AddToRoleAsync(user, Roles.Admin);
 
         if(!result.Succeeded)  
             return Result.Fail("Erro na criação");
         
-        return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
+        // return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
+        // return Result.Ok(await _userManager.FindByEmailAsync(request.Email));
+        return Result.Ok();
     }
 
     public async Task<Result<string>> Login(LoginRequestDto request)
@@ -77,6 +84,46 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
         
         return Result.Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
+
+    public async Task<Result<string>> RegisterPaciente(RegisterRequestPacienteDto request)
+    {
+        var result = await Register(request);
+        if(result.IsFailed)
+            return result;
+        
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if(user == null)
+            return Result.Fail("Cadastro não encontrado");
+
+        await _userManager.AddToRoleAsync(user, Roles.Paciente);
+
+        var DocConvenioName = Guid.NewGuid().ToString(); 
+        var DocIntentifiName = Guid.NewGuid().ToString();
+        var DocConvenioPath = Path.Combine(_configuration["Paths:PacienteDocumentos"], DocConvenioName); 
+        var DocIntentifiPath = Path.Combine(_configuration["Paths:PacienteDocumentos"], DocIntentifiName); 
+
+        Stream fileStream = new FileStream(DocConvenioPath, FileMode.Create);
+        Stream fileStream2 = new FileStream(DocIntentifiPath, FileMode.Create);
+        await request.Convenio.CopyToAsync(fileStream); 
+        await request.Convenio.CopyToAsync(fileStream2);
+
+        Paciente paciente = new()
+        {
+            Cadastro = user,
+            TemConvenio = false,
+            ImgCarteiraConvenio = DocConvenioName,
+            ImgDocumento = DocIntentifiName 
+        };
+
+        await _authRepo.CreatePaciente(paciente);
+
+        return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
+    }
+
+    // private string GetRole()
+    // {
+
+    // }
 
     public JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)
     {

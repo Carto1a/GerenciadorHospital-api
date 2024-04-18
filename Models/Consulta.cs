@@ -13,5 +13,5 @@ public class Consulta
     public TimeOnly Duracao { get; set; }
     public string Diagnostico { get; set; }
     // prescrição medica
-    public string Observacoes { get; set; }
+    public string? Observacoes { get; set; }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hospital.Models.Agendamentos;
-public class Consulta : Agendamento<Models.Consulta>
+public class ConsultaAgendamento : Agendamento<Consulta>
 {
 
 }
