@@ -17,12 +17,15 @@ public class MedicosController
     private readonly IAuthenticationService _authenticationService;
     private readonly IConsultaAgendamentoService _consultaAgendamentoService;
     private readonly IExameAgendamentoService _exameAgendamentoService;
+    private readonly IMedicoService _medicoService;
     public MedicosController(
         IConsultaAgendamentoService consultaAgendamentoService,
         IExameAgendamentoService exameAgendamentoService,
+        IMedicoService medicoService,
         IAuthenticationService authenticationService)
         : base(authenticationService)
     {
+        _medicoService = medicoService;
         _authenticationService = authenticationService;
         _consultaAgendamentoService = consultaAgendamentoService;
         _exameAgendamentoService = exameAgendamentoService;
@@ -157,5 +160,25 @@ public class MedicosController
             return BadRequest(resultDto);
 
         return Ok(resultDto);
+    }
+    // TODO: fazer um dto para esses dois
+    [Authorize(Policy = "ElevatedRights")]
+    [HttpGet("{pacienteId}")]
+    public async Task<IActionResult> GetMedicoById(
+        [FromRoute] string pacienteId)
+    {
+        throw new NotImplementedException();
+    }
+    [Authorize(Policy = "ElevatedRights")]
+    [HttpGet]
+    public async Task<IActionResult> GetPacientes(
+        [FromQuery] int limit, int page = 0)
+    {
+        var response = _medicoService.GetMedicos(limit, page);
+        var result = response.ToResultDto();
+        if (response.IsFailed)
+            return NotFound();
+
+        return Ok(result);
     }
 }

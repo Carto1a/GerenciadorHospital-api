@@ -25,11 +25,15 @@ public class PacienteRepository
             return Result.Fail(error.Message);
         }
     }
-    public Result<List<Paciente>> GetPacientes(int limit, int page = 0)
+    public Result<List<Paciente>> GetPacientes(
+        int limit, int page = 0)
     {
         try
         {
-            var list = _ctx.Pacientes.Skip(page).Take(limit).ToList();
+            var list = _ctx.Pacientes
+                .Skip(page)
+                .Take(limit)
+                .ToList();
             return Result.Ok(list);
         }
         catch (Exception error)

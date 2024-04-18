@@ -30,7 +30,11 @@ public class MedicoRepository
     {
         try
         {
-            var medico = _ctx.Medicos.Skip(page).Take(limit).ToList();
+            var medico = _ctx
+                .Medicos
+                .Skip(page)
+                .Take(limit)
+                .ToList();
             return Result.Ok(medico);
         }
         catch (Exception error)

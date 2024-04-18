@@ -92,7 +92,7 @@ public class PacienteController
     {
         var paciente = User.Claims
             .FirstOrDefault(x => x.Type == "ID")?.Value;
-        var result = await _consultaAgendamentoService
+        var response = await _consultaAgendamentoService
             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
             {
                 PacienteId = paciente,
@@ -102,11 +102,11 @@ public class PacienteController
                 Limit = limit,
                 Page = page
             });
-
-        if (result.IsFailed)
+        var result = response.ToResultDto();
+        if (response.IsFailed)
             return NotFound();
 
-        return Ok(result.Value);
+        return Ok(result);
     }
     [Authorize(Roles = "Paciente")]
     [HttpGet("Exames")]
@@ -117,7 +117,7 @@ public class PacienteController
         // TODO: limpar os dados desse negocio ai
         var paciente = User.Claims
             .FirstOrDefault(x => x.Type == "ID")?.Value;
-        var result = await _exameAgendamentoService
+        var response = await _exameAgendamentoService
             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
             {
                 PacienteId = paciente,
@@ -127,11 +127,11 @@ public class PacienteController
                 Limit = limit,
                 Page = page
             });
-
-        if (result.IsFailed)
+        var result = response.ToResultDto();
+        if (response.IsFailed)
             return NotFound();
 
-        return Ok(result.Value);
+        return Ok(result);
     }
     [Authorize(Policy = "ElevatedRights")]
     [HttpGet("Consultas/{pacienteId}")]
@@ -140,7 +140,7 @@ public class PacienteController
         [FromQuery] int? limit, int? page, string? medicoId,
         DateTime? MinDate, DateTime? MaxDate)
     {
-        var result = await _consultaAgendamentoService
+        var response = await _consultaAgendamentoService
             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
             {
                 PacienteId = pacienteId,
@@ -150,11 +150,11 @@ public class PacienteController
                 Limit = limit ?? 10,
                 Page = page ?? 0
             });
-
-        if (result.IsFailed)
+        var result = response.ToResultDto();
+        if (response.IsFailed)
             return NotFound();
 
-        return Ok(result.Value);
+        return Ok(result);
     }
     [Authorize(Policy = "ElevatedRights")]
     [HttpGet("Exames/{pacienteId}")]
@@ -163,7 +163,7 @@ public class PacienteController
         [FromQuery] int? limit, int? page, string? medicoId,
         DateTime? MinDate, DateTime? MaxDate)
     {
-        var result = await _exameAgendamentoService
+        var response = await _exameAgendamentoService
             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
             {
                 PacienteId = pacienteId,
@@ -173,10 +173,35 @@ public class PacienteController
                 Limit = limit ?? 10,
                 Page = page ?? 0
             });
-
-        if (result.IsFailed)
+        var result = response.ToResultDto();
+        if (response.IsFailed)
             return NotFound();
 
-        return Ok(result.Value);
+        return Ok(result);
+    }
+    // TODO: fazer um dto para esses dois
+    [Authorize(Policy = "ElevatedRights")]
+    [HttpGet]
+    public async Task<IActionResult> GetPacientes(
+        [FromQuery] int limit, int page)
+    {
+        var response = _pacienteService.GetPacientes(limit, page);
+        var result = response.ToResultDto();
+        if (response.IsFailed)
+            return NotFound();
+
+        return Ok(result);
+    }
+    [Authorize(Policy = "ElevatedRights")]
+    [HttpGet("{pacienteId}")]
+    public async Task<IActionResult> GetPacienteById(
+        [FromRoute] string pacienteId)
+    {
+        var response = _pacienteService.GetPacienteById(pacienteId);
+        var result = response.ToResultDto();
+        if (response.IsFailed)
+            return NotFound();
+
+        return Ok(result);
     }
 }
