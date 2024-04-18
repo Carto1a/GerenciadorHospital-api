@@ -4,6 +4,7 @@ using Hospital.Dto.Agendamento.Create;
 using Hospital.Dto.Agendamento.Get;
 using Hospital.Dto.Agendamento.Update;
 using Hospital.Dto.Atendimento.Create;
+using Hospital.Logs.Agendamentos.Success;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Agendamentos.Interfaces;
@@ -283,7 +284,10 @@ public class AgendamentoService<T, TAgendamento, TCreation>
             return Result.Fail("não foi possivel pegar a atividade");
         }
 
-        _logger.LogInformation($"Agendamentos pro query encontrado: {query.Serialize()}: {respose.Value.Count} - {typeof(T).Name}");
+        var successCode = AgendamentoServiceEnumSucess.SAGDS010;
+        var successInfo = $"{respose.Value.Count} - {query.Serialize()}";
+        _logger.LogInformation(AgendamentoServiceServiceSuccess
+            .ConstructSuccess(successCode, typeof(T).Name, successInfo));
         return respose;
     }
 
