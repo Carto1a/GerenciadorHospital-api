@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using FluentResults;
 using Flunt.Notifications;
 using Hospital.Dto;
 using Hospital.Models;
@@ -22,14 +23,11 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
         _userManager = userManager;
         _configuration = configuration;
     }
-    public async Task<string> Register(RegisterRequestDto request)
+    public async Task<Result<string>> Register(RegisterRequestDto request)
     {
         var userByEmail = await _userManager.FindByEmailAsync(request.Email);
         if(userByEmail != null)
-        {
-            AddNotification("Cadastro", "Cadastro já existente");
-            return null;
-        }
+            return Result.Fail("Cadastro não existe");
 
         Cadastro user = new()
         {
@@ -47,29 +45,21 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
         var result = await _userManager.CreateAsync(user, request.Password);
         await _userManager.AddToRoleAsync(user, Roles.Admin);
 
-        if(!result.Succeeded) 
-        {
-            AddNotification("Cadastro", "Erro na criação");
-            return null;
-        }
+        if(!result.Succeeded)  
+            return Result.Fail("Erro na criação");
+        
         return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
     }
 
-    public async Task<string> Login(LoginRequestDto request)
+    public async Task<Result<string>> Login(LoginRequestDto request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
         if(user == null)
-        {
-            AddNotification("Cadastro", "Cadastro não existe");
-            return null;
-        } 
+            return Result.Fail("Cadastro não existe");
 
         if(!await _userManager.CheckPasswordAsync(user, request.Password))
-        {
-            AddNotification("Senha", "Senha errada");
-            return null;
-        }
+            return Result.Fail("Senha errada");
 
         var authClaims = new List<Claim>
         {
@@ -85,7 +75,7 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
 
         var token = GetToken(authClaims);
         
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return Result.Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
 
     public JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)
