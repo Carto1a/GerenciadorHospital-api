@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Flunt.Notifications;
 using Hospital.Dto;
 using Hospital.Models;
 using Hospital.Service.Interfaces;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Hospital.Service;
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService : Notifiable<Notification>, IAuthenticationService
 {
     private readonly UserManager<Cadastro> _userManager;
     private readonly IConfiguration _configuration;
@@ -26,7 +27,8 @@ public class AuthenticationService : IAuthenticationService
         var userByEmail = await _userManager.FindByEmailAsync(request.Email);
         if(userByEmail != null)
         {
-            return "";
+            AddNotification("Cadastro", "Cadastro já existente");
+            return null;
         }
 
         Cadastro user = new()
@@ -46,8 +48,10 @@ public class AuthenticationService : IAuthenticationService
         await _userManager.AddToRoleAsync(user, Roles.Admin);
 
         if(!result.Succeeded) 
-            return "";
-        
+        {
+            AddNotification("Cadastro", "Erro na criação");
+            return null;
+        }
         return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
     }
 
@@ -56,8 +60,17 @@ public class AuthenticationService : IAuthenticationService
         var user = await _userManager.FindByEmailAsync(request.Email);
 
         if(user == null)
-            return "";
-        
+        {
+            AddNotification("Cadastro", "Cadastro não existe");
+            return null;
+        } 
+
+        if(!await _userManager.CheckPasswordAsync(user, request.Password))
+        {
+            AddNotification("Senha", "Senha errada");
+            return null;
+        }
+
         var authClaims = new List<Claim>
         {
             new(ClaimTypes.Name, user.UserName),

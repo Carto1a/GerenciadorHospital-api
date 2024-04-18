@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentResults" Version="3.15.2" />
     <PackageReference Include="Flunt" Version="2.0.5" />
     <PackageReference Include="microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
