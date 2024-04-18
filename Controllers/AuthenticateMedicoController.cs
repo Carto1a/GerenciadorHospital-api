@@ -43,7 +43,7 @@ public class AuthenticateMedicoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
+    public async Task<IActionResult> Register([FromBody] RegisterRequestMedicoDto request)
     {
         var response = await _authenticationService.Register(request);
         var resultDto = response.ToResultDto();

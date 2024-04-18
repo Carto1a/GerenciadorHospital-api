@@ -232,9 +232,11 @@ namespace Hospital.Migrations
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Duracao = table.Column<TimeOnly>(type: "TEXT", nullable: false),
+                    Duracao = table.Column<TimeSpan>(type: "TEXT", nullable: false),
                     Diagnostico = table.Column<string>(type: "TEXT", nullable: false),
-                    Observacoes = table.Column<string>(type: "TEXT", nullable: true)
+                    Observacoes = table.Column<string>(type: "TEXT", nullable: true),
+                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Custo = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -285,6 +287,7 @@ namespace Hospital.Migrations
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
                     Resultado = table.Column<string>(type: "TEXT", nullable: false),
+                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -315,7 +318,9 @@ namespace Hospital.Migrations
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -346,10 +351,13 @@ namespace Hospital.Migrations
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Duracao = table.Column<TimeSpan>(type: "TEXT", nullable: false),
                     ConsultaID = table.Column<int>(type: "INTEGER", nullable: false),
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Observacoes = table.Column<string>(type: "TEXT", nullable: false)
+                    Observacoes = table.Column<string>(type: "TEXT", nullable: false),
+                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Custo = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -385,7 +393,9 @@ namespace Hospital.Migrations
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -420,7 +430,9 @@ namespace Hospital.Migrations
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MedicoID = table.Column<int>(type: "INTEGER", nullable: false),
                     PacienteID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Cancelado = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -524,6 +536,12 @@ namespace Hospital.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Cpf",
+                table: "AspNetUsers",
+                column: "Cpf",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hospital.Models;
-using Hospital.Models.Agendamentos;
 
 namespace Hospital.Repository.Interfaces;
-public interface IRetornoRepository : IGenericAtentimentoRepository<Retorno, RetornoAgendamento>
+public interface IPacienteRepository
 {
+    Paciente GetPacienteById(int id);
+    List<Paciente> GetPacientes(int limit, int page = 0);
 }

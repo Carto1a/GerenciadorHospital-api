@@ -6,6 +6,6 @@ using Hospital.Models;
 using Hospital.Models.Agendamentos;
 
 namespace Hospital.Repository.Interfaces;
-public interface IConsultaRepository : IGenericAtentimento<Consulta, ConsultaAgendamento>
+public interface IConsultaRepository : IGenericAtentimentoRepository<Consulta, ConsultaAgendamento>
 {
 }

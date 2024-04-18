@@ -5,6 +5,6 @@ using System.Threading.Tasks;
 using Hospital.Models;
 using Hospital.Models.Agendamentos;
 namespace Hospital.Repository.Interfaces;
-public interface IExamesRepository : IGenericAtentimento<Exame, ExameAgendamento>
+public interface IExamesRepository : IGenericAtentimentoRepository<Exame, ExameAgendamento>
 {
 }

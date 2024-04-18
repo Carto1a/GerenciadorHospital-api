@@ -1,6 +1,7 @@
 using System.Text;
 using Hospital.Database;
 using Hospital.Models;
+using Hospital.Models.Agendamentos;
 using Hospital.Repository;
 using Hospital.Repository.Interfaces;
 using Hospital.Service;
@@ -58,6 +59,11 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+builder.Services.AddScoped<IPacienteService, PacienteService>();
+builder.Services.AddScoped<IExameService, ExameService>();
+builder.Services.AddScoped<IExamesRepository, ExameRepository>();
+builder.Services.AddScoped<IMedicoRepository, MedicoRepository>();
+builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
 
 // Add services to the container.
 builder.Services.AddControllers();

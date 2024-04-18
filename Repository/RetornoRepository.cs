@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Hospital.Models;
 using Hospital.Models.Agendamentos;
 
-namespace Hospital.Repository.Interfaces;
-public interface IRetornoRepository : IGenericAtentimentoRepository<Retorno, RetornoAgendamento>
+namespace Hospital.Repository;
+public class RetornoRepository : GenericAtentimento<Retorno, RetornoAgendamento>
 {
+
 }

@@ -23,4 +23,15 @@ public class AppDbContext : IdentityDbContext<Cadastro>
     public DbSet<RetornoAgendamento> AgendamentosRetornos { get; set; }
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {}
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.Entity<Cadastro>()
+            .HasIndex(u => u.Cpf)
+            .IsUnique();
+        builder.Entity<Cadastro>()
+            .HasIndex(u => u.Cpf)
+            .IsUnique();
+    }
 }

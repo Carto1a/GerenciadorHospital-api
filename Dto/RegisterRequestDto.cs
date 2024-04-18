@@ -12,7 +12,7 @@ public class RegisterRequestDto
     public string? Username { get; set; }
     [Required]
     public string? Nome { get; set; }
-    public string DataNascimento { get; set; }
+    public DateTime DataNascimento { get; set; }
     public bool Genero { get; set; }
     public string Telefone { get; set; }
     public int Cpf { get; set; }

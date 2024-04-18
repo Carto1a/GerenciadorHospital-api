@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Hospital.Models;
 
 namespace Hospital.Dto.Agendamento;
-public abstract class AgendamentoDto<T>
+public class AgendamentoCreateDto
 {
-    public T? Referente { get; set; }
     public DateTime DataHora { get; set; }
-    public Medico medico { get; set; }
-    public Paciente paciente { get; set; }
+    public int MedicoId { get; set; }
+    public int PacienteId { get; set; }
+    public decimal Custo { get; set; }
+    public bool Convenio { get; set; }
 }

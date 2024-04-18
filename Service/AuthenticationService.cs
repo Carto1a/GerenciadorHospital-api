@@ -29,7 +29,7 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
         _configuration = configuration;
         _authRepo = authenticationRepository;
     }
-    public async Task<Result<string>> Register(RegisterRequestDto request)
+    private async Task<Result> RegisterBase(RegisterRequestDto request)
     {
         var userByEmail = await _userManager.FindByEmailAsync(request.Email);
         if(userByEmail != null)
@@ -44,7 +44,7 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
             Telefone = "40028922",
             Cep = 123,
             NumeroCasa = "2",
-            UserName = request.Username,
+            UserName = request.Email,
             SecurityStamp = Guid.NewGuid().ToString()
         };
 
@@ -53,8 +53,6 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
         if(!result.Succeeded)  
             return Result.Fail("Erro na criação");
         
-        // return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
-        // return Result.Ok(await _userManager.FindByEmailAsync(request.Email));
         return Result.Ok();
     }
 
@@ -70,6 +68,7 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
 
         var authClaims = new List<Claim>
         {
+            new("ID", user.Id),
             new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -85,9 +84,10 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
         return Result.Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
 
-    public async Task<Result<string>> RegisterPaciente(RegisterRequestPacienteDto request)
+    public async Task<Result<string>> Register(RegisterRequestPacienteDto request)
     {
-        var result = await Register(request);
+        // teveria unit of work, mas eu to fechado com a microsoft e ef
+        var result = await RegisterBase(request);
         if(result.IsFailed)
             return result;
         
@@ -107,6 +107,9 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
         await request.Convenio.CopyToAsync(fileStream); 
         await request.Convenio.CopyToAsync(fileStream2);
 
+        fileStream.Close();
+        fileStream2.Close();
+
         Paciente paciente = new()
         {
             Cadastro = user,
@@ -119,12 +122,19 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
 
         return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
     }
+    public Task<Result<string>> Register(RegisterRequestMedicoDto request)
+    {
+        throw new NotImplementedException();
+    }
 
+    public Task<Result<string>> Register(RegisterRequestAdminDto request)
+    {
+        throw new NotImplementedException();
+    }
     // private string GetRole()
     // {
 
     // }
-
     public JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));

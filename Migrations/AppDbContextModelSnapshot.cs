@@ -42,7 +42,13 @@ namespace Hospital.Migrations
                     b.Property<bool>("Cancelado")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Convenio")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Criação")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Custo")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataHora")
@@ -77,7 +83,13 @@ namespace Hospital.Migrations
                     b.Property<bool>("Cancelado")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Convenio")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Criação")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Custo")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataHora")
@@ -112,7 +124,13 @@ namespace Hospital.Migrations
                     b.Property<bool>("Cancelado")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Convenio")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Criação")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Custo")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataHora")
@@ -216,6 +234,9 @@ namespace Hospital.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Cpf")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -232,6 +253,12 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Convenio")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Custo")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("TEXT");
 
@@ -239,7 +266,7 @@ namespace Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<TimeOnly>("Duracao")
+                    b.Property<TimeSpan>("Duracao")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MedicoID")
@@ -295,6 +322,9 @@ namespace Hospital.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Convenio")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Custo")
@@ -380,7 +410,16 @@ namespace Hospital.Migrations
                     b.Property<int>("ConsultaID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Convenio")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Custo")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("DataHora")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan>("Duracao")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MedicoID")
