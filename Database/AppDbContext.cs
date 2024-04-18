@@ -8,7 +8,6 @@ using Hospital.Models.Cadastro;
 namespace Hospital.Database;
 public class AppDbContext : IdentityDbContext<Cadastro>
 {
-    public DbSet<Cadastro> Cadastros { get; set; }
     public DbSet<Paciente> Pacientes { get; set; }
     public DbSet<Admin> Admins { get; set; }
     public DbSet<Medico> Medicos { get; set; }
@@ -25,14 +24,10 @@ public class AppDbContext : IdentityDbContext<Cadastro>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.Entity<Cadastro>()
-            .HasIndex(u => u.Cpf)
-            .IsUnique();
-        builder.Entity<Cadastro>()
-            .HasIndex(u => u.Cpf)
-            .IsUnique();
 
-        // builder.ApplyConfiguration(new AtendimentoMap());
+        builder.ApplyConfiguration(new ConsultaAgendamentoMap());
+        builder.ApplyConfiguration(new ExameAgendamentoMap());
+        builder.ApplyConfiguration(new RetornoAgendamentoMap());
         builder.ApplyConfiguration(new ConsultaMap());
         builder.ApplyConfiguration(new ExameMap());
         builder.ApplyConfiguration(new RetornoMap());

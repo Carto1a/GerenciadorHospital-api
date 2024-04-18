@@ -57,11 +57,11 @@ public class AgendamentoRepository<T, TAgendamento>
             var queryList = _ctx.Set<TAgendamento>().AsQueryable();
             if (query.MedicoId != null)
                 queryList = queryList.Where(e =>
-                    e.Medico.ID == query.MedicoId);
+                    e.Medico.Id == query.MedicoId);
 
             if (query.PacienteId != null)
                 queryList = queryList.Where(e =>
-                    e.Paciente.ID == query.PacienteId);
+                    e.Paciente.Id == query.PacienteId);
 
             if (query.MinDate != null)
                 queryList = queryList.Where(
@@ -103,12 +103,12 @@ public class AgendamentoRepository<T, TAgendamento>
     }
 
     public Result<List<TAgendamento>> GetAgendamentosByMedico(
-        int medicoId, int limit, int page = 0)
+        string medicoId, int limit, int page = 0)
     {
         try
         {
             var list = _ctx.Set<TAgendamento>()
-                .Where(e => e.Medico.ID == medicoId)
+                .Where(e => e.Medico.Id == medicoId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -121,12 +121,12 @@ public class AgendamentoRepository<T, TAgendamento>
     }
 
     public Result<List<TAgendamento>> GetAgendamentosByPaciente(
-        int pacienteId, int limit, int page = 0)
+        string pacienteId, int limit, int page = 0)
     {
         try
         {
             return _ctx.Set<TAgendamento>()
-                .Where(e => e.Paciente.ID == pacienteId)
+                .Where(e => e.Paciente.Id == pacienteId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();

@@ -107,7 +107,7 @@ public class RetornoAgendamentoService
         return respose;
     }
     public Result<List<RetornoAgendamento>> GetAgendamentosByMedico(
-        int medicoId, int limit, int page = 0)
+        string medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<RetornoAgendamento>>>();
         if (page < 0)
@@ -124,7 +124,7 @@ public class RetornoAgendamentoService
 
     }
     public Result<List<RetornoAgendamento>> GetAgendamentosByPaciente(
-        int pacienteId, int limit, int page = 0)
+        string pacienteId, int limit, int page = 0)
     {
         var results = new List<Result<List<RetornoAgendamento>>>();
         if (page < 0)

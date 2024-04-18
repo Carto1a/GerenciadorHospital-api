@@ -23,16 +23,16 @@ public static class SeedManager
         // não esta conpleto, ele so cadastra o login
         // mas falta cadastrar no admin
         var context = services.GetRequiredService<AppDbContext>();
-        var userManager = services.GetRequiredService<UserManager<Cadastro>>();
+        var userManager = services.GetRequiredService<UserManager<Admin>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        var adminUser = await context.Cadastros.FirstOrDefaultAsync(user =>
+        var adminUser = await context.Admins.FirstOrDefaultAsync(user =>
             user.UserName == "AuthenticationAdmin"
         );
 
         if (adminUser == null)
         {
-            adminUser = new Cadastro
+            adminUser = new Admin
             {
                 UserName = "AuthenticationAdmin",
                 Email = "admin@admin.admin",

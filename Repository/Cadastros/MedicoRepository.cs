@@ -12,11 +12,12 @@ public class MedicoRepository
     {
         _ctx = context;
     }
-    public Result<Medico?> GetMedicoById(int id)
+    public Result<Medico?> GetMedicoById(string id)
     {
         try
         {
-            var medico = _ctx.Medicos.FirstOrDefault(e => e.ID == id);
+            var medico = _ctx.Medicos
+                .FirstOrDefault(e => e.Id == id);
             return Result.Ok(medico);
         }
         catch (Exception error)

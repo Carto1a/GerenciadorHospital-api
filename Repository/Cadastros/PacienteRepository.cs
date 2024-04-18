@@ -12,11 +12,12 @@ public class PacienteRepository
     {
         _ctx = context;
     }
-    public Result<Paciente?> GetPacienteById(int id)
+    public Result<Paciente?> GetPacienteById(string id)
     {
         try
         {
-            var paciente = _ctx.Pacientes.FirstOrDefault(e => e.ID == id);
+            var paciente = _ctx.Pacientes
+                .FirstOrDefault(e => e.Id == id);
             return Result.Ok(paciente);
         }
         catch (Exception error)

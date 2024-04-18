@@ -18,7 +18,6 @@ using Hospital.Service.Agendamentos;
 using Hospital.Service.Atendimentos.Interfaces;
 using Hospital.Service.Atendimentos;
 using Hospital.Service.Cadastros;
-using Hospital.Models.Atendimento;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -30,6 +29,24 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // 2. Identity
 builder.Services.AddIdentity<Cadastro, IdentityRole>()
+    .AddRoles<IdentityRole>()
+    .AddRoleManager<RoleManager<IdentityRole>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddIdentityCore<Admin>()
+    .AddRoles<IdentityRole>()
+    .AddRoleManager<RoleManager<IdentityRole>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddIdentityCore<Paciente>()
+    .AddRoles<IdentityRole>()
+    .AddRoleManager<RoleManager<IdentityRole>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddIdentityCore<Medico>()
     .AddRoles<IdentityRole>()
     .AddRoleManager<RoleManager<IdentityRole>>()
     .AddEntityFrameworkStores<AppDbContext>()
@@ -64,6 +81,9 @@ builder.Services.AddAuthorization(options =>
     );
     options.AddPolicy("StandardRigths", policy =>
         policy.RequireRole(Roles.Admin, Roles.Medico, Roles.Paciente)
+    );
+    options.AddPolicy("OperationalRights", policy =>
+        policy.RequireRole(Roles.Admin, Roles.Medico)
     );
 });
 

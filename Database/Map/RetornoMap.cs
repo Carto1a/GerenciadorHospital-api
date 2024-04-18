@@ -7,7 +7,11 @@ public class RetornoMap : IEntityTypeConfiguration<Retorno>
 {
     public void Configure(EntityTypeBuilder<Retorno> builder)
     {
-        builder.HasOne(x => x.Medico);
-        builder.HasOne(x => x.Paciente);
+        builder.HasOne(x => x.Medico)
+            .WithMany(m => m.Retornos)
+            .HasForeignKey(x => x.MedicoId);
+        builder.HasOne(x => x.Paciente)
+            .WithMany(p => p.Retornos)
+            .HasForeignKey(x => x.PacienteId);
     }
 }

@@ -64,12 +64,12 @@ public class RetornoRepository
         }
     }
 
-    public Result<List<Retorno>> GetByMedico(int medicoId, int limit, int page = 0)
+    public Result<List<Retorno>> GetByMedico(string medicoId, int limit, int page = 0)
     {
         try
         {
             var list = _ctx.Retornos
-                .Where(e => e.Medico.ID == medicoId)
+                .Where(e => e.Medico.Id == medicoId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -81,12 +81,12 @@ public class RetornoRepository
         }
     }
 
-    public Result<List<Retorno>> GetByPaciente(int pacienteId, int limit, int page = 0)
+    public Result<List<Retorno>> GetByPaciente(string pacienteId, int limit, int page = 0)
     {
         try
         {
             var respose = _ctx.Retornos
-                .Where(e => e.Paciente.ID == pacienteId)
+                .Where(e => e.Paciente.Id == pacienteId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -121,11 +121,11 @@ public class RetornoRepository
             var queryList = _ctx.Retornos.AsQueryable();
             if (query.MedicoId != null)
                 queryList = queryList.Where(e =>
-                    e.Medico.ID == query.MedicoId);
+                    e.Medico.Id == query.MedicoId);
 
             if (query.PacienteId != null)
                 queryList = queryList.Where(e =>
-                    e.Paciente.ID == query.PacienteId);
+                    e.Paciente.Id == query.PacienteId);
 
             if (query.MinDate != null)
                 queryList = queryList.Where(

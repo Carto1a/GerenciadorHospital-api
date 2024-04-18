@@ -7,7 +7,11 @@ public class ConsultaMap : IEntityTypeConfiguration<Consulta>
 {
     public void Configure(EntityTypeBuilder<Consulta> builder)
     {
-        builder.HasOne(x => x.Medico);
-        builder.HasOne(x => x.Paciente);
+        builder.HasOne(x => x.Medico)
+            .WithMany(m => m.Consultas)
+            .HasForeignKey(x => x.MedicoId);
+        builder.HasOne(x => x.Paciente)
+            .WithMany(p => p.Consultas)
+            .HasForeignKey(x => x.PacienteId);
     }
 }

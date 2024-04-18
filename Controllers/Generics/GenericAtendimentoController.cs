@@ -1,10 +1,11 @@
-using Hospital.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Hospital.Models.Agendamentos;
-using Hospital.Service.Atendimentos.Interfaces;
 using Hospital.Dto.Atendimento.Create;
 using Hospital.Dto.Atendimento.Get;
 using Hospital.Dto.Atendimento.Update;
+using Hospital.Extensions;
+using Hospital.Models.Agendamentos;
+using Hospital.Service.Atendimentos.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Generics;
 public abstract class GenericAtendimentoController<
@@ -31,6 +32,7 @@ public abstract class GenericAtendimentoController<
         _service = service;
     }
 
+    [Authorize(Policy = "OperationalRights")]
     [HttpPost]
     public async Task<IActionResult> Creation(
         [FromForm] TCreation request)
@@ -45,6 +47,7 @@ public abstract class GenericAtendimentoController<
         return Ok(result);
     }
 
+    [Authorize(Policy = "StandardRights")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
@@ -55,6 +58,8 @@ public abstract class GenericAtendimentoController<
 
         return Ok(result);
     }
+
+    [Authorize(Policy = "StandardRights")]
     [HttpGet]
     public IActionResult GetByQuery(
         [FromQuery] AtendimentoGetByQueryDto query)
@@ -66,6 +71,8 @@ public abstract class GenericAtendimentoController<
 
         return Ok(result);
     }
+
+    [Authorize(Policy = "OperationalRights")]
     [HttpPut("{id}")]
     public IActionResult Update(
         [FromRoute] int id, [FromForm] TUpdate request)

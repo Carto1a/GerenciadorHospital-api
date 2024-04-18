@@ -15,14 +15,23 @@ public class AuthenticationService
 : IAuthenticationService
 {
     private readonly UserManager<Cadastro> _userManager;
+    private readonly UserManager<Paciente> _pacienteManager;
+    private readonly UserManager<Medico> _medicoManager;
+    private readonly UserManager<Admin> _adminManager;
     private readonly IConfiguration _configuration;
     private readonly IAuthenticationRepository _authRepo;
     public AuthenticationService(
         UserManager<Cadastro> userManager,
+        UserManager<Paciente> pacienteManager,
+        UserManager<Medico> medicoManager,
+        UserManager<Admin> adminManager,
         IConfiguration configuration,
         IAuthenticationRepository authenticationRepository)
     {
         _userManager = userManager;
+        _pacienteManager = pacienteManager;
+        _medicoManager = medicoManager;
+        _adminManager = adminManager;
         _configuration = configuration;
         _authRepo = authenticationRepository;
     }
@@ -63,14 +72,17 @@ public class AuthenticationService
         return Result.Ok();
     }
 
-    public async Task<Result<string>> Login(LoginRequestDto request)
+    public async Task<Result<string>> Login(
+        LoginRequestMedicoDto request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await _medicoManager
+            .FindByEmailAsync(request.Email);
 
         if (user == null)
             return Result.Fail("Cadastro não existe");
 
-        if (!await _userManager.CheckPasswordAsync(user, request.Password))
+        if (!await _medicoManager
+            .CheckPasswordAsync(user, request.Password))
             return Result.Fail("Senha errada");
 
         var authClaims = new List<Claim>
@@ -81,97 +93,182 @@ public class AuthenticationService
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        var userRoles = await _userManager.GetRolesAsync(user);
+        var userRoles = await _medicoManager.GetRolesAsync(user);
         authClaims.AddRange(userRoles.Select(userRoles =>
             new Claim(ClaimTypes.Role, userRoles)
         ));
 
         var token = GetToken(authClaims);
 
-        return Result.Ok(new JwtSecurityTokenHandler().WriteToken(token));
+        return Result.Ok(
+            new JwtSecurityTokenHandler().WriteToken(token));
     }
-
-    public async Task<Result<string>> Register(RegisterRequestPacienteDto request)
+    public async Task<Result<string>> Login(
+        LoginRequestPacienteDto request)
     {
-        // teveria unit of work, mas eu to fechado com a microsoft e ef
-        var result = await RegisterBase(request);
-        if (result.IsFailed)
-            return result;
+        var user = await _pacienteManager
+            .FindByEmailAsync(request.Email);
 
-        var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
-            return Result.Fail("Cadastro não encontrado");
+            return Result.Fail("Cadastro não existe");
 
-        await _userManager.AddToRoleAsync(user, Roles.Paciente);
+        if (!await _pacienteManager
+            .CheckPasswordAsync(user, request.Password))
+            return Result.Fail("Senha errada");
 
-        var DocConvenioName = Guid.NewGuid().ToString();
-        var DocIntentifiName = Guid.NewGuid().ToString();
-        var DocConvenioPath = Path.Combine(_configuration["Paths:PacienteDocumentos"], DocConvenioName);
-        var DocIntentifiPath = Path.Combine(_configuration["Paths:PacienteDocumentos"], DocIntentifiName);
-
-        Stream fileStream = new FileStream(DocConvenioPath, FileMode.Create);
-        Stream fileStream2 = new FileStream(DocIntentifiPath, FileMode.Create);
-        await request.Convenio.CopyToAsync(fileStream);
-        await request.Convenio.CopyToAsync(fileStream2);
-
-        fileStream.Close();
-        fileStream2.Close();
-
-        Paciente paciente = new()
+        var authClaims = new List<Claim>
         {
-            Cadastro = user,
-            TemConvenio = false,
-            ImgCarteiraConvenio = DocConvenioName,
-            ImgDocumento = DocIntentifiName
+            new("ID", user.Id),
+            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Email, user.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        await _authRepo.CreatePaciente(paciente);
+        var userRoles = await _pacienteManager.GetRolesAsync(user);
+        authClaims.AddRange(userRoles.Select(userRoles =>
+            new Claim(ClaimTypes.Role, userRoles)
+        ));
 
-        return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
+        var token = GetToken(authClaims);
+
+        return Result.Ok(
+            new JwtSecurityTokenHandler().WriteToken(token));
     }
-    public async Task<Result<string>> Register(RegisterRequestMedicoDto request)
+    public async Task<Result<string>> Login(
+        LoginRequestAdminDto request)
     {
-        var result = await RegisterBase(request);
-        if (result.IsFailed)
-            return result;
+        var user = await _adminManager
+            .FindByEmailAsync(request.Email);
 
-        // TODO: isso parece desnecesario
-        var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
-            return Result.Fail("Cadastro não encontrado");
+            return Result.Fail("Cadastro não existe");
 
-        await _userManager.AddToRoleAsync(user, Roles.Medico);
+        if (!await _adminManager
+            .CheckPasswordAsync(user, request.Password))
+            return Result.Fail("Senha errada");
 
-        Medico medico = new()
+        var authClaims = new List<Claim>
         {
-            Cadastro = user,
-            Especialidade = "muito pika"
+            new("ID", user.Id),
+            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Email, user.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        await _authRepo.CreateMedico(medico);
-        return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
+        var userRoles = await _adminManager.GetRolesAsync(user);
+        authClaims.AddRange(userRoles.Select(userRoles =>
+            new Claim(ClaimTypes.Role, userRoles)
+        ));
+
+        var token = GetToken(authClaims);
+
+        return Result.Ok(
+            new JwtSecurityTokenHandler().WriteToken(token));
     }
 
-    public async Task<Result<string>> Register(RegisterRequestAdminDto request)
+    public async Task<Result<string>> Register(
+        RegisterRequestPacienteDto request)
     {
-        var result = await RegisterBase(request);
-        if (result.IsFailed)
-            return result;
+        var paciente = await _pacienteManager
+            .FindByEmailAsync(request.Email);
+        if (paciente != null)
+            return Result.Fail("Cadastro ja existe");
 
-        // TODO: isso parece desnecesario
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user == null)
-            return Result.Fail("Cadastro não encontrado");
+        Paciente paciente1 = new();
+        await paciente1.Create(
+            request, _configuration["Paths:PacienteDocumentos"]);
 
-        await _userManager.AddToRoleAsync(user, Roles.Medico);
+        IdentityResult result;
 
-        Admin admin = new()
+        try
         {
-            Cadastro = user
-        };
+            result = await _pacienteManager
+                .CreateAsync(paciente1, request.Password);
+            await _pacienteManager
+                .AddToRoleAsync(paciente1, Roles.Paciente);
+        }
+        catch (Exception error)
+        {
+            return Result.Fail(error.Message);
+        }
 
-        await _authRepo.CreateAdmin(admin);
-        return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
+        if (!result.Succeeded)
+        {
+            return Result.Fail("Erro na Criação");
+        }
+
+        return await Login(
+            new LoginRequestPacienteDto
+            { Email = request.Email, Password = request.Password });
+    }
+    public async Task<Result<string>> Register(
+        RegisterRequestMedicoDto request)
+    {
+        var medico = await _medicoManager
+            .FindByEmailAsync(request.Email);
+        if (medico != null)
+            return Result.Fail("Cadastro ja existe");
+
+        Medico medico1 = new();
+        medico1.Create(request);
+
+        IdentityResult result;
+
+        try
+        {
+            result = await _medicoManager
+                .CreateAsync(medico1, request.Password);
+            await _medicoManager
+                .AddToRoleAsync(medico1, Roles.Medico);
+        }
+        catch (Exception error)
+        {
+            return Result.Fail(error.Message);
+        }
+
+        if (!result.Succeeded)
+        {
+            return Result.Fail("Erro na Criação");
+        }
+
+        return await Login(
+            new LoginRequestMedicoDto
+            { Email = request.Email, Password = request.Password });
+    }
+
+    public async Task<Result<string>> Register(
+        RegisterRequestAdminDto request)
+    {
+        var admin = await _adminManager
+            .FindByEmailAsync(request.Email);
+        if (admin != null)
+            return Result.Fail("Cadastro ja existe");
+
+        Admin admin1 = new();
+        admin1.Create(request);
+
+        IdentityResult result;
+
+        try
+        {
+            result = await _adminManager
+                .CreateAsync(admin1, request.Password);
+            await _adminManager
+                .AddToRoleAsync(admin1, Roles.Admin);
+        }
+        catch (Exception error)
+        {
+            return Result.Fail(error.Message);
+        }
+
+        if (!result.Succeeded)
+        {
+            return Result.Fail("Erro na Criação");
+        }
+
+        return await Login(
+            new LoginRequestAdminDto
+            { Email = request.Email, Password = request.Password });
     }
 
     public JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)

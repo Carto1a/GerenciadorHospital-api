@@ -89,7 +89,7 @@ public class AtendimentoService<T, TAgendamento, TCreation>
         var respose = _repo.GetByDate(minDate, maxDate, limit, page);
         return respose;
     }
-    public async Task<Result<T>> GetById(int id)
+    public async Task<Result<T?>> GetById(int id)
     {
         var respose = await _repo.GetById(id);
         if (respose.IsFailed)
@@ -98,7 +98,7 @@ public class AtendimentoService<T, TAgendamento, TCreation>
         return respose;
     }
     public Result<List<T>> GetByMedico(
-        int medicoId, int limit, int page = 0)
+        string medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<T>>>();
         if (page < 0)
@@ -114,7 +114,7 @@ public class AtendimentoService<T, TAgendamento, TCreation>
         return respose;
     }
     public Result<List<T>> GetByPaciente(
-        int pacienteId, int limit, int page = 0)
+        string pacienteId, int limit, int page = 0)
     {
         var results = new List<Result<List<T>>>();
         if (page < 0)

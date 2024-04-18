@@ -24,7 +24,8 @@ public class PacienteService
     public Result<string> GetPacienteDocumento(ClaimsPrincipal user, string guid)
     {
         var id = user.Claims.FirstOrDefault(x => x.Type == "ID")?.Value;
-        var paciente = _ctx.Pacientes.FirstOrDefault(x => x.Cadastro.Id == id);
+        var paciente = _ctx.Pacientes
+            .FirstOrDefault(x => x.Id == id);
 
         if (paciente.ImgCarteiraConvenio != guid && paciente.ImgDocumento != guid)
             return Result.Fail("Arquivo não achado");

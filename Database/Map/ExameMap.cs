@@ -7,7 +7,11 @@ public class ExameMap : IEntityTypeConfiguration<Exame>
 {
     public void Configure(EntityTypeBuilder<Exame> builder)
     {
-        builder.HasOne(x => x.Medico);
-        builder.HasOne(x => x.Paciente);
+        builder.HasOne(x => x.Medico)
+            .WithMany(m => m.Exames)
+            .HasForeignKey(x => x.MedicoId);
+        builder.HasOne(x => x.Paciente)
+            .WithMany(p => p.Exames)
+            .HasForeignKey(x => x.PacienteId);
     }
 }

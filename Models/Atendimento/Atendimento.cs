@@ -5,8 +5,10 @@ namespace Hospital.Models.Atendimento;
 public abstract class Atendimento
 {
     public int ID { get; set; }
-    public Medico Medico { get; set; }
-    public Paciente Paciente { get; set; }
+    public string MedicoId { get; set; }
+    public string PacienteId { get; set; }
+    public virtual Medico Medico { get; set; }
+    public virtual Paciente Paciente { get; set; }
     public DateTime Inicio { get; set; }
     public DateTime Fim { get; set; }
     public DateTime Criado { get; set; }

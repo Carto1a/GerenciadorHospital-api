@@ -2,6 +2,7 @@ using Hospital.Dto.Agendamento.Create;
 using Hospital.Dto.Agendamento.Get;
 using Hospital.Extensions;
 using Hospital.Service.Agendamentos.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Generics;
@@ -19,6 +20,7 @@ public abstract class GenericAgendamentoController<
         _service = service;
     }
 
+    [Authorize(Policy = "OperationalRights")]
     [HttpPost]
     public async Task<IActionResult> PostAgendamento(
         [FromForm] AgendamentoCreateDto request)
@@ -30,23 +32,27 @@ public abstract class GenericAgendamentoController<
 
         return Ok(result);
     }
+    [Authorize(Policy = "StandardRights")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         throw new NotImplementedException();
     }
+    [Authorize(Policy = "StandardRights")]
     [HttpGet]
     public IActionResult GetByQuery(
         [FromQuery] AgendamentoGetByQueryDto request)
     {
         throw new NotImplementedException();
     }
+    [Authorize(Policy = "OperationalRights")]
     [HttpPut("{id}")]
     public IActionResult Update(
         [FromRoute] int id, [FromForm] TUpdate request)
     {
         throw new NotImplementedException();
     }
+    [Authorize(Policy = "OperationalRights")]
     [HttpDelete("{id}")]
     public IActionResult CancelAgendamento([FromRoute] int id)
     {

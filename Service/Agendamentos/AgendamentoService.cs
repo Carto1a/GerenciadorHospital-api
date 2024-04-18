@@ -111,7 +111,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         return respose;
     }
     public Result<List<TAgendamento>> GetAgendamentosByMedico(
-        int medicoId, int limit, int page = 0)
+        string medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<TAgendamento>>>();
         if (page < 0)
@@ -128,7 +128,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
 
     }
     public Result<List<TAgendamento>> GetAgendamentosByPaciente(
-        int pacienteId, int limit, int page = 0)
+        string pacienteId, int limit, int page = 0)
     {
         var results = new List<Result<List<TAgendamento>>>();
         if (page < 0)

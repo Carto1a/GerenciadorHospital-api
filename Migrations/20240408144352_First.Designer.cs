@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240325192557_First")]
+    [Migration("20240408144352_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -19,22 +19,6 @@ namespace Hospital.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
-
-            modelBuilder.Entity("Hospital.Models.Admin", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CadastroId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CadastroId");
-
-                    b.ToTable("Admins");
-                });
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.ConsultaAgendamento", b =>
                 {
@@ -57,22 +41,27 @@ namespace Hospital.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MedicoID")
+                    b.Property<bool>("Deletado")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PacienteID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("MedicoId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int?>("TipoID")
+                    b.Property<string>("PacienteId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TipoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("MedicoID");
+                    b.HasIndex("MedicoId");
 
-                    b.HasIndex("PacienteID");
+                    b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoID");
+                    b.HasIndex("TipoId");
 
                     b.ToTable("AgendamentosConsultas");
                 });
@@ -98,22 +87,27 @@ namespace Hospital.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MedicoID")
+                    b.Property<bool>("Deletado")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PacienteID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("MedicoId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int?>("TipoID")
+                    b.Property<string>("PacienteId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TipoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("MedicoID");
+                    b.HasIndex("MedicoId");
 
-                    b.HasIndex("PacienteID");
+                    b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoID");
+                    b.HasIndex("TipoId");
 
                     b.ToTable("AgendamentosExames");
                 });
@@ -139,27 +133,166 @@ namespace Hospital.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MedicoID")
+                    b.Property<bool>("Deletado")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PacienteID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("MedicoId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int?>("TipoID")
+                    b.Property<string>("PacienteId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TipoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("MedicoID");
+                    b.HasIndex("MedicoId");
 
-                    b.HasIndex("PacienteID");
+                    b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoID");
+                    b.HasIndex("TipoId");
 
                     b.ToTable("AgendamentosRetornos");
                 });
 
-            modelBuilder.Entity("Hospital.Models.Cadastro", b =>
+            modelBuilder.Entity("Hospital.Models.Atendimento.Consulta", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Convenio")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Custo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Diagnostico")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Fim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Inicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MedicoId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Observacoes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PacienteId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MedicoId");
+
+                    b.HasIndex("PacienteId");
+
+                    b.ToTable("Consultas");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Atendimento.Exame", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Convenio")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Custo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Fim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Inicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MedicoId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PacienteId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Resultado")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MedicoId");
+
+                    b.HasIndex("PacienteId");
+
+                    b.ToTable("Exames");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Atendimento.Retorno", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ConsultaID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Convenio")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Custo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Fim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Inicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MedicoId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Observacoes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PacienteId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ConsultaID");
+
+                    b.HasIndex("MedicoId");
+
+                    b.HasIndex("PacienteId");
+
+                    b.ToTable("Retornos");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Cadastro.Cadastro", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -178,6 +311,11 @@ namespace Hospital.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateOnly>("DataNascimento")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -237,9 +375,6 @@ namespace Hospital.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Cpf")
-                        .IsUnique();
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -248,52 +383,13 @@ namespace Hospital.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Cadastro");
+
+                    b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("Hospital.Models.Consulta", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Convenio")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Criado")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Custo")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Diagnostico")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Fim")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Inicio")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MedicoID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Observacoes")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PacienteID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("MedicoID");
-
-                    b.HasIndex("PacienteID");
-
-                    b.ToTable("Consultas");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Convenio", b =>
+            modelBuilder.Entity("Hospital.Models.Cadastro.Convenio", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -311,151 +407,17 @@ namespace Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("PacienteID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PacienteId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Telefone")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PacienteID");
+                    b.HasIndex("PacienteId");
 
                     b.ToTable("Convenios");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Exame", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Convenio")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Criado")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Custo")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Fim")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Inicio")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MedicoID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PacienteID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Resultado")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("MedicoID");
-
-                    b.HasIndex("PacienteID");
-
-                    b.ToTable("Exames");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Medico", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CadastroId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Especialidade")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CadastroId");
-
-                    b.ToTable("Medicos");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Paciente", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CadastroId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ImgCarteiraConvenio")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ImgDocumento")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("TemConvenio")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CadastroId");
-
-                    b.ToTable("Pacientes");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Retorno", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ConsultaID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Convenio")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Criado")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Custo")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Fim")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Inicio")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MedicoID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Observacoes")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PacienteID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ConsultaID");
-
-                    b.HasIndex("MedicoID");
-
-                    b.HasIndex("PacienteID");
-
-                    b.ToTable("Retornos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -586,32 +548,61 @@ namespace Hospital.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Hospital.Models.Admin", b =>
+            modelBuilder.Entity("Hospital.Models.Cadastro.Admin", b =>
                 {
-                    b.HasOne("Hospital.Models.Cadastro", "Cadastro")
-                        .WithMany()
-                        .HasForeignKey("CadastroId");
+                    b.HasBaseType("Hospital.Models.Cadastro.Cadastro");
 
-                    b.Navigation("Cadastro");
+                    b.HasDiscriminator().HasValue("Admin");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Cadastro.Medico", b =>
+                {
+                    b.HasBaseType("Hospital.Models.Cadastro.Cadastro");
+
+                    b.Property<string>("Especialidade")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasDiscriminator().HasValue("Medico");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Cadastro.Paciente", b =>
+                {
+                    b.HasBaseType("Hospital.Models.Cadastro.Cadastro");
+
+                    b.Property<string>("ImgCarteiraConvenio")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImgDocumento")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("TemConvenio")
+                        .HasColumnType("INTEGER");
+
+                    b.HasDiscriminator().HasValue("Paciente");
                 });
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.ConsultaAgendamento", b =>
                 {
-                    b.HasOne("Hospital.Models.Medico", "Medico")
-                        .WithMany()
-                        .HasForeignKey("MedicoID")
+                    b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
+                        .WithMany("AgendamentosConsultas")
+                        .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Paciente", "Paciente")
-                        .WithMany()
-                        .HasForeignKey("PacienteID")
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
+                        .WithMany("AgendamentosConsultas")
+                        .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Consulta", "Tipo")
+                    b.HasOne("Hospital.Models.Atendimento.Consulta", "Tipo")
                         .WithMany()
-                        .HasForeignKey("TipoID");
+                        .HasForeignKey("TipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Medico");
 
@@ -622,21 +613,23 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.ExameAgendamento", b =>
                 {
-                    b.HasOne("Hospital.Models.Medico", "Medico")
-                        .WithMany()
-                        .HasForeignKey("MedicoID")
+                    b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
+                        .WithMany("AgendamentosExames")
+                        .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Paciente", "Paciente")
-                        .WithMany()
-                        .HasForeignKey("PacienteID")
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
+                        .WithMany("AgendamentosExames")
+                        .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Exame", "Tipo")
+                    b.HasOne("Hospital.Models.Atendimento.Exame", "Tipo")
                         .WithMany()
-                        .HasForeignKey("TipoID");
+                        .HasForeignKey("TipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Medico");
 
@@ -647,21 +640,23 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.RetornoAgendamento", b =>
                 {
-                    b.HasOne("Hospital.Models.Medico", "Medico")
-                        .WithMany()
-                        .HasForeignKey("MedicoID")
+                    b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
+                        .WithMany("AgendamentosRetornos")
+                        .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Paciente", "Paciente")
-                        .WithMany()
-                        .HasForeignKey("PacienteID")
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
+                        .WithMany("AgendamentosRetornos")
+                        .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Retorno", "Tipo")
+                    b.HasOne("Hospital.Models.Atendimento.Retorno", "Tipo")
                         .WithMany()
-                        .HasForeignKey("TipoID");
+                        .HasForeignKey("TipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Medico");
 
@@ -670,43 +665,17 @@ namespace Hospital.Migrations
                     b.Navigation("Tipo");
                 });
 
-            modelBuilder.Entity("Hospital.Models.Consulta", b =>
+            modelBuilder.Entity("Hospital.Models.Atendimento.Consulta", b =>
                 {
-                    b.HasOne("Hospital.Models.Medico", "Medico")
-                        .WithMany()
-                        .HasForeignKey("MedicoID")
+                    b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
+                        .WithMany("Consultas")
+                        .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Paciente", "Paciente")
-                        .WithMany()
-                        .HasForeignKey("PacienteID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Medico");
-
-                    b.Navigation("Paciente");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Convenio", b =>
-                {
-                    b.HasOne("Hospital.Models.Paciente", null)
-                        .WithMany("Convenios")
-                        .HasForeignKey("PacienteID");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Exame", b =>
-                {
-                    b.HasOne("Hospital.Models.Medico", "Medico")
-                        .WithMany()
-                        .HasForeignKey("MedicoID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hospital.Models.Paciente", "Paciente")
-                        .WithMany()
-                        .HasForeignKey("PacienteID")
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
+                        .WithMany("Consultas")
+                        .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -715,45 +684,42 @@ namespace Hospital.Migrations
                     b.Navigation("Paciente");
                 });
 
-            modelBuilder.Entity("Hospital.Models.Medico", b =>
+            modelBuilder.Entity("Hospital.Models.Atendimento.Exame", b =>
                 {
-                    b.HasOne("Hospital.Models.Cadastro", "Cadastro")
-                        .WithMany()
-                        .HasForeignKey("CadastroId")
+                    b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
+                        .WithMany("Exames")
+                        .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Cadastro");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Paciente", b =>
-                {
-                    b.HasOne("Hospital.Models.Cadastro", "Cadastro")
-                        .WithMany()
-                        .HasForeignKey("CadastroId")
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
+                        .WithMany("Exames")
+                        .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Cadastro");
+                    b.Navigation("Medico");
+
+                    b.Navigation("Paciente");
                 });
 
-            modelBuilder.Entity("Hospital.Models.Retorno", b =>
+            modelBuilder.Entity("Hospital.Models.Atendimento.Retorno", b =>
                 {
-                    b.HasOne("Hospital.Models.Consulta", "Consulta")
+                    b.HasOne("Hospital.Models.Atendimento.Consulta", "Consulta")
                         .WithMany()
                         .HasForeignKey("ConsultaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Medico", "Medico")
-                        .WithMany()
-                        .HasForeignKey("MedicoID")
+                    b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
+                        .WithMany("Retornos")
+                        .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Paciente", "Paciente")
-                        .WithMany()
-                        .HasForeignKey("PacienteID")
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
+                        .WithMany("Retornos")
+                        .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -762,6 +728,13 @@ namespace Hospital.Migrations
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Cadastro.Convenio", b =>
+                {
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", null)
+                        .WithMany("Convenios")
+                        .HasForeignKey("PacienteId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -775,7 +748,7 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Hospital.Models.Cadastro", null)
+                    b.HasOne("Hospital.Models.Cadastro.Cadastro", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -784,7 +757,7 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Hospital.Models.Cadastro", null)
+                    b.HasOne("Hospital.Models.Cadastro.Cadastro", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -799,7 +772,7 @@ namespace Hospital.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Cadastro", null)
+                    b.HasOne("Hospital.Models.Cadastro.Cadastro", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -808,16 +781,43 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Hospital.Models.Cadastro", null)
+                    b.HasOne("Hospital.Models.Cadastro.Cadastro", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Hospital.Models.Paciente", b =>
+            modelBuilder.Entity("Hospital.Models.Cadastro.Medico", b =>
                 {
+                    b.Navigation("AgendamentosConsultas");
+
+                    b.Navigation("AgendamentosExames");
+
+                    b.Navigation("AgendamentosRetornos");
+
+                    b.Navigation("Consultas");
+
+                    b.Navigation("Exames");
+
+                    b.Navigation("Retornos");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Cadastro.Paciente", b =>
+                {
+                    b.Navigation("AgendamentosConsultas");
+
+                    b.Navigation("AgendamentosExames");
+
+                    b.Navigation("AgendamentosRetornos");
+
+                    b.Navigation("Consultas");
+
                     b.Navigation("Convenios");
+
+                    b.Navigation("Exames");
+
+                    b.Navigation("Retornos");
                 });
 #pragma warning restore 612, 618
         }

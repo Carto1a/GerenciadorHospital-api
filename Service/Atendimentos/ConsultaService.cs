@@ -91,7 +91,7 @@ public class ConsultaService
         return respose;
     }
     public Result<List<Consulta>> GetByMedico(
-        int medicoId, int limit, int page = 0)
+        string medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<Consulta>>>();
         if (page < 0)
@@ -107,7 +107,7 @@ public class ConsultaService
         return respose;
     }
     public Result<List<Consulta>> GetByPaciente(
-        int pacienteId, int limit, int page = 0)
+        string pacienteId, int limit, int page = 0)
     {
         var results = new List<Result<List<Consulta>>>();
         if (page < 0)

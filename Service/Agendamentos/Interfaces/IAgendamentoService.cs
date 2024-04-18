@@ -11,8 +11,8 @@ public interface IAgendamentoService<T, TAgendamento, TCreation>
     Task<Result> CancelAgendamento(int id);
     Task<Result> UpdateAgendamento(AgendamentoUpdateDto novo, int id);
     Task<Result<TAgendamento?>> GetAgendamentoById(int id);
-    Result<List<TAgendamento>> GetAgendamentosByPaciente(int pacienteId, int limit, int page = 0);
-    Result<List<TAgendamento>> GetAgendamentosByMedico(int medicoId, int limit, int page = 0);
+    Result<List<TAgendamento>> GetAgendamentosByPaciente(string pacienteId, int limit, int page = 0);
+    Result<List<TAgendamento>> GetAgendamentosByMedico(string medicoId, int limit, int page = 0);
     Result<List<TAgendamento>> GetAgendamentosByDate(DateTime minDate, DateTime maxDate, int limit, int page = 0);
     Result<List<TAgendamento>> GetAgendamentosByQuery(AgendamentoGetByQueryDto query);
 }
