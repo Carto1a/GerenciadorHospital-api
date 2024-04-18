@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Dto;
 public class RegisterRequestDto
 {
-    [MinLength(Consts.UsernameMinLength, ErrorMessage = Consts.UsernameLengthValidationError)]
-    public string? Username { get; set; }
+    /* [MinLength(Consts.UsernameMinLength, ErrorMessage = Consts.UsernameLengthValidationError)] */
+    /* public string? Username { get; set; } */
     [Required]
     public string? Nome { get; set; }
     public DateTime DataNascimento { get; set; }

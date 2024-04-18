@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Hospital.Dto.Atividades;
 public class AtendimentoGetQueryDto
 {
-    public DateTime? minDate { get; set; }
-    public DateTime? maxDate { get; set; }
-    public int? medicoId { get; set; }
-    public int? pacienteId { get; set; }
-    public int? limit { get; set; }
-    public int? page { get; set; }
+    public DateTime? MinDate { get; set; }
+    public DateTime? MaxDate { get; set; }
+    public int? MedicoId { get; set; }
+    public int? PacienteId { get; set; }
+    public int? Limit { get; set; }
+    public int? Page { get; set; }
 }

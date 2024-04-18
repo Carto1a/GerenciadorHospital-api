@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentResults;
 using Hospital.Models;
 
 namespace Hospital.Repository.Interfaces;
 public interface IMedicoRepository
 {
-    Medico? GetMedicoById(int id);
-    List<Medico> GetMedicos(int limit, int page = 0); 
+    Result<Medico?> GetMedicoById(int id);
+    Result<List<Medico>> GetMedicos(int limit, int page = 0); 
 }

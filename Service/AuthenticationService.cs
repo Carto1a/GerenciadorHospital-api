@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using FluentResults;
 using Flunt.Notifications;
 using Hospital.Dto;
@@ -22,7 +18,7 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
     private readonly IAuthenticationRepository _authRepo;
     public AuthenticationService(
         UserManager<Cadastro> userManager,
-        IConfiguration configuration, 
+        IConfiguration configuration,
         IAuthenticationRepository authenticationRepository)
     {
         _userManager = userManager;
@@ -32,8 +28,8 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
     private async Task<Result> RegisterBase(RegisterRequestDto request)
     {
         var userByEmail = await _userManager.FindByEmailAsync(request.Email);
-        if(userByEmail != null)
-            return Result.Fail("Cadastro não existe");
+        if (userByEmail != null)
+            return Result.Fail("Cadastro ja existe");
 
         Cadastro user = new()
         {
@@ -42,17 +38,27 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
             DataNascimento = DateOnly.FromDateTime(DateTime.Now),
             Genero = false,
             Telefone = "40028922",
+            Cpf = request.Cpf,
             Cep = 123,
             NumeroCasa = "2",
             UserName = request.Email,
             SecurityStamp = Guid.NewGuid().ToString()
         };
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        IdentityResult result;
 
-        if(!result.Succeeded)  
+        try
+        {
+            result = await _userManager.CreateAsync(user, request.Password);
+        }
+        catch (Exception error)
+        {
+            return Result.Fail(error.Message);
+        }
+
+        if (!result.Succeeded)
             return Result.Fail("Erro na criação");
-        
+
         return Result.Ok();
     }
 
@@ -60,10 +66,10 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
-        if(user == null)
+        if (user == null)
             return Result.Fail("Cadastro não existe");
 
-        if(!await _userManager.CheckPasswordAsync(user, request.Password))
+        if (!await _userManager.CheckPasswordAsync(user, request.Password))
             return Result.Fail("Senha errada");
 
         var authClaims = new List<Claim>
@@ -76,11 +82,11 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
 
         var userRoles = await _userManager.GetRolesAsync(user);
         authClaims.AddRange(userRoles.Select(userRoles =>
-            new Claim(ClaimTypes.Role, userRoles) 
+            new Claim(ClaimTypes.Role, userRoles)
         ));
 
         var token = GetToken(authClaims);
-        
+
         return Result.Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
 
@@ -88,23 +94,23 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
     {
         // teveria unit of work, mas eu to fechado com a microsoft e ef
         var result = await RegisterBase(request);
-        if(result.IsFailed)
+        if (result.IsFailed)
             return result;
-        
+
         var user = await _userManager.FindByEmailAsync(request.Email);
-        if(user == null)
+        if (user == null)
             return Result.Fail("Cadastro não encontrado");
 
         await _userManager.AddToRoleAsync(user, Roles.Paciente);
 
-        var DocConvenioName = Guid.NewGuid().ToString(); 
+        var DocConvenioName = Guid.NewGuid().ToString();
         var DocIntentifiName = Guid.NewGuid().ToString();
-        var DocConvenioPath = Path.Combine(_configuration["Paths:PacienteDocumentos"], DocConvenioName); 
-        var DocIntentifiPath = Path.Combine(_configuration["Paths:PacienteDocumentos"], DocIntentifiName); 
+        var DocConvenioPath = Path.Combine(_configuration["Paths:PacienteDocumentos"], DocConvenioName);
+        var DocIntentifiPath = Path.Combine(_configuration["Paths:PacienteDocumentos"], DocIntentifiName);
 
         Stream fileStream = new FileStream(DocConvenioPath, FileMode.Create);
         Stream fileStream2 = new FileStream(DocIntentifiPath, FileMode.Create);
-        await request.Convenio.CopyToAsync(fileStream); 
+        await request.Convenio.CopyToAsync(fileStream);
         await request.Convenio.CopyToAsync(fileStream2);
 
         fileStream.Close();
@@ -115,26 +121,58 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
             Cadastro = user,
             TemConvenio = false,
             ImgCarteiraConvenio = DocConvenioName,
-            ImgDocumento = DocIntentifiName 
+            ImgDocumento = DocIntentifiName
         };
 
         await _authRepo.CreatePaciente(paciente);
 
         return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
     }
-    public Task<Result<string>> Register(RegisterRequestMedicoDto request)
+    public async Task<Result<string>> Register(RegisterRequestMedicoDto request)
     {
-        throw new NotImplementedException();
+        var result = await RegisterBase(request);
+        if (result.IsFailed)
+            return result;
+
+        // TODO: isso parece desnecesario
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+            return Result.Fail("Cadastro não encontrado");
+
+        await _userManager.AddToRoleAsync(user, Roles.Medico);
+
+        Medico medico = new()
+        {
+            Cadastro = user,
+            Especialidade = "muito pika"
+        };
+
+        await _authRepo.CreateMedico(medico);
+        return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
     }
 
-    public Task<Result<string>> Register(RegisterRequestAdminDto request)
+    public async Task<Result<string>> Register(RegisterRequestAdminDto request)
     {
-        throw new NotImplementedException();
-    }
-    // private string GetRole()
-    // {
+        var result = await RegisterBase(request);
+        if (result.IsFailed)
+            return result;
 
-    // }
+        // TODO: isso parece desnecesario
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+            return Result.Fail("Cadastro não encontrado");
+
+        await _userManager.AddToRoleAsync(user, Roles.Medico);
+
+        Admin admin = new()
+        {
+            Cadastro = user
+        };
+
+        await _authRepo.CreateAdmin(admin);
+        return await Login(new LoginRequestDto { Email = request.Email, Password = request.Password });
+    }
+
     public JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
@@ -145,7 +183,7 @@ public class AuthenticationService : Notifiable<Notification>, IAuthenticationSe
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
         );
-        
+
         return token;
     }
     private string GetErrorsText(IEnumerable<IdentityError> errors)

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentResults;
 using Hospital.Database;
 using Hospital.Models;
 using Hospital.Repository.Interfaces;
@@ -14,14 +11,29 @@ public class MedicoRepository : IMedicoRepository
     {
         _ctx = context;
     }
-    public Medico? GetMedicoById(int id)
+    public Result<Medico?> GetMedicoById(int id)
     {
-        var medico = _ctx.Medicos.FirstOrDefault(e => e.ID == id);
-        return medico;
+        try
+        {
+            var medico = _ctx.Medicos.FirstOrDefault(e => e.ID == id);
+            return Result.Ok(medico);
+        }
+        catch (Exception error)
+        {
+            return Result.Fail(error.Message);
+        }
     }
 
-    public List<Medico> GetMedicos(int limit, int page = 0)
+    public Result<List<Medico>> GetMedicos(int limit, int page = 0)
     {
-        return _ctx.Medicos.Skip(page).Take(limit).ToList();
+        try
+        {
+            var medico = _ctx.Medicos.Skip(page).Take(limit).ToList();
+            return Result.Ok(medico);
+        }
+        catch (Exception error)
+        {
+            return Result.Fail(error.Message);
+        }
     }
 }

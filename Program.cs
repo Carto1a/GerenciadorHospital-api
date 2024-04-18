@@ -1,10 +1,13 @@
 using System.Text;
 using Hospital.Database;
 using Hospital.Models;
-using Hospital.Models.Agendamentos;
 using Hospital.Repository;
+using Hospital.Repository.Generics;
+using Hospital.Repository.Generics.Interfaces;
 using Hospital.Repository.Interfaces;
 using Hospital.Service;
+using Hospital.Service.Generics;
+using Hospital.Service.Generics.Interfaces;
 using Hospital.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -28,7 +31,7 @@ builder.Services.AddIdentity<Cadastro, IdentityRole>()
     .AddDefaultTokenProviders();
 
 // 3. Adding Authentication
-builder.Services.AddAuthentication(options => 
+builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -64,6 +67,8 @@ builder.Services.AddScoped<IExameService, ExameService>();
 builder.Services.AddScoped<IExamesRepository, ExameRepository>();
 builder.Services.AddScoped<IMedicoRepository, MedicoRepository>();
 builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
+builder.Services.AddScoped(typeof(IGenericAtendimentoService<,,>), typeof(GenericAtendimentoService<,,>));
+builder.Services.AddScoped(typeof(IGenericAtendimentoRepository<,>), typeof(GenericAtendimentoRepository<,>));
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -75,7 +80,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Wedding Planner API", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
                       Enter 'Bearer' [space] and then your token in the text input below.
                       \r\n\r\nExample: 'Bearer 12345abcdef'",
         Name = "Authorization",

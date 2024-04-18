@@ -1,16 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Hospital.Database;
 using Hospital.Models;
 using Hospital.Models.Agendamentos;
+using Hospital.Repository.Generics;
 using Hospital.Repository.Interfaces;
 
 namespace Hospital.Repository;
-
-public class ExameRepository : GenericAtentimento<Exame, ExameAgendamento>, IExamesRepository
+public class ExameRepository : GenericAtendimentoRepository<Exame, ExameAgendamento>, IExamesRepository
 {
+    public ExameRepository(AppDbContext context) : base(context)
+    {
+    }
     // private readonly AppDbContext _ctx;
     // public Task Create(Exame exame, ExameAgendamento agendamento)
     // {

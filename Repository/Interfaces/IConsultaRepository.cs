@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Hospital.Models;
 using Hospital.Models.Agendamentos;
+using Hospital.Repository.Generics.Interfaces;
 
 namespace Hospital.Repository.Interfaces;
-public interface IConsultaRepository : IGenericAtentimentoRepository<Consulta, ConsultaAgendamento>
+public interface IConsultaRepository : IGenericAtendimentoRepository<Consulta, ConsultaAgendamento>
 {
 }

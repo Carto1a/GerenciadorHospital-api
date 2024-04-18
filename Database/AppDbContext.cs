@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Hospital.Models;
 using Hospital.Models.Agendamentos;
+using Hospital.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Hospital.Database.Map;
 
 namespace Hospital.Database;
 public class AppDbContext : IdentityDbContext<Cadastro>
@@ -33,5 +30,7 @@ public class AppDbContext : IdentityDbContext<Cadastro>
         builder.Entity<Cadastro>()
             .HasIndex(u => u.Cpf)
             .IsUnique();
+
+        builder.ApplyConfiguration(new AtendimentoMap());
     }
 }

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 using FluentResults;
 using Hospital.Database;
 using Hospital.Dto.Agendamento;
@@ -54,8 +49,8 @@ public class ExameService : IExameService
 
         ExameAgendamento agendamento = new()
         {
-            Paciente = paciente,
-            Medico = medico,
+            Paciente = paciente.Value,
+            Medico = medico.Value,
             DataHora = request.DataHora,
             Criação = DateTime.Now,
             Tipo = null,

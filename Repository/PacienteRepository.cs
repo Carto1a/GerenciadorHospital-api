@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentResults;
 using Hospital.Database;
 using Hospital.Models;
 using Hospital.Repository.Interfaces;
@@ -14,13 +11,28 @@ public class PacienteRepository : IPacienteRepository
     {
         _ctx = context;
     }
-    public Paciente? GetPacienteById(int id)
+    public Result<Paciente?> GetPacienteById(int id)
     {
-        var paciente = _ctx.Pacientes.FirstOrDefault(e => e.ID == id);
-        return paciente; 
+        try
+        {
+            var paciente = _ctx.Pacientes.FirstOrDefault(e => e.ID == id);
+            return Result.Ok(paciente);
+        }
+        catch (Exception error)
+        {
+            return Result.Fail(error.Message);
+        }
     }
-    public List<Paciente> GetPacientes(int limit, int page = 0)
+    public Result<List<Paciente>> GetPacientes(int limit, int page = 0)
     {
-        return _ctx.Pacientes.Skip(page).Take(limit).ToList();
+        try
+        {
+            var list = _ctx.Pacientes.Skip(page).Take(limit).ToList();
+            return Result.Ok(list);
+        }
+        catch(Exception error)
+        {
+            return Result.Fail(error.Message);
+        }
     }
 }

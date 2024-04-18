@@ -1,27 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentResults;
 using Hospital.Dto;
 using Hospital.Extensions;
-using Hospital.Models;
 using Hospital.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hospital.Controllers;
-[ApiController]
-[Route("api/Admin")]
-public class AuthenticateAdminController : ControllerBase 
+namespace Hospital.Controllers.Generics;
+public abstract class GenericAuthenticationController<T> : ControllerBase
+/* where T : RegisterRequestPacienteDto */
 {
     private readonly IAuthenticationService _authenticationService;
-    public AuthenticateAdminController(IAuthenticationService authenticationService)
+    public GenericAuthenticationController(
+        IAuthenticationService authenticationService)
     {
         _authenticationService = authenticationService;
     }
-
     [AllowAnonymous]
-    [HttpPost("login")]
+    [HttpPost("Login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -31,24 +26,33 @@ public class AuthenticateAdminController : ControllerBase
         var response = await _authenticationService.Login(request);
         var resultDto = response.ToResultDto();
 
-        if(response.IsFailed)
+        if (response.IsFailed)
             return BadRequest(resultDto);
 
         return Ok(resultDto);
     }
 
     [AllowAnonymous]
-    [HttpPost("cadastro")]
+    [HttpPost("Cadastro")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestAdminDto request)
+    public async Task<IActionResult> Register([FromForm] T request)
     {
-        var response = await _authenticationService.Register(request);
-        var resultDto = response.ToResultDto();
+        var requestType = request.GetType();
+        var method = _authenticationService
+            .GetType()
+            .GetMethod("Register", new[] { requestType });
 
-        if(response.IsFailed)
+        if (method == null)
+            throw new NotImplementedException();
+
+        /* var response = await _authenticationService.Register((RegisterRequestMedicoDto)request); */
+        var response = await (Task<Result<string>>)method?
+            .Invoke(_authenticationService, new object[] { request });
+        var resultDto = response.ToResultDto();
+        if (response.IsFailed)
             return BadRequest(resultDto);
 
         return Ok(resultDto);

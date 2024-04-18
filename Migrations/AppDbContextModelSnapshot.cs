@@ -256,17 +256,20 @@ namespace Hospital.Migrations
                     b.Property<bool>("Convenio")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Custo")
+                    b.Property<DateTime>("Criado")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DataHora")
+                    b.Property<decimal>("Custo")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Diagnostico")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<TimeSpan>("Duracao")
+                    b.Property<DateTime>("Fim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Inicio")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MedicoID")
@@ -327,10 +330,16 @@ namespace Hospital.Migrations
                     b.Property<bool>("Convenio")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Custo")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DataHora")
+                    b.Property<DateTime>("Fim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Inicio")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MedicoID")
@@ -413,13 +422,16 @@ namespace Hospital.Migrations
                     b.Property<bool>("Convenio")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Custo")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DataHora")
+                    b.Property<DateTime>("Fim")
                         .HasColumnType("TEXT");
 
-                    b.Property<TimeSpan>("Duracao")
+                    b.Property<DateTime>("Inicio")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MedicoID")
