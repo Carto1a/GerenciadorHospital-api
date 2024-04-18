@@ -26,7 +26,7 @@ public class PacienteController
         IConsultaAgendamentoService consultaAgendamentoService,
         IExameAgendamentoService exameAgendamentoService,
         IAuthenticationService authenticationService)
-        : base(authenticationService)
+    : base(authenticationService)
     {
         _pacienteService = pacienteService;
         _authenticationService = authenticationService;

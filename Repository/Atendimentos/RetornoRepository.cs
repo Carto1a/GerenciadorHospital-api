@@ -7,13 +7,15 @@ using Hospital.Dto.Atendimento.Get;
 
 namespace Hospital.Repository.Atendimentos;
 public class RetornoRepository
-: IRetornoRepository
+: AtendimentoRepository<Retorno>,
+IRetornoRepository
 {
     private readonly ILogger<RetornoRepository> _logger;
     private readonly AppDbContext _ctx;
     public RetornoRepository(
         AppDbContext context,
         ILogger<RetornoRepository> logger)
+    : base(context, logger)
     {
         _ctx = context;
         _logger = logger;

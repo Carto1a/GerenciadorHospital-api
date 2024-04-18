@@ -47,15 +47,22 @@ public class AuthenticationService
     public async Task<Result<string>> Login(
         LoginRequestMedicoDto request)
     {
+        _logger.LogInformation($"Logando medico: {request.Email}");
         var user = await _medicoManager
             .FindByEmailAsync(request.Email);
 
         if (user == null)
+        {
+            _logger.LogError($"Cadastro de medico não existe: {request.Email}");
             return Result.Fail("Cadastro não existe");
+        }
 
         if (!await _medicoManager
             .CheckPasswordAsync(user, request.Password))
+        {
+            _logger.LogError($"Senha de medico errada: {request.Email}");
             return Result.Fail("Senha errada");
+        }
 
         var authClaims = new List<Claim>
         {
@@ -72,21 +79,29 @@ public class AuthenticationService
 
         var token = GetToken(authClaims);
 
+        _logger.LogInformation($"Medico logado: {request.Email}");
         return Result.Ok(
             new JwtSecurityTokenHandler().WriteToken(token));
     }
     public async Task<Result<string>> Login(
         LoginRequestPacienteDto request)
     {
+        _logger.LogInformation($"Logando paciente: {request.Email}");
         var user = await _pacienteManager
             .FindByEmailAsync(request.Email);
 
         if (user == null)
+        {
+            _logger.LogError($"Cadastro de paciente não existe: {request.Email}");
             return Result.Fail("Cadastro não existe");
+        }
 
         if (!await _pacienteManager
             .CheckPasswordAsync(user, request.Password))
+        {
+            _logger.LogError($"Senha de paciente errada: {request.Email}");
             return Result.Fail("Senha errada");
+        }
 
         var authClaims = new List<Claim>
         {
@@ -103,21 +118,29 @@ public class AuthenticationService
 
         var token = GetToken(authClaims);
 
+        _logger.LogInformation($"Paciente logado: {request.Email}");
         return Result.Ok(
             new JwtSecurityTokenHandler().WriteToken(token));
     }
     public async Task<Result<string>> Login(
         LoginRequestAdminDto request)
     {
+        _logger.LogInformation($"Logando admin: {request.Email}");
         var user = await _adminManager
             .FindByEmailAsync(request.Email);
 
         if (user == null)
+        {
+            _logger.LogError($"Cadastro de admin não existe: {request.Email}");
             return Result.Fail("Cadastro não existe");
+        }
 
         if (!await _adminManager
             .CheckPasswordAsync(user, request.Password))
+        {
+            _logger.LogError($"Senha de admin errada: {request.Email}");
             return Result.Fail("Senha errada");
+        }
 
         var authClaims = new List<Claim>
         {
@@ -134,6 +157,7 @@ public class AuthenticationService
 
         var token = GetToken(authClaims);
 
+        _logger.LogInformation($"Admin logado: {request.Email}");
         return Result.Ok(
             new JwtSecurityTokenHandler().WriteToken(token));
     }
@@ -141,18 +165,26 @@ public class AuthenticationService
     public async Task<Result<string>> Register(
         RegisterRequestPacienteDto request)
     {
+        _logger.LogInformation($"Registrando paciente: {request.Email}");
         var paciente = await _pacienteManager
             .FindByEmailAsync(request.Email);
         if (paciente != null)
+        {
+            _logger.LogError($"Cadastro de paciente já existe: {request.Email}");
             return Result.Fail("Cadastro ja existe");
+        }
 
         Convenio? convenio = null;
         if (request.ConvenioId != null)
         {
+            _logger.LogInformation($"Registrando convenio do paciente: {request.ConvenioId}");
             var convenioResponse = _convenioService
                 .GetById((Guid)request.ConvenioId);
             if (convenioResponse.IsFailed)
+            {
+                _logger.LogError($"Convenio não existe: {request.ConvenioId}");
                 return Result.Fail("Convenio não existe");
+            }
             convenio = convenioResponse.Value;
         }
 
@@ -173,14 +205,17 @@ public class AuthenticationService
         }
         catch (Exception error)
         {
+            _logger.LogError($"Erro na criação de paciente: {error.Message}");
             return Result.Fail(error.Message);
         }
 
         if (!result.Succeeded)
         {
+            _logger.LogError($"Erro na criação de paciente: {request.Email}");
             return Result.Fail("Erro na Criação");
         }
 
+        _logger.LogInformation($"Paciente registrado: {paciente1.Id}");
         return await Login(
             new LoginRequestPacienteDto
             { Email = request.Email, Password = request.Password });
@@ -188,10 +223,14 @@ public class AuthenticationService
     public async Task<Result<string>> Register(
         RegisterRequestMedicoDto request)
     {
+        _logger.LogInformation($"Registrando medico: {request.Email}");
         var medico = await _medicoManager
             .FindByEmailAsync(request.Email);
         if (medico != null)
+        {
+            _logger.LogError($"Cadastro de medico já existe: {request.Email}");
             return Result.Fail("Cadastro ja existe");
+        }
 
         Medico medico1 = new();
         medico1.Create(request);
@@ -207,14 +246,17 @@ public class AuthenticationService
         }
         catch (Exception error)
         {
+            _logger.LogError($"Erro na criação de medico: {error.Message}");
             return Result.Fail(error.Message);
         }
 
         if (!result.Succeeded)
         {
+            _logger.LogError($"Erro na criação de medico: {request.Email}");
             return Result.Fail("Erro na Criação");
         }
 
+        _logger.LogInformation($"Medico registrado: {medico1.Id}");
         return await Login(
             new LoginRequestMedicoDto
             { Email = request.Email, Password = request.Password });
@@ -223,10 +265,14 @@ public class AuthenticationService
     public async Task<Result<string>> Register(
         RegisterRequestAdminDto request)
     {
+        _logger.LogInformation($"Registrando admin: {request.Email}");
         var admin = await _adminManager
             .FindByEmailAsync(request.Email);
         if (admin != null)
+        {
+            _logger.LogError($"Cadastro de admin já existe: {request.Email}");
             return Result.Fail("Cadastro ja existe");
+        }
 
         Admin admin1 = new();
         admin1.Create(request);
@@ -242,14 +288,17 @@ public class AuthenticationService
         }
         catch (Exception error)
         {
+            _logger.LogError($"Erro na criação de admin: {error.Message}");
             return Result.Fail(error.Message);
         }
 
         if (!result.Succeeded)
         {
+            _logger.LogError($"Erro na criação de admin: {request.Email}");
             return Result.Fail("Erro na Criação");
         }
 
+        _logger.LogInformation($"Admin registrado: {admin1.Id}");
         return await Login(
             new LoginRequestAdminDto
             { Email = request.Email, Password = request.Password });
@@ -257,6 +306,8 @@ public class AuthenticationService
 
     public JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)
     {
+        // NOTE: eu confio no github copilot /s
+        _logger.LogInformation($"Gerando token para: {authClaims.First(claim => claim.Type == ClaimTypes.Email).Value}");
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],

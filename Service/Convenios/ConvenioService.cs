@@ -21,59 +21,88 @@ public class ConvenioService
     public async Task<Result> Create(
         ConvenioCreateDto request)
     {
+        _logger.LogInformation($"Criando convenio: {request.CNPJ}");
         var convenio = GetByCnpj(request.CNPJ);
         if (convenio.Value != null)
+        {
+            _logger.LogError($"CNPJ do convenio já existe no banco de dados: {request.CNPJ}");
             return Result.Fail("CNPJ já existe no banco de dados");
+        }
 
         var newConvenio = new Convenio();
         newConvenio.Create(request);
         var response = await _repository.CreateConvenio(newConvenio);
         if (response.IsFailed)
+        {
+            _logger.LogError($"Não foi possível criar o convenio: {request.CNPJ}");
             return Result.Fail("Não foi possível criar o convenio");
+        }
 
+        _logger.LogInformation($"Convenio criado: {request.CNPJ}");
         return Result.Ok();
     }
 
     public Result Delete(Guid id)
     {
+        _logger.LogInformation($"Deletando convenio: {id}");
         var response = GetById(id);
         if (response.IsFailed)
+        {
+            _logger.LogError($"Convenio não encontrado para deletar: {id}");
             return Result.Fail("Convenio não encontrado");
+        }
 
         var convenio = response.Value;
         convenio.Deletar();
 
         var responseDeletado = _repository.UpdateConvenio(convenio);
         if (responseDeletado.IsFailed)
+        {
+            _logger.LogError($"Não foi possível deletar o convenio: {id}");
             return Result.Fail("Não foi possível deletar o convenio");
+        }
 
+        _logger.LogInformation($"Convenio deletado: {id}");
         return Result.Ok();
     }
 
     public Result<Convenio?> GetByCnpj(string cnpj)
     {
+        _logger.LogInformation($"Buscando convenio por cnpj: {cnpj}");
         var convenio = _repository.GetConvenioByCnpj(cnpj);
         if (convenio.IsFailed)
+        {
+            _logger.LogError($"CNPJ do convenio não existe no banco de dados: {cnpj}");
             return Result.Fail("CNPJ não existe no banco de dados");
+        }
 
+        _logger.LogInformation($"Convenio encontrado por cnpj: {cnpj}");
         return convenio;
     }
 
     public Result<Convenio?> GetById(Guid id)
     {
+        _logger.LogInformation($"Buscando convenio por id: {id}");
         var response = _repository.GetConvenioById(id);
         if (response.IsFailed)
+        {
+            _logger.LogError($"Convenio não encontrado: {id}");
             return Result.Fail("Convenio não encontrado");
+        }
 
+        _logger.LogInformation($"Convenio encontrado: {id}");
         return Result.Ok(response.Value);
     }
 
     public async Task<Result<List<Convenio>>> GetByQuery(
         ConvenioGetByQueryDto query)
     {
+        _logger.LogInformation($"Buscando convenio por query: {query}");
         // TODO: Separar o nome para fazer full text search
         // TODO: Verificar o cnpj
         var response = _repository.GetConvenios(query);
+
+        _logger.LogInformation($"Convenio encontrado por query: {response.Value.Count}");
         return Result.Ok(response.Value);
     }
 

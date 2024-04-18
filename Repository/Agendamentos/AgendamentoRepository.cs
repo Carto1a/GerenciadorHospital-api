@@ -5,6 +5,7 @@ using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Agendamentos.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Hospital.Repository.Agendamentos;
 public class AgendamentoRepository<T, TAgendamento>
@@ -23,14 +24,14 @@ public class AgendamentoRepository<T, TAgendamento>
         _logger.LogDebug(1, $"NLog injected into AgendamentoRepository {nameof(T)}");
     }
 
-    public async Task<Result> CreateAgentamento(
+    public async Task<Result<EntityEntry<TAgendamento>>> CreateAgentamento(
         TAgendamento agentamento)
     {
         try
         {
-            await _ctx.Set<TAgendamento>().AddAsync(agentamento);
+            var result = await _ctx.Set<TAgendamento>().AddAsync(agentamento);
             await _ctx.SaveChangesAsync();
-            return Result.Ok();
+            return Result.Ok(result);
         }
         catch (Exception error)
         {

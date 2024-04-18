@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using Hospital.Dto.Atendimento.Create;
+using Hospital.Models.Atendimento.Interfaces;
 using Hospital.Models.Cadastro;
 
 namespace Hospital.Models.Atendimento;
 public abstract class Atendimento
+: IAtendimento<AtendimentoCreationDto>
 {
     [Key]
     public Guid Id { get; set; }
@@ -18,7 +20,7 @@ public abstract class Atendimento
     public decimal Custo { get; set; }
 
     public TimeSpan Duracao => Fim - Inicio;
-    protected void Creation(
+    public void Creation(
         AtendimentoCreationDto request,
         Medico medico,
         Paciente paciente)

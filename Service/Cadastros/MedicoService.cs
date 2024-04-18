@@ -20,21 +20,31 @@ public class MedicoService
     }
     public Result<Medico?> GetMedicoById(Guid id)
     {
+        _logger.LogInformation($"Buscando medico por id: {id}");
         // NOTE: talvez verificar o uuid?
         var response = _medicoRepository.GetMedicoById(id);
         if (response.IsFailed)
+        {
+            _logger.LogError($"Não foi possivel achar o Medico: {id}");
             return Result.Fail("Não foi possivel achar o Medico");
+        }
 
+        _logger.LogInformation($"Medico encontrado: {id}");
         return Result.Ok(response.Value);
     }
 
     public Result<List<Medico>> GetMedicos(
         int limit, int page = 0)
     {
+        _logger.LogInformation($"Buscando medicos: {limit} - {page}");
         var response = _medicoRepository.GetMedicos(limit, page);
         if (response.IsFailed)
+        {
+            _logger.LogError("Erro ao buscar medicos");
             return Result.Fail("Erro ao buscar medicos");
+        }
 
+        _logger.LogInformation($"Medicos encontrados: {response.Value.Count}");
         return Result.Ok(response.Value);
     }
 }

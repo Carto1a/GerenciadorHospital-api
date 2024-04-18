@@ -5,7 +5,8 @@ using Hospital.Models.Cadastro;
 
 namespace Hospital.Models.Atendimento;
 public class Retorno
-: Atendimento, IAtendimento<RetornoCreationDto>
+: Atendimento,
+IAtendimento<RetornoCreationDto>
 {
     public virtual RetornoAgendamento Agendamento { get; set; }
     public Consulta Consulta { get; set; }

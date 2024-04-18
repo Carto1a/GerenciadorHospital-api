@@ -1,5 +1,6 @@
 using FluentResults;
 using Hospital.Dto.Atendimento.Get;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Hospital.Repository.Atendimentos.Interfaces;
 public interface IAtendimentoRepository<T>

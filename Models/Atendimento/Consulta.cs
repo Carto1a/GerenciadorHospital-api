@@ -5,7 +5,8 @@ using Hospital.Models.Cadastro;
 
 namespace Hospital.Models.Atendimento;
 public class Consulta
-: Atendimento, IAtendimento<ConsultaCreationDto>
+: Atendimento,
+IAtendimento<ConsultaCreationDto>
 {
     public ConsultaAgendamento Agendamento { get; set; }
     public string Diagnostico { get; set; }

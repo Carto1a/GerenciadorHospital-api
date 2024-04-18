@@ -25,6 +25,10 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 
+// TODO: fazer o sistema louco? de log e id
+// TODO: colocar o email que fez uma req importante no log
+
+var basedir = AppDomain.CurrentDomain.BaseDirectory;
 var logger = NLog.LogManager.Setup()
     .LoadConfigurationFromAppSettings()
     .GetCurrentClassLogger();
@@ -37,13 +41,15 @@ builder.Logging.ClearProviders();
 builder.Host.UseNLog();
 
 AppDomain.CurrentDomain
-.FirstChanceException += (sender, eventArgs) =>
+.UnhandledException += (sender, eventArgs) =>
 {
-    logger.Error(eventArgs.Exception, "Stopped program because of exception");
+    logger.Error(eventArgs.ExceptionObject.ToString(), "Stopped program because of exception");
     NLog.LogManager.Shutdown();
-    Console.WriteLine(eventArgs.Exception.Message);
-    /* Debug.WriteLine(eventArgs.Exception.ToString()); */
+    Console.WriteLine(eventArgs.ExceptionObject.ToString());
 };
+
+// NOTE: Cade? Achei
+Directory.CreateDirectory($"{basedir}\\logs");
 
 // 1. DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>

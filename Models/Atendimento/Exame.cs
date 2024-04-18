@@ -5,7 +5,8 @@ using Hospital.Models.Cadastro;
 
 namespace Hospital.Models.Atendimento;
 public class Exame
-: Atendimento, IAtendimento<ExameCreationDto>
+: Atendimento,
+IAtendimento<ExameCreationDto>
 {
     // tipo de exame
     public ExameAgendamento Agendamento { get; set; }
