@@ -9,10 +9,15 @@ namespace Hospital.Repository.Agendamentos;
 public class ConsultaAgendamentoRepository
 : IConsultaAgendamentoRepository
 {
+    private readonly ILogger<ConsultaAgendamentoRepository> _logger;
     private readonly AppDbContext _ctx;
-    public ConsultaAgendamentoRepository(AppDbContext context)
+    public ConsultaAgendamentoRepository(
+        AppDbContext context,
+        ILogger<ConsultaAgendamentoRepository> logger)
     {
         _ctx = context;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into ConsultaAgendamentoRepository");
     }
 
     public async Task<Result> CreateAgentamento(
@@ -32,13 +37,14 @@ public class ConsultaAgendamentoRepository
         }
     }
 
-    public async Task<Result<ConsultaAgendamento?>> GetAgendamentoById(int id)
+    public async Task<Result<ConsultaAgendamento?>> GetAgendamentoById(
+        Guid id)
     {
         try
         {
             var list = await _ctx.AgendamentosConsultas
                 .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.ID == id);
+                .FirstOrDefaultAsync(e => e.Id == id);
             return Result.Ok(list);
         }
         catch (Exception error)
@@ -56,11 +62,11 @@ public class ConsultaAgendamentoRepository
             var queryList = _ctx.AgendamentosConsultas.AsQueryable();
             if (query.MedicoId != null)
                 queryList = queryList.Where(e =>
-                    e.Medico.Id == query.MedicoId);
+                    e.MedicoId == query.MedicoId);
 
             if (query.PacienteId != null)
                 queryList = queryList.Where(e =>
-                    e.Paciente.Id == query.PacienteId);
+                    e.PacienteId == query.PacienteId);
 
             if (query.MinDate != null)
                 queryList = queryList.Where(
@@ -102,12 +108,12 @@ public class ConsultaAgendamentoRepository
     }
 
     public async Task<Result<List<ConsultaAgendamento>>> GetAgendamentosByMedico(
-        string medicoId, int limit, int page = 0)
+        Guid medicoId, int limit, int page = 0)
     {
         try
         {
             var list = await _ctx.AgendamentosConsultas
-                .Where(e => e.Medico.Id == medicoId)
+                .Where(e => e.MedicoId == medicoId)
                 .Skip(page)
                 .Take(limit)
                 .ToListAsync();
@@ -120,12 +126,12 @@ public class ConsultaAgendamentoRepository
     }
 
     public Result<List<ConsultaAgendamento>> GetAgendamentosByPaciente(
-        string pacienteId, int limit, int page = 0)
+        Guid pacienteId, int limit, int page = 0)
     {
         try
         {
             return _ctx.AgendamentosConsultas
-                .Where(e => e.Paciente.Id == pacienteId)
+                .Where(e => e.PacienteId == pacienteId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();

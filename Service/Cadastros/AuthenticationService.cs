@@ -6,6 +6,7 @@ using Hospital.Dto;
 using Hospital.Dto.Auth;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Service.Convenios.Interfaces;
 using Hospital.Service.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -14,10 +15,12 @@ namespace Hospital.Service.Cadastros;
 public class AuthenticationService
 : IAuthenticationService
 {
+    private readonly ILogger<AuthenticationService> _logger;
     private readonly UserManager<Cadastro> _userManager;
     private readonly UserManager<Paciente> _pacienteManager;
     private readonly UserManager<Medico> _medicoManager;
     private readonly UserManager<Admin> _adminManager;
+    private readonly IConvenioService _convenioService;
     private readonly IConfiguration _configuration;
     private readonly IAuthenticationRepository _authRepo;
     public AuthenticationService(
@@ -25,51 +28,20 @@ public class AuthenticationService
         UserManager<Paciente> pacienteManager,
         UserManager<Medico> medicoManager,
         UserManager<Admin> adminManager,
+        IConvenioService convenioService,
         IConfiguration configuration,
-        IAuthenticationRepository authenticationRepository)
+        IAuthenticationRepository authenticationRepository,
+        ILogger<AuthenticationService> logger)
     {
         _userManager = userManager;
         _pacienteManager = pacienteManager;
         _medicoManager = medicoManager;
         _adminManager = adminManager;
+        _convenioService = convenioService;
         _configuration = configuration;
         _authRepo = authenticationRepository;
-    }
-    private async Task<Result> RegisterBase(RegisterRequestDto request)
-    {
-        var userByEmail = await _userManager.FindByEmailAsync(request.Email);
-        if (userByEmail != null)
-            return Result.Fail("Cadastro ja existe");
-
-        Cadastro user = new()
-        {
-            Email = request.Email,
-            Nome = request.Nome,
-            DataNascimento = DateOnly.FromDateTime(DateTime.Now),
-            Genero = false,
-            Telefone = "40028922",
-            Cpf = request.Cpf,
-            Cep = 123,
-            NumeroCasa = "2",
-            UserName = request.Email,
-            SecurityStamp = Guid.NewGuid().ToString()
-        };
-
-        IdentityResult result;
-
-        try
-        {
-            result = await _userManager.CreateAsync(user, request.Password);
-        }
-        catch (Exception error)
-        {
-            return Result.Fail(error.Message);
-        }
-
-        if (!result.Succeeded)
-            return Result.Fail("Erro na criação");
-
-        return Result.Ok();
+        _logger = logger;
+        _logger.LogDebug(1, "NLog injected into AuthenticationService");
     }
 
     public async Task<Result<string>> Login(
@@ -87,7 +59,7 @@ public class AuthenticationService
 
         var authClaims = new List<Claim>
         {
-            new("ID", user.Id),
+            new("ID", user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -118,7 +90,7 @@ public class AuthenticationService
 
         var authClaims = new List<Claim>
         {
-            new("ID", user.Id),
+            new("ID", user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -149,7 +121,7 @@ public class AuthenticationService
 
         var authClaims = new List<Claim>
         {
-            new("ID", user.Id),
+            new("ID", user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -174,9 +146,21 @@ public class AuthenticationService
         if (paciente != null)
             return Result.Fail("Cadastro ja existe");
 
+        Convenio? convenio = null;
+        if (request.ConvenioId != null)
+        {
+            var convenioResponse = _convenioService
+                .GetById((Guid)request.ConvenioId);
+            if (convenioResponse.IsFailed)
+                return Result.Fail("Convenio não existe");
+            convenio = convenioResponse.Value;
+        }
+
         Paciente paciente1 = new();
-        await paciente1.Create(
-            request, _configuration["Paths:PacienteDocumentos"]);
+        paciente1.Create(
+            request,
+            convenio,
+            _configuration["Paths:PacienteDocumentos"]);
 
         IdentityResult result;
 

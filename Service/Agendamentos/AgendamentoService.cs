@@ -8,6 +8,7 @@ using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Agendamentos.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Repository.Convenios.Ineterfaces;
 using Hospital.Service.Agendamentos.Interfaces;
 
 namespace Hospital.Service.Agendamentos;
@@ -17,9 +18,11 @@ public class AgendamentoService<T, TAgendamento, TCreation>
     where TAgendamento : Agendamento<T>, new()
     where TCreation : AtendimentoCreationDto
 {
+    private readonly ILogger<AgendamentoService<T, TAgendamento, TCreation>> _logger;
     private readonly IAgendamentoRepository<T, TAgendamento> _repo;
     private readonly IMedicoRepository _medicoRepo;
     private readonly IPacienteRepository _pacienteRepo;
+    private readonly IConvenioRepository _convenioRepo;
     private readonly AppDbContext _ctx;
 
     public object StatusAgendamento { get; private set; }
@@ -27,16 +30,21 @@ public class AgendamentoService<T, TAgendamento, TCreation>
     public AgendamentoService(
         IPacienteRepository paciente,
         IMedicoRepository medico,
+        IConvenioRepository convenio,
         IAgendamentoRepository<T, TAgendamento> repository,
-        AppDbContext context)
+        AppDbContext context,
+        ILogger<AgendamentoService<T, TAgendamento, TCreation>> logger)
     {
         _pacienteRepo = paciente;
         _medicoRepo = medico;
+        _convenioRepo = convenio;
         _ctx = context;
         _repo = repository;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into AgendamentoService {nameof(T)}");
     }
 
-    public async Task<Result> CancelAgendamento(int id)
+    public async Task<Result> CancelAgendamento(Guid id)
     {
         var resAgendamendo = await GetAgendamentoById(id);
         if (resAgendamendo.IsFailed)
@@ -57,15 +65,23 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         var results = new List<Result>();
         var medico = _medicoRepo.GetMedicoById(request.MedicoId);
         var paciente = _pacienteRepo.GetPacienteById(request.PacienteId);
+        var convenio = _convenioRepo.GetConvenioById((Guid)request.ConvenioId);
 
-        results.Add(request.DataHora < DateTime.Now ? Result.Fail("Data e hora inválida") : Result.Ok());
-        results.Add(medico == null ? Result.Fail("Medico não existe") : Result.Ok());
-        results.Add(paciente == null ? Result.Fail("Paciente não existe") : Result.Ok());
+        results.Add(request.DataHora < DateTime.Now ?
+                Result.Fail("Data e hora inválida") : Result.Ok());
+        results.Add(medico.Value == null ?
+                Result.Fail("Medico não existe") : Result.Ok());
+        results.Add(paciente.Value == null ?
+                Result.Fail("Paciente não existe") : Result.Ok());
 
         var mergedResult = results.Merge();
 
-        if (mergedResult.IsFailed)
+        if (mergedResult.IsFailed || convenio.IsFailed)
             return mergedResult;
+
+        var CustoFinal = request.Custo;
+        if (convenio.Value != null)
+            CustoFinal -= request.Custo * convenio.Value.Desconto;
 
         TAgendamento agendamento = new()
         {
@@ -77,7 +93,9 @@ public class AgendamentoService<T, TAgendamento, TCreation>
             TipoId = default,
             Status = AgendamentoStatus.Agendado,
             Custo = request.Custo,
-            Convenio = request.Convenio
+            Convenio = convenio.Value,
+            CustoFinal = CustoFinal,
+            Deletado = false
         };
 
         var respose = await _repo.CreateAgentamento(agendamento);
@@ -87,7 +105,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         return Result.Ok();
     }
     public async Task<Result> LinkAtendimento(
-        T entity, int id)
+        T entity, Guid id)
     {
         var resAgendamendo = await GetAgendamentoById(id);
         if (resAgendamendo.IsFailed)
@@ -104,7 +122,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         return Result.Ok();
     }
     public async Task<Result<TAgendamento?>> GetAgendamentoById(
-        int id)
+        Guid id)
     {
         var respose = await _repo.GetAgendamentoById(id);
         if (respose.IsFailed)
@@ -129,7 +147,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         return respose;
     }
     public async Task<Result<List<TAgendamento>>> GetAgendamentosByMedico(
-        string medicoId, int limit, int page = 0)
+        Guid medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<TAgendamento>>>();
         if (page < 0)
@@ -146,7 +164,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
 
     }
     public Result<List<TAgendamento>> GetAgendamentosByPaciente(
-        string pacienteId, int limit, int page = 0)
+        Guid pacienteId, int limit, int page = 0)
     {
         var results = new List<Result<List<TAgendamento>>>();
         if (page < 0)
@@ -162,7 +180,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         return respose;
     }
     public async Task<Result> UpdateAgendamento(
-        AgendamentoUpdateDto novo, int id)
+        AgendamentoUpdateDto novo, Guid id)
     {
         // TODO: Validar data e hora
         var respose = await GetAgendamentoById(id);
@@ -203,7 +221,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         return respose;
     }
 
-    public async Task<Result> EmAndamentoAgendamento(int id)
+    public async Task<Result> EmAndamentoAgendamento(Guid id)
     {
         var resAgendamendo = await GetAgendamentoById(id);
         if (resAgendamendo.IsFailed)
@@ -219,7 +237,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         return Result.Ok();
     }
 
-    public async Task<Result> EmEsperaAgendamento(int id)
+    public async Task<Result> EmEsperaAgendamento(Guid id)
     {
         var resAgendamendo = await GetAgendamentoById(id);
         if (resAgendamendo.IsFailed)

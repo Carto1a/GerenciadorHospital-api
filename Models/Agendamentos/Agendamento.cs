@@ -5,19 +5,22 @@ using Hospital.Models.Cadastro;
 namespace Hospital.Models.Agendamentos;
 public abstract class Agendamento<T>
 {
-    public int ID { get; set; }
-    public int? TipoId { get; set; }
-    public string MedicoId { get; set; }
-    public string PacienteId { get; set; }
+    [Key]
+    public Guid Id { get; set; }
+    public Guid? TipoId { get; set; }
+    public Guid MedicoId { get; set; }
+    public Guid PacienteId { get; set; }
+    public Guid? ConvenioId { get; set; }
     public virtual T? Tipo { get; set; }
     public virtual Medico Medico { get; set; }
     public virtual Paciente Paciente { get; set; }
+    public virtual Convenio? Convenio { get; set; }
     [EnumDataType(typeof(AgendamentoStatus))]
     public AgendamentoStatus Status { get; set; }
     public DateTime DataHora { get; set; }
     public DateTime Criação { get; set; }
     public decimal Custo { get; set; }
-    public bool Convenio { get; set; }
+    public decimal CustoFinal { get; set; }
     public bool Deletado { get; set; }
 
     public void Link(T e) => Tipo = e;
@@ -30,10 +33,9 @@ public abstract class Agendamento<T>
         Deletado = true;
         Status = AgendamentoStatus.Cancelado;
     }
-    public void Update(AgendamentoUpdateDto novo)
+    public void Update(AgendamentoUpdateDto request)
     {
-        DataHora = novo.DataHora;
-        Custo = novo.Custo;
-        Convenio = novo.Convenio;
+        DataHora = request.DataHora;
+        Custo = request.Custo;
     }
 }

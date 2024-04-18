@@ -1,5 +1,6 @@
 using Hospital.Dto.Agendamento.Create;
 using Hospital.Dto.Agendamento.Get;
+using Hospital.Dto.Agendamento.Update;
 using Hospital.Extensions;
 using Hospital.Service.Agendamentos.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -13,17 +14,21 @@ public abstract class GenericAgendamentoController<
     TUpdate>
 : ControllerBase
 {
+    private readonly ILogger<GenericAgendamentoController<T, TAgendamento, TCreation, TUpdate>> _logger;
     private readonly IAgendamentoService<T, TAgendamento, TCreation> _service;
     public GenericAgendamentoController(
-        IAgendamentoService<T, TAgendamento, TCreation> service)
+        IAgendamentoService<T, TAgendamento, TCreation> service,
+        ILogger<GenericAgendamentoController<T, TAgendamento, TCreation, TUpdate>> logger)
     {
         _service = service;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into GenericAgendamentoController {nameof(T)}");
     }
 
     [Authorize(Policy = "OperationalRights")]
     [HttpPost]
     public async Task<IActionResult> PostAgendamento(
-        [FromForm] AgendamentoCreateDto request)
+        [FromBody] AgendamentoCreateDto request)
     {
         var response = await _service.CreateAgendamento(request);
         var result = response.ToResultDto();
@@ -34,28 +39,48 @@ public abstract class GenericAgendamentoController<
     }
     [Authorize(Policy = "StandardRights")]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] int id)
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        throw new NotImplementedException();
+        var response = await _service.GetAgendamentoById(id);
+        var result = response.ToResultDto();
+        if (response.IsFailed)
+            return BadRequest(result);
+
+        return Ok(result);
     }
     [Authorize(Policy = "StandardRights")]
     [HttpGet]
-    public IActionResult GetByQuery(
+    public async Task<IActionResult> GetByQuery(
         [FromQuery] AgendamentoGetByQueryDto request)
     {
-        throw new NotImplementedException();
+        var response = await _service.GetAgendamentosByQuery(request);
+        var result = response.ToResultDto();
+        if (response.IsFailed)
+            return BadRequest(result);
+
+        return Ok(result);
     }
     [Authorize(Policy = "OperationalRights")]
     [HttpPut("{id}")]
-    public IActionResult Update(
-        [FromRoute] int id, [FromForm] TUpdate request)
+    public async Task<IActionResult> Update(
+        [FromRoute] Guid id, [FromForm] AgendamentoUpdateDto request)
     {
-        throw new NotImplementedException();
+        var response = await _service.UpdateAgendamento(request, id);
+        var result = response.ToResultDto();
+        if (response.IsFailed)
+            return BadRequest(result);
+
+        return Ok(result);
     }
     [Authorize(Policy = "OperationalRights")]
     [HttpDelete("{id}")]
-    public IActionResult CancelAgendamento([FromRoute] int id)
+    public async Task<IActionResult> CancelAgendamento([FromRoute] Guid id)
     {
-        throw new NotImplementedException();
+        var response = await _service.CancelAgendamento(id);
+        var result = response.ToResultDto();
+        if (response.IsFailed)
+            return BadRequest(result);
+
+        return Ok(result);
     }
 }

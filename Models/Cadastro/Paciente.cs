@@ -1,45 +1,48 @@
 using Hospital.Dto.Auth;
-using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 
 namespace Hospital.Models.Cadastro;
 public class Paciente
 : Cadastro
 {
-    public bool TemConvenio { get; set; }
-    public virtual List<Convenio>? Convenios { get; set; }
-    public string ImgCarteiraConvenio { get; set; }
+    public Guid? ConvenioId { get; set; }
+    public virtual Convenio? Convenio { get; set; }
+    public string? ImgCarteiraConvenio { get; set; }
     public string ImgDocumento { get; set; }
     public virtual ICollection<Consulta> Consultas { get; set; }
     public virtual ICollection<Exame> Exames { get; set; }
     public virtual ICollection<Retorno> Retornos { get; set; }
-    /* public virtual ICollection<ConsultaAgendamento> AgendamentosConsultas { get; set; } */
-    /* public virtual ICollection<ExameAgendamento> AgendamentosExames { get; set; } */
-    /* public virtual ICollection<RetornoAgendamento> AgendamentosRetornos { get; set; } */
 
-    public async Task Create(
+    public void Create(
         RegisterRequestPacienteDto request,
+        Convenio? convenio,
         string path)
     {
-        var DocConvenioName = Guid.NewGuid().ToString();
+        // NOTE: se criar uma exeção, todo isso morre
+        string? DocConvenioName = null;
+
+        if (request.ConvenioId != null)
+        {
+            DocConvenioName = Guid.NewGuid().ToString();
+            var DocConvenioPath = Path.Combine(
+                path, DocConvenioName);
+            Stream fileStream = new FileStream(
+                DocConvenioPath, FileMode.Create);
+            Task task = request.ConvenioImg.CopyToAsync(fileStream)
+                .ContinueWith(task => fileStream.Close());
+        }
+
         var DocIntentifiName = Guid.NewGuid().ToString();
-        var DocConvenioPath = Path.Combine(
-            path, DocConvenioName);
         var DocIntentifiPath = Path.Combine(
             path, DocIntentifiName);
 
-        Stream fileStream = new FileStream(
-            DocConvenioPath, FileMode.Create);
         Stream fileStream2 = new FileStream(
             DocIntentifiPath, FileMode.Create);
+        // NOTE: que deus abençõe essa task, que ela nunca dê erro
+        // NOTE: amem
+        Task task1 = request.DocumentoImg.CopyToAsync(fileStream2)
+            .ContinueWith(task => fileStream2.Close());
 
-        await request.Convenio.CopyToAsync(fileStream);
-        await request.Convenio.CopyToAsync(fileStream2);
-
-        fileStream.Close();
-        fileStream2.Close();
-
-        TemConvenio = request.TemConvenio;
         ImgCarteiraConvenio = DocConvenioName;
         ImgDocumento = DocIntentifiName;
         Email = request.Email;

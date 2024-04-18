@@ -7,14 +7,18 @@ namespace Hospital.Service.Cadastros;
 public class MedicoService
 : IMedicoService
 {
+    private readonly ILogger<MedicoService> _logger;
     private readonly IMedicoRepository _medicoRepository;
 
     public MedicoService(
-        IMedicoRepository medicoRepository)
+        IMedicoRepository medicoRepository,
+        ILogger<MedicoService> logger)
     {
         _medicoRepository = medicoRepository;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into MedicoService");
     }
-    public Result<Medico?> GetMedicoById(string id)
+    public Result<Medico?> GetMedicoById(Guid id)
     {
         // NOTE: talvez verificar o uuid?
         var response = _medicoRepository.GetMedicoById(id);

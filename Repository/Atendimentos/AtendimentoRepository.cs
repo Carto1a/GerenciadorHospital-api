@@ -1,19 +1,24 @@
 using FluentResults;
-using Microsoft.EntityFrameworkCore;
-using Hospital.Models.Atendimento;
 using Hospital.Database;
-using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Dto.Atendimento.Get;
+using Hospital.Models.Atendimento;
+using Hospital.Repository.Atendimentos.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Repository.Atendimentos;
 public class AtendimentoRepository<T>
 : IAtendimentoRepository<T>
     where T : Atendimento, new()
 {
+    private readonly ILogger<AtendimentoRepository<T>> _logger;
     private readonly AppDbContext _ctx;
-    public AtendimentoRepository(AppDbContext context)
+    public AtendimentoRepository(
+        AppDbContext context,
+        ILogger<AtendimentoRepository<T>> logger)
     {
         _ctx = context;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into AtendimentoRepository {nameof(T)}");
     }
 
     public async Task<Result<T>> Create(T etity)
@@ -50,13 +55,13 @@ public class AtendimentoRepository<T>
         }
     }
 
-    public async Task<Result<T?>> GetById(int id)
+    public async Task<Result<T?>> GetById(Guid id)
     {
         try
         {
             var teste = typeof(T);
             var list = await _ctx.Set<T>()
-                .FirstOrDefaultAsync(e => e.ID == id);
+                .FirstOrDefaultAsync(e => e.Id == id);
             return Result.Ok(list);
         }
         catch (Exception error)
@@ -65,12 +70,13 @@ public class AtendimentoRepository<T>
         }
     }
 
-    public Result<List<T>> GetByMedico(string medicoId, int limit, int page = 0)
+    public Result<List<T>> GetByMedico(
+        Guid medicoId, int limit, int page = 0)
     {
         try
         {
             var list = _ctx.Set<T>()
-                .Where(e => e.Medico.Id == medicoId)
+                .Where(e => e.MedicoId == medicoId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -82,12 +88,13 @@ public class AtendimentoRepository<T>
         }
     }
 
-    public Result<List<T>> GetByPaciente(string pacienteId, int limit, int page = 0)
+    public Result<List<T>> GetByPaciente(
+        Guid pacienteId, int limit, int page = 0)
     {
         try
         {
             var respose = _ctx.Set<T>()
-                .Where(e => e.Paciente.Id == pacienteId)
+                .Where(e => e.PacienteId == pacienteId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -123,11 +130,11 @@ public class AtendimentoRepository<T>
             var queryList = _ctx.Set<T>().AsQueryable();
             if (query.MedicoId != null)
                 queryList = queryList.Where(e =>
-                    e.Medico.Id == query.MedicoId);
+                    e.MedicoId == query.MedicoId);
 
             if (query.PacienteId != null)
                 queryList = queryList.Where(e =>
-                    e.Paciente.Id == query.PacienteId);
+                    e.PacienteId == query.PacienteId);
 
             if (query.MinDate != null)
                 queryList = queryList.Where(
@@ -148,6 +155,5 @@ public class AtendimentoRepository<T>
         {
             return Result.Fail(error.Message);
         }
-
     }
 }

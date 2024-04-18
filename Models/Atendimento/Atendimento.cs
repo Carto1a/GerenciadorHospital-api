@@ -1,13 +1,14 @@
+using System.ComponentModel.DataAnnotations;
 using Hospital.Dto.Atendimento.Create;
-using Hospital.Models.Agendamentos;
 using Hospital.Models.Cadastro;
 
 namespace Hospital.Models.Atendimento;
 public abstract class Atendimento
 {
-    public int ID { get; set; }
-    public string MedicoId { get; set; }
-    public string PacienteId { get; set; }
+    [Key]
+    public Guid Id { get; set; }
+    public Guid MedicoId { get; set; }
+    public Guid PacienteId { get; set; }
     public virtual Medico Medico { get; set; }
     public virtual Paciente Paciente { get; set; }
     public DateTime Inicio { get; set; }

@@ -7,12 +7,17 @@ namespace Hospital.Repository.Cadastros;
 public class PacienteRepository
 : IPacienteRepository
 {
+    private readonly ILogger<PacienteRepository> _logger;
     private readonly AppDbContext _ctx;
-    public PacienteRepository(AppDbContext context)
+    public PacienteRepository(
+        AppDbContext context,
+        ILogger<PacienteRepository> logger)
     {
         _ctx = context;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into PacienteRepository");
     }
-    public Result<Paciente?> GetPacienteById(string id)
+    public Result<Paciente?> GetPacienteById(Guid id)
     {
         try
         {

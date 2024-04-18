@@ -12,10 +12,21 @@ namespace Hospital.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Admins",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admins", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
@@ -29,19 +40,14 @@ namespace Hospital.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false),
                     DataNascimento = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Genero = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Telefone = table.Column<string>(type: "TEXT", nullable: false),
+                    Telefone = table.Column<string>(type: "TEXT", nullable: true),
                     Cpf = table.Column<int>(type: "INTEGER", nullable: false),
                     Cep = table.Column<int>(type: "INTEGER", nullable: false),
-                    NumeroCasa = table.Column<string>(type: "TEXT", nullable: false),
-                    Discriminator = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
-                    Especialidade = table.Column<string>(type: "TEXT", nullable: true),
-                    TemConvenio = table.Column<bool>(type: "INTEGER", nullable: true),
-                    ImgCarteiraConvenio = table.Column<string>(type: "TEXT", nullable: true),
-                    ImgDocumento = table.Column<string>(type: "TEXT", nullable: true),
+                    NumeroCasa = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -63,12 +69,46 @@ namespace Hospital.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Convenios",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CNPJ = table.Column<string>(type: "TEXT", nullable: true),
+                    CEP = table.Column<string>(type: "TEXT", nullable: true),
+                    Numero = table.Column<string>(type: "TEXT", nullable: true),
+                    Nome = table.Column<string>(type: "TEXT", nullable: true),
+                    Descrição = table.Column<string>(type: "TEXT", nullable: true),
+                    Desconto = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Telefone = table.Column<string>(type: "TEXT", nullable: true),
+                    Email = table.Column<string>(type: "TEXT", nullable: true),
+                    Site = table.Column<string>(type: "TEXT", nullable: true),
+                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Convenios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Medicos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Especialidade = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Medicos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -89,7 +129,7 @@ namespace Hospital.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -111,7 +151,7 @@ namespace Hospital.Migrations
                     LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
                     ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -128,8 +168,8 @@ namespace Hospital.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -152,7 +192,7 @@ namespace Hospital.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)
@@ -169,15 +209,39 @@ namespace Hospital.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Pacientes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ImgCarteiraConvenio = table.Column<string>(type: "TEXT", nullable: true),
+                    ImgDocumento = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pacientes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pacientes_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Pacientes_Convenios_ConvenioId",
+                        column: x => x.ConvenioId,
+                        principalTable: "Convenios",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Consultas",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Diagnostico = table.Column<string>(type: "TEXT", nullable: false),
                     Observacoes = table.Column<string>(type: "TEXT", nullable: true),
-                    MedicoId = table.Column<string>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Fim = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -186,52 +250,29 @@ namespace Hospital.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Consultas", x => x.ID);
+                    table.PrimaryKey("PK_Consultas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Consultas_AspNetUsers_MedicoId",
+                        name: "FK_Consultas_Medicos_MedicoId",
                         column: x => x.MedicoId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Medicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Consultas_AspNetUsers_PacienteId",
+                        name: "FK_Consultas_Pacientes_PacienteId",
                         column: x => x.PacienteId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Convenios",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    Descrição = table.Column<string>(type: "TEXT", nullable: false),
-                    Endereco = table.Column<string>(type: "TEXT", nullable: false),
-                    Telefone = table.Column<int>(type: "INTEGER", nullable: false),
-                    PacienteId = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Convenios", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Convenios_AspNetUsers_PacienteId",
-                        column: x => x.PacienteId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Exames",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Resultado = table.Column<string>(type: "TEXT", nullable: false),
-                    MedicoId = table.Column<string>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Fim = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -240,17 +281,17 @@ namespace Hospital.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Exames", x => x.ID);
+                    table.PrimaryKey("PK_Exames", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Exames_AspNetUsers_MedicoId",
+                        name: "FK_Exames_Medicos_MedicoId",
                         column: x => x.MedicoId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Medicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Exames_AspNetUsers_PacienteId",
+                        name: "FK_Exames_Pacientes_PacienteId",
                         column: x => x.PacienteId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -259,50 +300,54 @@ namespace Hospital.Migrations
                 name: "AgendamentosConsultas",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    TipoId = table.Column<int>(type: "INTEGER", nullable: true),
-                    MedicoId = table.Column<string>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TipoId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
                     Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AgendamentosConsultas", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_AgendamentosConsultas_AspNetUsers_MedicoId",
-                        column: x => x.MedicoId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AgendamentosConsultas_AspNetUsers_PacienteId",
-                        column: x => x.PacienteId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_AgendamentosConsultas", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AgendamentosConsultas_Consultas_TipoId",
                         column: x => x.TipoId,
                         principalTable: "Consultas",
-                        principalColumn: "ID");
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AgendamentosConsultas_Convenios_ConvenioId",
+                        column: x => x.ConvenioId,
+                        principalTable: "Convenios",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AgendamentosConsultas_Medicos_MedicoId",
+                        column: x => x.MedicoId,
+                        principalTable: "Medicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AgendamentosConsultas_Pacientes_PacienteId",
+                        column: x => x.PacienteId,
+                        principalTable: "Pacientes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Retornos",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ConsultaID = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Observacoes = table.Column<string>(type: "TEXT", nullable: false),
-                    MedicoId = table.Column<string>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Fim = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -311,24 +356,24 @@ namespace Hospital.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Retornos", x => x.ID);
+                    table.PrimaryKey("PK_Retornos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Retornos_AspNetUsers_MedicoId",
-                        column: x => x.MedicoId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Retornos_AspNetUsers_PacienteId",
-                        column: x => x.PacienteId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Retornos_Consultas_ConsultaID",
-                        column: x => x.ConsultaID,
+                        name: "FK_Retornos_Consultas_ConsultaId",
+                        column: x => x.ConsultaId,
                         principalTable: "Consultas",
-                        principalColumn: "ID",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Retornos_Medicos_MedicoId",
+                        column: x => x.MedicoId,
+                        principalTable: "Medicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Retornos_Pacientes_PacienteId",
+                        column: x => x.PacienteId,
+                        principalTable: "Pacientes",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -336,77 +381,92 @@ namespace Hospital.Migrations
                 name: "AgendamentosExames",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    TipoId = table.Column<int>(type: "INTEGER", nullable: true),
-                    MedicoId = table.Column<string>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TipoId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
                     Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AgendamentosExames", x => x.ID);
+                    table.PrimaryKey("PK_AgendamentosExames", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AgendamentosExames_AspNetUsers_MedicoId",
-                        column: x => x.MedicoId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AgendamentosExames_AspNetUsers_PacienteId",
-                        column: x => x.PacienteId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_AgendamentosExames_Convenios_ConvenioId",
+                        column: x => x.ConvenioId,
+                        principalTable: "Convenios",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AgendamentosExames_Exames_TipoId",
                         column: x => x.TipoId,
                         principalTable: "Exames",
-                        principalColumn: "ID");
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AgendamentosExames_Medicos_MedicoId",
+                        column: x => x.MedicoId,
+                        principalTable: "Medicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AgendamentosExames_Pacientes_PacienteId",
+                        column: x => x.PacienteId,
+                        principalTable: "Pacientes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AgendamentosRetornos",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    TipoId = table.Column<int>(type: "INTEGER", nullable: true),
-                    MedicoId = table.Column<string>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TipoId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Criação = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Convenio = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
                     Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AgendamentosRetornos", x => x.ID);
+                    table.PrimaryKey("PK_AgendamentosRetornos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AgendamentosRetornos_AspNetUsers_MedicoId",
+                        name: "FK_AgendamentosRetornos_Convenios_ConvenioId",
+                        column: x => x.ConvenioId,
+                        principalTable: "Convenios",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AgendamentosRetornos_Medicos_MedicoId",
                         column: x => x.MedicoId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Medicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AgendamentosRetornos_AspNetUsers_PacienteId",
+                        name: "FK_AgendamentosRetornos_Pacientes_PacienteId",
                         column: x => x.PacienteId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AgendamentosRetornos_Retornos_TipoId",
                         column: x => x.TipoId,
                         principalTable: "Retornos",
-                        principalColumn: "ID");
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AgendamentosConsultas_ConvenioId",
+                table: "AgendamentosConsultas",
+                column: "ConvenioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosConsultas_MedicoId",
@@ -425,6 +485,11 @@ namespace Hospital.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AgendamentosExames_ConvenioId",
+                table: "AgendamentosExames",
+                column: "ConvenioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosExames_MedicoId",
                 table: "AgendamentosExames",
                 column: "MedicoId");
@@ -439,6 +504,11 @@ namespace Hospital.Migrations
                 table: "AgendamentosExames",
                 column: "TipoId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AgendamentosRetornos_ConvenioId",
+                table: "AgendamentosRetornos",
+                column: "ConvenioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosRetornos_MedicoId",
@@ -504,11 +574,6 @@ namespace Hospital.Migrations
                 column: "PacienteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Convenios_PacienteId",
-                table: "Convenios",
-                column: "PacienteId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Exames_MedicoId",
                 table: "Exames",
                 column: "MedicoId");
@@ -519,9 +584,14 @@ namespace Hospital.Migrations
                 column: "PacienteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Retornos_ConsultaID",
+                name: "IX_Pacientes_ConvenioId",
+                table: "Pacientes",
+                column: "ConvenioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Retornos_ConsultaId",
                 table: "Retornos",
-                column: "ConsultaID");
+                column: "ConsultaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Retornos_MedicoId",
@@ -537,6 +607,9 @@ namespace Hospital.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Admins");
+
             migrationBuilder.DropTable(
                 name: "AgendamentosConsultas");
 
@@ -562,9 +635,6 @@ namespace Hospital.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Convenios");
-
-            migrationBuilder.DropTable(
                 name: "Exames");
 
             migrationBuilder.DropTable(
@@ -577,7 +647,16 @@ namespace Hospital.Migrations
                 name: "Consultas");
 
             migrationBuilder.DropTable(
+                name: "Medicos");
+
+            migrationBuilder.DropTable(
+                name: "Pacientes");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Convenios");
         }
     }
 }

@@ -17,8 +17,9 @@ public class ExameAgendamentoController
     ExameUpdateDto>
 {
     public ExameAgendamentoController(
-        IExameAgendamentoService service)
-        : base(service)
+        IExameAgendamentoService service,
+        ILogger<GenericAgendamentoController<Exame, ExameAgendamento, ExameCreationDto, ExameUpdateDto>> logger)
+        : base(service, logger)
     {
     }
 }

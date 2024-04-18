@@ -14,11 +14,13 @@ namespace Hospital.Controllers.Pacientes;
 public class PacienteController
 : GenericAuthenticationController<RegisterRequestPacienteDto>
 {
+    private readonly ILogger<PacienteController> _logger;
     private readonly IPacienteService _pacienteService;
     private readonly IConsultaAgendamentoService _consultaAgendamentoService;
     private readonly IExameAgendamentoService _exameAgendamentoService;
     private readonly IAuthenticationService _authenticationService;
     public PacienteController(
+        ILogger<PacienteController> logger,
         IConfiguration configuration,
         IPacienteService pacienteService,
         IConsultaAgendamentoService consultaAgendamentoService,
@@ -30,6 +32,8 @@ public class PacienteController
         _authenticationService = authenticationService;
         _consultaAgendamentoService = consultaAgendamentoService;
         _exameAgendamentoService = exameAgendamentoService;
+        _logger = logger;
+        _logger.LogDebug(1, "NLog injected into PacienteController");
     }
 
     [AllowAnonymous]
@@ -70,8 +74,8 @@ public class PacienteController
 
     [Authorize(Roles = "Paciente")]
     [HttpGet("Documentos/Mostrar/{guid}")]
-    public async Task<IActionResult> GetDocumento(
-        [FromRoute] string guid)
+    public IActionResult GetDocumento(
+        [FromRoute] Guid guid)
     {
         var result = _pacienteService.GetPacienteDocumento(User, guid);
         if (result.IsFailed)
@@ -87,15 +91,18 @@ public class PacienteController
     [Authorize(Roles = "Paciente")]
     [HttpGet("Consultas")]
     public async Task<IActionResult> GetConsultas(
-        [FromQuery] int limit, int page, string? medicoId,
+        [FromQuery] int limit, int page, Guid? medicoId,
         DateTime? MinDate, DateTime? MaxDate)
     {
         var paciente = User.Claims
             .FirstOrDefault(x => x.Type == "ID")?.Value;
+        if (paciente == null)
+            return Unauthorized();
+
         var response = await _consultaAgendamentoService
             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
             {
-                PacienteId = paciente,
+                PacienteId = new Guid(paciente),
                 MedicoId = medicoId,
                 MinDate = MinDate,
                 MaxDate = MaxDate,
@@ -111,16 +118,19 @@ public class PacienteController
     [Authorize(Roles = "Paciente")]
     [HttpGet("Exames")]
     public async Task<IActionResult> GetExames(
-        [FromQuery] int limit, int page, string? medicoId,
+        [FromQuery] int limit, int page, Guid? medicoId,
         DateTime? MinDate, DateTime? MaxDate)
     {
         // TODO: limpar os dados desse negocio ai
         var paciente = User.Claims
             .FirstOrDefault(x => x.Type == "ID")?.Value;
+        if (paciente == null)
+            return Unauthorized();
+
         var response = await _exameAgendamentoService
             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
             {
-                PacienteId = paciente,
+                PacienteId = new Guid(paciente),
                 MedicoId = medicoId,
                 MinDate = MinDate,
                 MaxDate = MaxDate,
@@ -136,8 +146,8 @@ public class PacienteController
     [Authorize(Policy = "ElevatedRights")]
     [HttpGet("Consultas/{pacienteId}")]
     public async Task<IActionResult> GetConsultaById(
-        [FromRoute] string pacienteId,
-        [FromQuery] int? limit, int? page, string? medicoId,
+        [FromRoute] Guid pacienteId,
+        [FromQuery] int? limit, int? page, Guid? medicoId,
         DateTime? MinDate, DateTime? MaxDate)
     {
         var response = await _consultaAgendamentoService
@@ -159,8 +169,8 @@ public class PacienteController
     [Authorize(Policy = "ElevatedRights")]
     [HttpGet("Exames/{pacienteId}")]
     public async Task<IActionResult> GetExameById(
-        [FromRoute] string pacienteId,
-        [FromQuery] int? limit, int? page, string? medicoId,
+        [FromRoute] Guid pacienteId,
+        [FromQuery] int? limit, int? page, Guid? medicoId,
         DateTime? MinDate, DateTime? MaxDate)
     {
         var response = await _exameAgendamentoService
@@ -182,7 +192,7 @@ public class PacienteController
     // TODO: fazer um dto para esses dois
     [Authorize(Policy = "ElevatedRights")]
     [HttpGet]
-    public async Task<IActionResult> GetPacientes(
+    public IActionResult GetPacientes(
         [FromQuery] int limit, int page)
     {
         var response = _pacienteService.GetPacientes(limit, page);
@@ -194,8 +204,8 @@ public class PacienteController
     }
     [Authorize(Policy = "ElevatedRights")]
     [HttpGet("{pacienteId}")]
-    public async Task<IActionResult> GetPacienteById(
-        [FromRoute] string pacienteId)
+    public IActionResult GetPacienteById(
+        [FromRoute] Guid pacienteId)
     {
         var response = _pacienteService.GetPacienteById(pacienteId);
         var result = response.ToResultDto();

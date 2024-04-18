@@ -21,8 +21,10 @@ public class ExamesController
         IAtendimentoService<
             Exame,
             ExameAgendamento,
-            ExameCreationDto> service)
-        : base(service)
+            ExameCreationDto,
+            ExameUpdateDto> service,
+        ILogger<GenericAtendimentoController<Exame, ExameAgendamento, ExameCreationDto, ExameUpdateDto>> logger)
+        : base(service, logger)
     { }
 
 }

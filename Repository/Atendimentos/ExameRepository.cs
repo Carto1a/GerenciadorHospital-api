@@ -9,10 +9,15 @@ namespace Hospital.Repository.Atendimentos;
 public class ExameRepository
 : IExameRepository
 {
+    private readonly ILogger<ExameRepository> _logger;
     private readonly AppDbContext _ctx;
-    public ExameRepository(AppDbContext context)
+    public ExameRepository(
+        AppDbContext context,
+        ILogger<ExameRepository> logger)
     {
         _ctx = context;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into ExameRepository");
     }
 
     public async Task<Result<Exame>> Create(Exame etity)
@@ -49,13 +54,13 @@ public class ExameRepository
         }
     }
 
-    public async Task<Result<Exame?>> GetById(int id)
+    public async Task<Result<Exame?>> GetById(Guid id)
     {
         try
         {
             var teste = typeof(Exame);
             var list = await _ctx.Exames
-                .FirstOrDefaultAsync(e => e.ID == id);
+                .FirstOrDefaultAsync(e => e.Id == id);
             return Result.Ok(list);
         }
         catch (Exception error)
@@ -64,12 +69,13 @@ public class ExameRepository
         }
     }
 
-    public Result<List<Exame>> GetByMedico(string medicoId, int limit, int page = 0)
+    public Result<List<Exame>> GetByMedico(
+        Guid medicoId, int limit, int page = 0)
     {
         try
         {
             var list = _ctx.Exames
-                .Where(e => e.Medico.Id == medicoId)
+                .Where(e => e.MedicoId == medicoId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -81,12 +87,13 @@ public class ExameRepository
         }
     }
 
-    public Result<List<Exame>> GetByPaciente(string pacienteId, int limit, int page = 0)
+    public Result<List<Exame>> GetByPaciente(
+        Guid pacienteId, int limit, int page = 0)
     {
         try
         {
             var respose = _ctx.Exames
-                .Where(e => e.Paciente.Id == pacienteId)
+                .Where(e => e.PacienteId == pacienteId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -123,11 +130,11 @@ public class ExameRepository
             Console.WriteLine("exame");
             if (query.MedicoId != null)
                 queryList = queryList.Where(e =>
-                    e.Medico.Id == query.MedicoId);
+                    e.MedicoId == query.MedicoId);
 
             if (query.PacienteId != null)
                 queryList = queryList.Where(e =>
-                    e.Paciente.Id == query.PacienteId);
+                    e.PacienteId == query.PacienteId);
 
             if (query.MinDate != null)
                 queryList = queryList.Where(

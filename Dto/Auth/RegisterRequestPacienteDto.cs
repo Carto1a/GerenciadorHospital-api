@@ -1,10 +1,10 @@
 using Hospital.Models.Cadastro;
 
 namespace Hospital.Dto.Auth;
-public class RegisterRequestPacienteDto : RegisterRequestDto
+public class RegisterRequestPacienteDto
+: RegisterRequestDto
 {
-    public IFormFile Convenio { get; set; }
-    public IFormFile Documento { get; set; }
-    public bool TemConvenio { get; set; }
-    /* public List<Convenio>? Convenios { get; set; } */
+    public required IFormFile DocumentoImg { get; set; }
+    public Guid? ConvenioId { get; set; }
+    public IFormFile? ConvenioImg { get; set; }
 }

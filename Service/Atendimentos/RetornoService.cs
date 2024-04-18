@@ -2,6 +2,7 @@ using FluentResults;
 using Hospital.Database;
 using Hospital.Dto.Atendimento.Create;
 using Hospital.Dto.Atendimento.Get;
+using Hospital.Dto.Atendimento.Update;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
@@ -12,6 +13,7 @@ namespace Hospital.Service.Atendimentos;
 public class RetornoService
 : IRetornoService
 {
+    private readonly ILogger<RetornoService> _logger;
     private readonly IRetornoRepository _repo;
     private readonly IRetornoAgendamentoService _agendametoService;
     private readonly IPacienteRepository _pacienteRepo;
@@ -22,13 +24,16 @@ public class RetornoService
         IMedicoRepository medico,
         IRetornoRepository repository,
         IRetornoAgendamentoService agendamento,
-        AppDbContext context)
+        AppDbContext context,
+        ILogger<RetornoService> logger)
     {
         _pacienteRepo = paciente;
         _medicoRepo = medico;
         _ctx = context;
         _repo = repository;
         _agendametoService = agendamento;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into RetornoService");
     }
     public async Task<Result> Create(RetornoCreationDto request)
     {
@@ -82,7 +87,7 @@ public class RetornoService
         var respose = _repo.GetByDate(minDate, maxDate, limit, page);
         return respose;
     }
-    public async Task<Result<Retorno>> GetById(int id)
+    public async Task<Result<Retorno>> GetById(Guid id)
     {
         var respose = await _repo.GetById(id);
         if (respose.IsFailed)
@@ -91,7 +96,7 @@ public class RetornoService
         return respose;
     }
     public Result<List<Retorno>> GetByMedico(
-        string medicoId, int limit, int page = 0)
+        Guid medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<Retorno>>>();
         if (page < 0)
@@ -107,7 +112,7 @@ public class RetornoService
         return respose;
     }
     public Result<List<Retorno>> GetByPaciente(
-        string pacienteId, int limit, int page = 0)
+        Guid pacienteId, int limit, int page = 0)
     {
         var results = new List<Result<List<Retorno>>>();
         if (page < 0)
@@ -122,7 +127,8 @@ public class RetornoService
 
         return respose;
     }
-    public Result<List<Retorno>> GetByQuery(AtendimentoGetByQueryDto query)
+    public Result<List<Retorno>> GetByQuery(
+        AtendimentoGetByQueryDto query)
     {
         var results = new List<Result<List<Retorno>>>();
         if (query.Page < 0)
@@ -142,5 +148,10 @@ public class RetornoService
             return Result.Fail("não foi possivel pegar a atividade");
 
         return respose;
+    }
+
+    public Task<Result> Update(RetornoUpdateDto request, Guid id)
+    {
+        throw new NotImplementedException();
     }
 }

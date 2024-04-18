@@ -2,6 +2,7 @@ using FluentResults;
 using Hospital.Database;
 using Hospital.Dto.Atendimento.Create;
 using Hospital.Dto.Atendimento.Get;
+using Hospital.Dto.Atendimento.Update;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento.Interfaces;
 using Hospital.Repository.Atendimentos.Interfaces;
@@ -10,15 +11,18 @@ using Hospital.Service.Agendamentos.Interfaces;
 using Hospital.Service.Atendimentos.Interfaces;
 
 namespace Hospital.Service.Atendimentos;
-public class AtendimentoService<T, TAgendamento, TCreation>
+public class AtendimentoService<T, TAgendamento, TCreation, TUpdate>
 : IAtendimentoService<
     T,
     TAgendamento,
-    TCreation>
+    TCreation,
+    TUpdate>
     where T : IAtendimento<TCreation>, new()
     where TCreation : AtendimentoCreationDto
     where TAgendamento : Agendamento<T>
+    where TUpdate : AtendimentoUpdateDto
 {
+    private readonly ILogger<AtendimentoService<T, TAgendamento, TCreation, TUpdate>> _logger;
     private readonly IAtendimentoRepository<T> _repo;
     private readonly IAgendamentoService<T, TAgendamento, TCreation> _agendametoService;
     private readonly IPacienteRepository _pacienteRepo;
@@ -29,13 +33,16 @@ public class AtendimentoService<T, TAgendamento, TCreation>
         IMedicoRepository medico,
         IAtendimentoRepository<T> repository,
         IAgendamentoService<T, TAgendamento, TCreation> agendamento,
-        AppDbContext context)
+        AppDbContext context,
+        ILogger<AtendimentoService<T, TAgendamento, TCreation, TUpdate>> logger)
     {
         _pacienteRepo = paciente;
         _medicoRepo = medico;
         _ctx = context;
         _repo = repository;
         _agendametoService = agendamento;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into AtendimentoService {nameof(T)}");
     }
     public async Task<Result> Create(TCreation request)
     {
@@ -89,7 +96,7 @@ public class AtendimentoService<T, TAgendamento, TCreation>
         var respose = _repo.GetByDate(minDate, maxDate, limit, page);
         return respose;
     }
-    public async Task<Result<T?>> GetById(int id)
+    public async Task<Result<T?>> GetById(Guid id)
     {
         var respose = await _repo.GetById(id);
         if (respose.IsFailed)
@@ -98,7 +105,7 @@ public class AtendimentoService<T, TAgendamento, TCreation>
         return respose;
     }
     public Result<List<T>> GetByMedico(
-        string medicoId, int limit, int page = 0)
+        Guid medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<T>>>();
         if (page < 0)
@@ -114,7 +121,7 @@ public class AtendimentoService<T, TAgendamento, TCreation>
         return respose;
     }
     public Result<List<T>> GetByPaciente(
-        string pacienteId, int limit, int page = 0)
+        Guid pacienteId, int limit, int page = 0)
     {
         var results = new List<Result<List<T>>>();
         if (page < 0)
@@ -149,5 +156,10 @@ public class AtendimentoService<T, TAgendamento, TCreation>
             return Result.Fail("não foi possivel pegar a atividade");
 
         return respose;
+    }
+
+    public Task<Result> Update(TUpdate request, Guid id)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -2,6 +2,7 @@ using FluentResults;
 using Hospital.Database;
 using Hospital.Dto.Atendimento.Create;
 using Hospital.Dto.Atendimento.Get;
+using Hospital.Dto.Atendimento.Update;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
@@ -12,6 +13,7 @@ namespace Hospital.Service.Atendimentos;
 public class ConsultaService
 : IConsultaService
 {
+    private readonly ILogger<ConsultaService> _logger;
     private readonly IConsultaRepository _repo;
     private readonly IConsultaAgendamentoService _agendametoService;
     private readonly IPacienteRepository _pacienteRepo;
@@ -22,13 +24,16 @@ public class ConsultaService
         IMedicoRepository medico,
         IConsultaRepository repository,
         IConsultaAgendamentoService agendamento,
-        AppDbContext context)
+        AppDbContext context,
+        ILogger<ConsultaService> logger)
     {
         _pacienteRepo = paciente;
         _medicoRepo = medico;
         _ctx = context;
         _repo = repository;
         _agendametoService = agendamento;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into ConsultaService");
     }
     public async Task<Result> Create(ConsultaCreationDto request)
     {
@@ -82,7 +87,7 @@ public class ConsultaService
         var respose = _repo.GetByDate(minDate, maxDate, limit, page);
         return respose;
     }
-    public async Task<Result<Consulta>> GetById(int id)
+    public async Task<Result<Consulta>> GetById(Guid id)
     {
         var respose = await _repo.GetById(id);
         if (respose.IsFailed)
@@ -91,7 +96,7 @@ public class ConsultaService
         return respose;
     }
     public Result<List<Consulta>> GetByMedico(
-        string medicoId, int limit, int page = 0)
+        Guid medicoId, int limit, int page = 0)
     {
         var results = new List<Result<List<Consulta>>>();
         if (page < 0)
@@ -107,7 +112,7 @@ public class ConsultaService
         return respose;
     }
     public Result<List<Consulta>> GetByPaciente(
-        string pacienteId, int limit, int page = 0)
+        Guid pacienteId, int limit, int page = 0)
     {
         var results = new List<Result<List<Consulta>>>();
         if (page < 0)
@@ -143,5 +148,10 @@ public class ConsultaService
             return Result.Fail("não foi possivel pegar a atividade");
 
         return respose;
+    }
+
+    public Task<Result> Update(ConsultaUpdateDto request, Guid id)
+    {
+        throw new NotImplementedException();
     }
 }

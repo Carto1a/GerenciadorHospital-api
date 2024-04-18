@@ -9,10 +9,15 @@ namespace Hospital.Repository.Atendimentos;
 public class RetornoRepository
 : IRetornoRepository
 {
+    private readonly ILogger<RetornoRepository> _logger;
     private readonly AppDbContext _ctx;
-    public RetornoRepository(AppDbContext context)
+    public RetornoRepository(
+        AppDbContext context,
+        ILogger<RetornoRepository> logger)
     {
         _ctx = context;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into RetornoRepository");
     }
 
     public async Task<Result<Retorno>> Create(Retorno etity)
@@ -49,13 +54,13 @@ public class RetornoRepository
         }
     }
 
-    public async Task<Result<Retorno?>> GetById(int id)
+    public async Task<Result<Retorno?>> GetById(Guid id)
     {
         try
         {
             var teste = typeof(Retorno);
             var list = await _ctx.Retornos
-                .FirstOrDefaultAsync(e => e.ID == id);
+                .FirstOrDefaultAsync(e => e.Id == id);
             return Result.Ok(list);
         }
         catch (Exception error)
@@ -64,12 +69,13 @@ public class RetornoRepository
         }
     }
 
-    public Result<List<Retorno>> GetByMedico(string medicoId, int limit, int page = 0)
+    public Result<List<Retorno>> GetByMedico(
+        Guid medicoId, int limit, int page = 0)
     {
         try
         {
             var list = _ctx.Retornos
-                .Where(e => e.Medico.Id == medicoId)
+                .Where(e => e.MedicoId == medicoId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -81,12 +87,13 @@ public class RetornoRepository
         }
     }
 
-    public Result<List<Retorno>> GetByPaciente(string pacienteId, int limit, int page = 0)
+    public Result<List<Retorno>> GetByPaciente(
+        Guid pacienteId, int limit, int page = 0)
     {
         try
         {
             var respose = _ctx.Retornos
-                .Where(e => e.Paciente.Id == pacienteId)
+                .Where(e => e.PacienteId == pacienteId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -114,18 +121,19 @@ public class RetornoRepository
         }
     }
 
-    public Result<List<Retorno>> GetByQuery(AtendimentoGetByQueryDto query)
+    public Result<List<Retorno>> GetByQuery(
+        AtendimentoGetByQueryDto query)
     {
         try
         {
             var queryList = _ctx.Retornos.AsQueryable();
             if (query.MedicoId != null)
                 queryList = queryList.Where(e =>
-                    e.Medico.Id == query.MedicoId);
+                    e.MedicoId == query.MedicoId);
 
             if (query.PacienteId != null)
                 queryList = queryList.Where(e =>
-                    e.Paciente.Id == query.PacienteId);
+                    e.PacienteId == query.PacienteId);
 
             if (query.MinDate != null)
                 queryList = queryList.Where(

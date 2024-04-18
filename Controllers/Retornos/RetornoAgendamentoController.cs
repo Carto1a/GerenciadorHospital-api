@@ -17,7 +17,8 @@ public class RetornoAgendamentoController
     RetornoUpdateDto>
 {
     public RetornoAgendamentoController(
-        IRetornoAgendamentoService service)
-        : base(service)
+        IRetornoAgendamentoService service,
+        ILogger<GenericAgendamentoController<Retorno, RetornoAgendamento, RetornoCreationDto, RetornoUpdateDto>> logger)
+        : base(service, logger)
     { }
 }

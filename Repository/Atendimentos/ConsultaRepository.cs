@@ -9,10 +9,15 @@ namespace Hospital.Repository.Atendimentos;
 public class ConsultaRepository
 : IConsultaRepository
 {
+    private readonly ILogger<ConsultaRepository> _logger;
     private readonly AppDbContext _ctx;
-    public ConsultaRepository(AppDbContext context)
+    public ConsultaRepository(
+        AppDbContext context,
+        ILogger<ConsultaRepository> logger)
     {
         _ctx = context;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into ConsultaRepository");
     }
 
     public async Task<Result<Consulta>> Create(Consulta etity)
@@ -49,12 +54,12 @@ public class ConsultaRepository
         }
     }
 
-    public async Task<Result<Consulta?>> GetById(int id)
+    public async Task<Result<Consulta?>> GetById(Guid id)
     {
         try
         {
             var list = await _ctx.Consultas
-                .FirstOrDefaultAsync(e => e.ID == id);
+                .FirstOrDefaultAsync(e => e.Id == id);
             return Result.Ok(list);
         }
         catch (Exception error)
@@ -63,12 +68,13 @@ public class ConsultaRepository
         }
     }
 
-    public Result<List<Consulta>> GetByMedico(string medicoId, int limit, int page = 0)
+    public Result<List<Consulta>> GetByMedico(
+        Guid medicoId, int limit, int page = 0)
     {
         try
         {
             var list = _ctx.Consultas
-                .Where(e => e.Medico.Id == medicoId)
+                .Where(e => e.MedicoId == medicoId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -80,12 +86,13 @@ public class ConsultaRepository
         }
     }
 
-    public Result<List<Consulta>> GetByPaciente(string pacienteId, int limit, int page = 0)
+    public Result<List<Consulta>> GetByPaciente(
+        Guid pacienteId, int limit, int page = 0)
     {
         try
         {
             var respose = _ctx.Consultas
-                .Where(e => e.Paciente.Id == pacienteId)
+                .Where(e => e.PacienteId == pacienteId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -113,18 +120,19 @@ public class ConsultaRepository
         }
     }
 
-    public Result<List<Consulta>> GetByQuery(AtendimentoGetByQueryDto query)
+    public Result<List<Consulta>> GetByQuery(
+        AtendimentoGetByQueryDto query)
     {
         try
         {
             var queryList = _ctx.Consultas.AsQueryable();
             if (query.MedicoId != null)
                 queryList = queryList.Where(e =>
-                    e.Medico.Id == query.MedicoId);
+                    e.MedicoId == query.MedicoId);
 
             if (query.PacienteId != null)
                 queryList = queryList.Where(e =>
-                    e.Paciente.Id == query.PacienteId);
+                    e.PacienteId == query.PacienteId);
 
             if (query.MinDate != null)
                 queryList = queryList.Where(

@@ -6,10 +6,15 @@ namespace Hospital.Repository.Cadastros;
 public class AuthenticationRepository
 : IAuthenticationRepository
 {
+    private readonly ILogger<AuthenticationRepository> _logger;
     private readonly AppDbContext _ctx;
-    public AuthenticationRepository(AppDbContext ctx)
+    public AuthenticationRepository(
+        AppDbContext ctx,
+        ILogger<AuthenticationRepository> logger)
     {
         _ctx = ctx;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into AuthenticationRepository");
     }
 
     public async Task CreatePaciente(Paciente user)

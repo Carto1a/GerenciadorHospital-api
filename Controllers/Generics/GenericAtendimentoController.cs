@@ -19,17 +19,23 @@ public abstract class GenericAtendimentoController<
     where TCreation : AtendimentoCreationDto
     where TUpdate : AtendimentoUpdateDto
 {
+    private readonly ILogger<GenericAtendimentoController<T, TAgendamento, TCreation, TUpdate>> _logger;
     private readonly IAtendimentoService<
         T,
         TAgendamento,
-        TCreation> _service;
+        TCreation,
+        TUpdate> _service;
     public GenericAtendimentoController(
         IAtendimentoService<
             T,
             TAgendamento,
-            TCreation> service)
+            TCreation,
+            TUpdate> service,
+        ILogger<GenericAtendimentoController<T, TAgendamento, TCreation, TUpdate>> logger)
     {
         _service = service;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into GenericAtendimentoController {nameof(T)}");
     }
 
     [Authorize(Policy = "OperationalRights")]
@@ -37,8 +43,6 @@ public abstract class GenericAtendimentoController<
     public async Task<IActionResult> Creation(
         [FromForm] TCreation request)
     {
-        /* var claimsIdentity = this.User.Identity as ClaimsIdentity; */
-        /* var userId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value; */
         var response = await _service.Create(request);
         var result = response.ToResultDto();
         if (result.IsFailed)
@@ -49,7 +53,7 @@ public abstract class GenericAtendimentoController<
 
     [Authorize(Policy = "StandardRights")]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] int id)
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var response = await _service.GetById(id);
         var result = response.ToResultDto();
@@ -74,9 +78,14 @@ public abstract class GenericAtendimentoController<
 
     [Authorize(Policy = "OperationalRights")]
     [HttpPut("{id}")]
-    public IActionResult Update(
-        [FromRoute] int id, [FromForm] TUpdate request)
+    public async Task<IActionResult> Update(
+        [FromRoute] Guid id, [FromForm] TUpdate request)
     {
-        throw new NotImplementedException();
+        var response = await _service.Update(request, id);
+        var result = response.ToResultDto();
+        if (result.IsFailed)
+            return BadRequest(result);
+
+        return Ok(result);
     }
 }

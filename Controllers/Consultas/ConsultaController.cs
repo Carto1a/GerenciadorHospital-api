@@ -17,7 +17,8 @@ public class ConsultaController
     ConsultaUpdateDto>
 {
     public ConsultaController(
-        IConsultaService service)
-        : base(service)
+        IConsultaService service,
+        ILogger<GenericAtendimentoController<Consulta, ConsultaAgendamento, ConsultaCreationDto, ConsultaUpdateDto>> logger)
+        : base(service, logger)
     { }
 }

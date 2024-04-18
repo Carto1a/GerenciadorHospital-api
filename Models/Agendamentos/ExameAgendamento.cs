@@ -1,7 +1,8 @@
 using Hospital.Models.Atendimento;
 
 namespace Hospital.Models.Agendamentos;
-public class ExameAgendamento : Agendamento<Exame>
+public class ExameAgendamento
+: Agendamento<Exame>
 {
 
 }

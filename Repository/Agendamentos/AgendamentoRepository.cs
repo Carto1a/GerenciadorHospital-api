@@ -12,13 +12,19 @@ public class AgendamentoRepository<T, TAgendamento>
     where T : Atendimento, new()
     where TAgendamento : Agendamento<T>
 {
+    private readonly ILogger<AgendamentoRepository<T, TAgendamento>> _logger;
     private readonly AppDbContext _ctx;
-    public AgendamentoRepository(AppDbContext context)
+    public AgendamentoRepository(
+        AppDbContext context,
+        ILogger<AgendamentoRepository<T, TAgendamento>> logger)
     {
         _ctx = context;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into AgendamentoRepository {nameof(T)}");
     }
 
-    public async Task<Result> CreateAgentamento(TAgendamento agentamento)
+    public async Task<Result> CreateAgentamento(
+        TAgendamento agentamento)
     {
         try
         {
@@ -33,13 +39,14 @@ public class AgendamentoRepository<T, TAgendamento>
         }
     }
 
-    public async Task<Result<TAgendamento?>> GetAgendamentoById(int id)
+    public async Task<Result<TAgendamento?>> GetAgendamentoById(
+        Guid id)
     {
         try
         {
             var list = await _ctx.Set<TAgendamento>()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.ID == id);
+                .FirstOrDefaultAsync(e => e.Id == id);
             return Result.Ok(list);
         }
         catch (Exception error)
@@ -57,11 +64,11 @@ public class AgendamentoRepository<T, TAgendamento>
             var queryList = _ctx.Set<TAgendamento>().AsQueryable();
             if (query.MedicoId != null)
                 queryList = queryList.Where(e =>
-                    e.Medico.Id == query.MedicoId);
+                    e.MedicoId == query.MedicoId);
 
             if (query.PacienteId != null)
                 queryList = queryList.Where(e =>
-                    e.Paciente.Id == query.PacienteId);
+                    e.PacienteId == query.PacienteId);
 
             if (query.MinDate != null)
                 queryList = queryList.Where(
@@ -103,7 +110,7 @@ public class AgendamentoRepository<T, TAgendamento>
     }
 
     public async Task<Result<List<TAgendamento>>> GetAgendamentosByMedico(
-        string medicoId, int limit, int page = 0)
+        Guid medicoId, int limit, int page = 0)
     {
         try
         {
@@ -121,12 +128,12 @@ public class AgendamentoRepository<T, TAgendamento>
     }
 
     public Result<List<TAgendamento>> GetAgendamentosByPaciente(
-        string pacienteId, int limit, int page = 0)
+        Guid pacienteId, int limit, int page = 0)
     {
         try
         {
             return _ctx.Set<TAgendamento>()
-                .Where(e => e.Paciente.Id == pacienteId)
+                .Where(e => e.PacienteId == pacienteId)
                 .Skip(page)
                 .Take(limit)
                 .ToList();
@@ -137,7 +144,8 @@ public class AgendamentoRepository<T, TAgendamento>
         }
     }
 
-    public async Task<Result> UpdateAgentamento(TAgendamento NovoAgendamento)
+    public async Task<Result> UpdateAgentamento(
+        TAgendamento NovoAgendamento)
     {
         try
         {

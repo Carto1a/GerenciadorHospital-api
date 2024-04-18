@@ -13,10 +13,14 @@ public class AdminsController
 : GenericAuthenticationController<RegisterRequestAdminDto>
 {
     private readonly IAuthenticationService _authenticationService;
+    private readonly ILogger<AdminsController> _logger;
     public AdminsController(
+        ILogger<AdminsController> logger,
         IAuthenticationService authenticationService) : base(authenticationService)
     {
         _authenticationService = authenticationService;
+        _logger = logger;
+        _logger.LogDebug(1, "NLog injected into AdminsController");
     }
 
     [AllowAnonymous]

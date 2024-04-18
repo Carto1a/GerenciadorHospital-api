@@ -10,9 +10,9 @@ public interface IAgendamentoRepository<T, TAgendamento>
 {
     Task<Result> CreateAgentamento(TAgendamento agentamento);
     Task<Result> UpdateAgentamento(TAgendamento NovoAgendamento);
-    Task<Result<TAgendamento?>> GetAgendamentoById(int id);
-    Result<List<TAgendamento>> GetAgendamentosByPaciente(string pacienteId, int limit, int page = 0);
-    Task<Result<List<TAgendamento>>> GetAgendamentosByMedico(string medicoId, int limit, int page = 0);
+    Task<Result<TAgendamento?>> GetAgendamentoById(Guid id);
+    Result<List<TAgendamento>> GetAgendamentosByPaciente(Guid pacienteId, int limit, int page = 0);
+    Task<Result<List<TAgendamento>>> GetAgendamentosByMedico(Guid medicoId, int limit, int page = 0);
     Result<List<TAgendamento>> GetAgendamentosByDate(DateTime minDate, DateTime maxDate, int limit, int page = 0);
     Task<Result<List<TAgendamento>>> GetAgendamentoByQuery(AgendamentoGetByQueryDto query);
 }

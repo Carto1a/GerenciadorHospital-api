@@ -2,25 +2,48 @@ using System.Text;
 using Hospital.Database;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Agendamentos;
+using Hospital.Repository.Agendamentos.Interfaces;
 using Hospital.Repository.Atendimentos;
 using Hospital.Repository.Atendimentos.Interfaces;
-using Hospital.Repository.Agendamentos.Interfaces;
+using Hospital.Repository.Cadastros;
+using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Repository.Convenios;
+using Hospital.Repository.Convenios.Ineterfaces;
+using Hospital.Service.Agendamentos;
+using Hospital.Service.Agendamentos.Interfaces;
+using Hospital.Service.Atendimentos;
+using Hospital.Service.Atendimentos.Interfaces;
+using Hospital.Service.Cadastros;
+using Hospital.Service.Convenios;
+using Hospital.Service.Convenios.Interfaces;
 using Hospital.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Hospital.Repository.Cadastros.Interfaces;
-using Hospital.Repository.Cadastros;
-using Hospital.Service.Agendamentos.Interfaces;
-using Hospital.Service.Agendamentos;
-using Hospital.Service.Atendimentos.Interfaces;
-using Hospital.Service.Atendimentos;
-using Hospital.Service.Cadastros;
+using NLog;
+using NLog.Web;
 
+var logger = NLog.LogManager.Setup()
+    .LoadConfigurationFromAppSettings()
+    .GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+logger.Debug("Starting application");
+
+// Logger Initialization
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
+
+AppDomain.CurrentDomain
+.FirstChanceException += (sender, eventArgs) =>
+{
+    logger.Error(eventArgs.Exception, "Stopped program because of exception");
+    NLog.LogManager.Shutdown();
+    Console.WriteLine(eventArgs.Exception.Message);
+    /* Debug.WriteLine(eventArgs.Exception.ToString()); */
+};
 
 // 1. DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -28,27 +51,27 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 // 2. Identity
-builder.Services.AddIdentity<Cadastro, IdentityRole>()
-    .AddRoles<IdentityRole>()
-    .AddRoleManager<RoleManager<IdentityRole>>()
+builder.Services.AddIdentity<Cadastro, IdentityRole<Guid>>()
+    .AddRoles<IdentityRole<Guid>>()
+    .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddIdentityCore<Admin>()
-    .AddRoles<IdentityRole>()
-    .AddRoleManager<RoleManager<IdentityRole>>()
+    .AddRoles<IdentityRole<Guid>>()
+    .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddIdentityCore<Paciente>()
-    .AddRoles<IdentityRole>()
-    .AddRoleManager<RoleManager<IdentityRole>>()
+    .AddRoles<IdentityRole<Guid>>()
+    .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddIdentityCore<Medico>()
-    .AddRoles<IdentityRole>()
-    .AddRoleManager<RoleManager<IdentityRole>>()
+    .AddRoles<IdentityRole<Guid>>()
+    .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -133,6 +156,10 @@ builder.Services.AddScoped<
     IMedicoRepository,
     MedicoRepository>();
 
+builder.Services.AddScoped<
+    IConvenioRepository,
+    ConvenioRepository>();
+
 // Services
 builder.Services.AddScoped(
     typeof(IAgendamentoService<,,>),
@@ -143,8 +170,8 @@ builder.Services.AddScoped<
     ConsultaService>();
 
 builder.Services.AddScoped(
-    typeof(IAtendimentoService<,,>),
-    typeof(AtendimentoService<,,>));
+    typeof(IAtendimentoService<,,,>),
+    typeof(AtendimentoService<,,,>));
 builder.Services.AddScoped<
     IExameService,
     ExameService>();
@@ -178,6 +205,10 @@ builder.Services.AddScoped<
 builder.Services.AddScoped<
     IMedicoService,
     MedicoService>();
+
+builder.Services.AddScoped<
+    IConvenioService,
+    ConvenioService>();
 
 // Add services to the container.
 builder.Services.AddControllers();

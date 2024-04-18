@@ -12,11 +12,12 @@ public static class SeedManager
     }
     private static async Task SeedRoles(IServiceProvider services)
     {
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var roleManager = services
+        .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
-        await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
-        await roleManager.CreateAsync(new IdentityRole(Roles.Paciente));
-        await roleManager.CreateAsync(new IdentityRole(Roles.Medico));
+        await roleManager.CreateAsync(new IdentityRole<Guid>(Roles.Admin));
+        await roleManager.CreateAsync(new IdentityRole<Guid>(Roles.Paciente));
+        await roleManager.CreateAsync(new IdentityRole<Guid>(Roles.Medico));
     }
     private static async Task SeedAdminUser(IServiceProvider services)
     {
@@ -24,7 +25,7 @@ public static class SeedManager
         // mas falta cadastrar no admin
         var context = services.GetRequiredService<AppDbContext>();
         var userManager = services.GetRequiredService<UserManager<Admin>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
         var adminUser = await context.Admins.FirstOrDefaultAsync(user =>
             user.UserName == "AuthenticationAdmin"

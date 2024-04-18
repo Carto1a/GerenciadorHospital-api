@@ -7,12 +7,17 @@ namespace Hospital.Repository.Cadastros;
 public class MedicoRepository
 : IMedicoRepository
 {
+    private readonly ILogger<MedicoRepository> _logger;
     private readonly AppDbContext _ctx;
-    public MedicoRepository(AppDbContext context)
+    public MedicoRepository(
+        AppDbContext context,
+        ILogger<MedicoRepository> logger)
     {
         _ctx = context;
+        _logger = logger;
+        _logger.LogDebug(1, $"NLog injected into MedicoRepository");
     }
-    public Result<Medico?> GetMedicoById(string id)
+    public Result<Medico?> GetMedicoById(Guid id)
     {
         try
         {
