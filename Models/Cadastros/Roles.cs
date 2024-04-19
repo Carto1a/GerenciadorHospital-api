@@ -1,7 +1,7 @@
 namespace Hospital.Models.Cadastro;
-public static class Roles
+public class Roles
 {
-    public const string Admin = "ADMIN";
-    public const string Paciente = "PACIENTE";
-    public const string Medico = "MEDICO";
+    public static string Admin = "ADMIN";
+    public static string Paciente = "PACIENTE";
+    public static string Medico = "MEDICO";
 }

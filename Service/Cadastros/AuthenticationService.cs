@@ -6,7 +6,7 @@ using FluentResults;
 
 using Hospital.Dto.Auth;
 using Hospital.Models.Cadastro;
-using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Repository.Cadastros.Authentications.Interfaces;
 using Hospital.Service.Convenios.Interfaces;
 using Hospital.Service.Interfaces;
 
@@ -19,20 +19,18 @@ public class AuthenticationService
 {
     private readonly ILogger<AuthenticationService> _logger;
     private readonly UserManager<Cadastro> _userManager;
-    private readonly UserManager<Paciente> _pacienteManager;
-    private readonly UserManager<Medico> _medicoManager;
-    private readonly UserManager<Admin> _adminManager;
+    private readonly IAuthAdminRepository _adminManager;
+    private readonly IAuthMedicoRepository _medicoManager;
+    private readonly IAuthPacienteRepository _pacienteManager;
     private readonly IConvenioService _convenioService;
     private readonly IConfiguration _configuration;
-    private readonly IAuthenticationRepository _authRepo;
     public AuthenticationService(
         UserManager<Cadastro> userManager,
-        UserManager<Paciente> pacienteManager,
-        UserManager<Medico> medicoManager,
-        UserManager<Admin> adminManager,
+        IAuthPacienteRepository pacienteManager,
+        IAuthMedicoRepository medicoManager,
+        IAuthAdminRepository adminManager,
         IConvenioService convenioService,
         IConfiguration configuration,
-        IAuthenticationRepository authenticationRepository,
         ILogger<AuthenticationService> logger)
     {
         _userManager = userManager;
@@ -41,7 +39,6 @@ public class AuthenticationService
         _adminManager = adminManager;
         _convenioService = convenioService;
         _configuration = configuration;
-        _authRepo = authenticationRepository;
         _logger = logger;
         _logger.LogDebug(1, "NLog injected into AuthenticationService");
     }
@@ -51,8 +48,7 @@ public class AuthenticationService
     {
         _logger.LogInformation($"Logando medico: {request.Email}");
         var user = await _medicoManager
-            .FindByEmailAsync(request.Email);
-
+            .FindByEmail(request.Email);
         if (user == null)
         {
             _logger.LogError($"Cadastro de medico não existe: {request.Email}");
@@ -60,7 +56,7 @@ public class AuthenticationService
         }
 
         if (!await _medicoManager
-            .CheckPasswordAsync(user, request.Password))
+            .CheckPassword(user, request.Password))
         {
             _logger.LogError($"Senha de medico errada: {request.Email}");
             return Result.Fail("Senha errada");
@@ -74,7 +70,7 @@ public class AuthenticationService
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        var userRoles = await _medicoManager.GetRolesAsync(user);
+        var userRoles = await _medicoManager.GetRoles(user);
         authClaims.AddRange(userRoles.Select(userRoles =>
             new Claim(ClaimTypes.Role, userRoles)
         ));
@@ -90,7 +86,7 @@ public class AuthenticationService
     {
         _logger.LogInformation($"Logando paciente: {request.Email}");
         var user = await _pacienteManager
-            .FindByEmailAsync(request.Email);
+            .FindByEmail(request.Email);
 
         if (user == null)
         {
@@ -99,7 +95,7 @@ public class AuthenticationService
         }
 
         if (!await _pacienteManager
-            .CheckPasswordAsync(user, request.Password))
+            .CheckPassword(user, request.Password))
         {
             _logger.LogError($"Senha de paciente errada: {request.Email}");
             return Result.Fail("Senha errada");
@@ -113,7 +109,7 @@ public class AuthenticationService
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        var userRoles = await _pacienteManager.GetRolesAsync(user);
+        var userRoles = await _pacienteManager.GetRoles(user);
         authClaims.AddRange(userRoles.Select(userRoles =>
             new Claim(ClaimTypes.Role, userRoles)
         ));
@@ -129,7 +125,7 @@ public class AuthenticationService
     {
         _logger.LogInformation($"Logando admin: {request.Email}");
         var user = await _adminManager
-            .FindByEmailAsync(request.Email);
+            .FindByEmail(request.Email);
 
         if (user == null)
         {
@@ -138,7 +134,7 @@ public class AuthenticationService
         }
 
         if (!await _adminManager
-            .CheckPasswordAsync(user, request.Password))
+            .CheckPassword(user, request.Password))
         {
             _logger.LogError($"Senha de admin errada: {request.Email}");
             return Result.Fail("Senha errada");
@@ -152,7 +148,7 @@ public class AuthenticationService
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        var userRoles = await _adminManager.GetRolesAsync(user);
+        var userRoles = await _adminManager.GetRoles(user);
         authClaims.AddRange(userRoles.Select(userRoles =>
             new Claim(ClaimTypes.Role, userRoles)
         ));
@@ -169,11 +165,11 @@ public class AuthenticationService
     {
         _logger.LogInformation($"Registrando paciente: {request.Email}");
         var paciente = await _pacienteManager
-            .FindByEmailAsync(request.Email);
+            .FindByEmail(request.Email);
         if (paciente != null)
         {
             _logger.LogError($"Cadastro de paciente já existe: {request.Email}");
-            return Result.Fail("Cadastro ja existe");
+            return Result.Fail("Cadastro já existe");
         }
 
         Convenio? convenio = null;
@@ -194,28 +190,15 @@ public class AuthenticationService
             request,
             convenio,
             _configuration["Paths:PacienteDocumentos"]);
-        if (paciente1 == null)
+        if (paciente1.IsFailed)
         {
             _logger.LogError($"Erro na criação de paciente: {request.Email}");
             return Result.Fail("Erro na Criação");
         }
 
-        IdentityResult result;
-
-        try
-        {
-            result = await _pacienteManager
-                .CreateAsync(paciente1.Value, request.Password);
-            await _pacienteManager
-                .AddToRoleAsync(paciente1.Value, Roles.Paciente);
-        }
-        catch (Exception error)
-        {
-            _logger.LogError($"Erro na criação de paciente: {error.Message}");
-            return Result.Fail(error.Message);
-        }
-
-        if (!result.Succeeded)
+        var result = await _pacienteManager
+            .Create(paciente1.Value, request.Password);
+        if (result.IsFailed)
         {
             _logger.LogError($"Erro na criação de paciente: {request.Email}");
             return Result.Fail("Erro na Criação");
@@ -226,43 +209,35 @@ public class AuthenticationService
             new LoginRequestPacienteDto
             { Email = request.Email, Password = request.Password });
     }
+
     public async Task<Result<string>> Register(
         RegisterRequestMedicoDto request)
     {
         _logger.LogInformation($"Registrando medico: {request.Email}");
         var medico = await _medicoManager
-            .FindByEmailAsync(request.Email);
+            .FindByEmail(request.Email);
         if (medico != null)
         {
             _logger.LogError($"Cadastro de medico já existe: {request.Email}");
-            return Result.Fail("Cadastro ja existe");
+            return Result.Fail("Cadastro já exite");
         }
 
-        Medico medico1 = new();
-        medico1.Create(request);
-
-        IdentityResult result;
-
-        try
-        {
-            result = await _medicoManager
-                .CreateAsync(medico1, request.Password);
-            await _medicoManager
-                .AddToRoleAsync(medico1, Roles.Medico);
-        }
-        catch (Exception error)
-        {
-            _logger.LogError($"Erro na criação de medico: {error.Message}");
-            return Result.Fail(error.Message);
-        }
-
-        if (!result.Succeeded)
+        var medico1 = Medico.Create(request);
+        if (medico1.IsFailed)
         {
             _logger.LogError($"Erro na criação de medico: {request.Email}");
             return Result.Fail("Erro na Criação");
         }
 
-        _logger.LogInformation($"Medico registrado: {medico1.Id}");
+        var result = await _medicoManager
+            .Create(medico1.Value, request.Password);
+        if (result.IsFailed)
+        {
+            _logger.LogError($"Erro na criação de medico: {request.Email}");
+            return Result.Fail("Erro na Criação");
+        }
+
+        _logger.LogInformation($"Medico registrado: {medico1.Value.Id}");
         return await Login(
             new LoginRequestMedicoDto
             { Email = request.Email, Password = request.Password });
@@ -273,38 +248,29 @@ public class AuthenticationService
     {
         _logger.LogInformation($"Registrando admin: {request.Email}");
         var admin = await _adminManager
-            .FindByEmailAsync(request.Email);
+            .FindByEmail(request.Email);
         if (admin != null)
         {
             _logger.LogError($"Cadastro de admin já existe: {request.Email}");
             return Result.Fail("Cadastro ja existe");
         }
 
-        Admin admin1 = new();
-        admin1.Create(request);
-
-        IdentityResult result;
-
-        try
-        {
-            result = await _adminManager
-                .CreateAsync(admin1, request.Password);
-            await _adminManager
-                .AddToRoleAsync(admin1, Roles.Admin);
-        }
-        catch (Exception error)
-        {
-            _logger.LogError($"Erro na criação de admin: {error.Message}");
-            return Result.Fail(error.Message);
-        }
-
-        if (!result.Succeeded)
+        var admin1 = Admin.Create(request);
+        if (admin1.IsFailed)
         {
             _logger.LogError($"Erro na criação de admin: {request.Email}");
             return Result.Fail("Erro na Criação");
         }
 
-        _logger.LogInformation($"Admin registrado: {admin1.Id}");
+        var result = await _adminManager
+            .Create(admin1.Value, request.Password);
+        if (result.IsFailed)
+        {
+            _logger.LogError($"Erro na criação de admin: {request.Email}");
+            return Result.Fail("Erro na Criação");
+        }
+
+        _logger.LogInformation($"Admin registrado: {admin1.Value.Id}");
         return await Login(
             new LoginRequestAdminDto
             { Email = request.Email, Password = request.Password });

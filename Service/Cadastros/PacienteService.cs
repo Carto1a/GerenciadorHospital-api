@@ -67,17 +67,16 @@ public class PacienteService
             return Result.Fail("Paciente não encontrado");
         }
 
-
         var paciente = response.Value;
 
-        if (
-            !guid.Equals(paciente.ImgCarteiraConvenio)
+        if (!guid.Equals(paciente.ImgCarteiraConvenio)
             && !guid.Equals(paciente.ImgDocumento))
         {
             _logger.LogError($"Não foi possivel achar o arquivo de: {id}");
             return Result.Fail("Não foi possivel achar o arquivo");
         }
 
+        var rootPath = _configuration["Paths:PacienteDocumentos"];
         var path = Path.Combine(
             _configuration["Paths:PacienteDocumentos"], guid.ToString());
         if (!File.Exists(path))

@@ -4,7 +4,7 @@ namespace Hospital.Models.Cadastro;
 public class Cadastro
 : IdentityUser<Guid>
 {
-    public string Nome { get; set; }
+    public required string Nome { get; set; }
     public DateOnly DataNascimento { get; set; }
     public bool Genero { get; set; }
     public string? Telefone { get; set; }

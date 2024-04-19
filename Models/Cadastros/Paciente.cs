@@ -28,12 +28,14 @@ public class Paciente
                 throw new ArgumentNullException(
                     nameof(request.ConvenioImg));
 
-            DocConvenioName = SaveDocs(path, request.ConvenioImg);
+            var ConvenioPath = Path.Combine(path, "Convenios");
+            DocConvenioName = SaveDocs(ConvenioPath, request.ConvenioImg);
             if (DocConvenioName.IsFailed)
                 return Result.Fail(DocConvenioName.Errors);
         }
 
-        var DocIntentifiName = SaveDocs(path, request.DocumentoImg);
+        var DocumentoPath = Path.Combine(path, "Documentos");
+        var DocIntentifiName = SaveDocs(DocumentoPath, request.DocumentoImg);
         if (DocIntentifiName.IsFailed)
             return Result.Fail(DocIntentifiName.Errors);
 

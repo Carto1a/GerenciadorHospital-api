@@ -7,6 +7,8 @@ using Hospital.Repository.Agendamentos.Interfaces;
 using Hospital.Repository.Atendimentos;
 using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros;
+using Hospital.Repository.Cadastros.Authentications;
+using Hospital.Repository.Cadastros.Authentications.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Repository.Convenios;
 using Hospital.Repository.Convenios.Ineterfaces;
@@ -157,8 +159,16 @@ builder.Services.AddScoped<
 
 //  - Cadastros
 builder.Services.AddScoped<
-    IAuthenticationRepository,
-    AuthenticationRepository>();
+    IAuthPacienteRepository,
+    AuthPacienteRepository>();
+
+builder.Services.AddScoped<
+    IAuthMedicoRepository,
+    AuthMedicoRepository>();
+
+builder.Services.AddScoped<
+    IAuthAdminRepository,
+    AuthAdminRepository>();
 
 builder.Services.AddScoped<
     IPacienteRepository,

@@ -1,5 +1,6 @@
 namespace Hospital.Dto.Auth;
-public class RegisterRequestAdminDto : RegisterRequestDto
+public class RegisterRequestAdminDto
+: RegisterRequestDto
 {
 
 }
