@@ -41,6 +41,14 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 logger.Debug("Starting application");
 
+var JWTSecret = configuration["JWT:Secret"] ??
+    throw new InvalidOperationException(
+        "JWT:Secret not found in appsettings.json");
+
+var DocPath = configuration["Paths:PacienteDocumentos"] ??
+    throw new InvalidOperationException(
+        "Paths:PacienteDocumentos not found in appsettings.json");
+
 // Logger Initialization
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
@@ -87,9 +95,6 @@ builder.Services.AddIdentityCore<Medico>()
     .AddDefaultTokenProviders();
 
 // 3. Adding Authentication
-var JWTSecret = configuration["JWT:Secret"] ??
-    throw new InvalidOperationException(
-        "JWT:Secret not found in appsettings.json");
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

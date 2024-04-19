@@ -63,7 +63,8 @@ public class AuthPacienteRepository
 
     public Task<Paciente?> FindByEmail(string email)
     {
-        return _manager.FindByEmailAsync(email);
+        var user = _manager.FindByEmailAsync(email);
+        return user;
     }
 
     public Task<bool> CheckPassword(Paciente admin, string senha)

@@ -2,6 +2,7 @@ using Hospital.Controllers.Generics;
 using Hospital.Dto.Agendamento.Get;
 using Hospital.Dto.Auth;
 using Hospital.Dto.Result;
+using Hospital.Enums;
 using Hospital.Extensions;
 using Hospital.Service.Agendamentos.Interfaces;
 using Hospital.Service.Interfaces;
@@ -70,25 +71,90 @@ public class PacienteController
         if (response.IsFailed)
             return BadRequest(resultDto);
 
+        // TODO: enviar created?
         return Ok(resultDto);
     }
 
-    [Authorize(Roles = "Paciente")]
-    [HttpGet("Documentos/Mostrar/{guid}")]
-    public IActionResult GetDocumento(
-        [FromRoute] Guid guid)
+    [Authorize(Roles = "PACIENTE")]
+    [HttpGet("Documentos/Identificacao")]
+    public IActionResult GetDocumento()
     {
-        var result = _pacienteService.GetPacienteDocumento(User, guid);
+        var id = User.Claims.FirstOrDefault(x => x.Type == "ID")?.Value;
+        if (id == null)
+        {
+            _logger.LogError("Id do token do paciente não encontrado");
+            return NotFound("Documento não encontrado");
+        }
+
+        var result = _pacienteService.GetPacienteDocumento(
+            new Guid(id),
+            PacienteDocumentosEnum.Identificacao);
         if (result.IsFailed)
-            return NotFound();
+            return NotFound("Documento não encontrado");
 
         var path = result.Value;
-        if (!System.IO.File.Exists(path))
-            return NotFound();
 
         // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft
         return File(System.IO.File.ReadAllBytes(path), "image/png");
     }
+
+    [Authorize(Roles = "PACIENTE")]
+    [HttpGet("Documentos/Convenio")]
+    public IActionResult GetDocumentoConvenio()
+    {
+        var id = User.Claims.FirstOrDefault(x => x.Type == "ID")?.Value;
+        if (id == null)
+        {
+            _logger.LogError("Id do token do paciente não encontrado");
+            return NotFound("Documento não encontrado");
+        }
+
+        var result = _pacienteService.GetPacienteDocumento(
+            new Guid(id),
+            PacienteDocumentosEnum.Convenio);
+        if (result.IsFailed)
+            return NotFound("Documento não encontrado");
+
+        var path = result.Value;
+
+        // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft
+        return File(System.IO.File.ReadAllBytes(path), "image/png");
+    }
+
+    [Authorize(Policy = "ElevatedRights")]
+    [HttpGet("Documentos/Convenio/{guid}")]
+    public IActionResult GetDocumentoConvenioByGuid(
+        [FromRoute] Guid guid)
+    {
+        var result = _pacienteService.GetPacienteDocumentoByGuid(
+            guid,
+            PacienteDocumentosEnum.Convenio);
+        if (result.IsFailed)
+            return NotFound("Documento não encontrado");
+
+        var path = result.Value;
+
+        // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft
+        return File(System.IO.File.ReadAllBytes(path), "image/png");
+    }
+
+    [Authorize(Policy = "ElevatedRights")]
+    [HttpGet("Documentos/Identificacao/{guid}")]
+    public IActionResult GetDocumentoByGuid(
+        [FromRoute] Guid guid)
+    {
+        var result = _pacienteService.GetPacienteDocumentoByGuid(
+            guid,
+            PacienteDocumentosEnum.Identificacao);
+        if (result.IsFailed)
+            return NotFound("Documento não encontrado");
+
+        var path = result.Value;
+
+        // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft
+        return File(System.IO.File.ReadAllBytes(path), "image/png");
+    }
+
     [Authorize(Roles = "Paciente")]
     [HttpGet("Consultas")]
     public async Task<IActionResult> GetConsultas(

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using FluentResults;
 
 using Hospital.Database;
+using Hospital.Enums;
 using Hospital.Extensions;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
@@ -50,17 +51,12 @@ public class PacienteService
     }
 
     public Result<string> GetPacienteDocumento(
-        ClaimsPrincipal user, Guid guid)
+        Guid id,
+        PacienteDocumentosEnum documentoTipo)
     {
-        _logger.LogInformation($"Buscando documento do paciente: {guid}");
-        var id = user.Claims.FirstOrDefault(x => x.Type == "ID")?.Value;
-        if (id == null)
-        {
-            _logger.LogError("Id do token do paciente não encontrado");
-            return Result.Fail("Paciente não encontrado");
-        }
-
-        var response = _pacienteRepository.GetPacienteById(new Guid(id));
+        // TODO: deixar a controller que o id
+        _logger.LogInformation($"Buscando documento do paciente: {id}");
+        var response = _pacienteRepository.GetPacienteById(id);
         if (response.IsFailed)
         {
             _logger.LogError("Paciente não encontrado");
@@ -68,24 +64,97 @@ public class PacienteService
         }
 
         var paciente = response.Value;
-
-        if (!guid.Equals(paciente.ImgCarteiraConvenio)
-            && !guid.Equals(paciente.ImgDocumento))
+        if (paciente == null)
         {
-            _logger.LogError($"Não foi possivel achar o arquivo de: {id}");
-            return Result.Fail("Não foi possivel achar o arquivo");
+            _logger.LogError("Paciente não encontrado");
+            return Result.Fail("Paciente não encontrado");
         }
 
         var rootPath = _configuration["Paths:PacienteDocumentos"];
-        var path = Path.Combine(
-            _configuration["Paths:PacienteDocumentos"], guid.ToString());
+        if (rootPath == null)
+        {
+            _logger.LogError("Diretório de documentos não encontrado");
+            throw new InvalidOperationException(
+                "Paths:PacienteDocumentos not found in appsettings.json");
+        }
+        // NOTE: feio
+        var path = String.Empty;
+        var DocName = String.Empty;
+        switch (documentoTipo)
+        {
+            case PacienteDocumentosEnum.Identificacao:
+                DocName = paciente.ImgDocumento.ToString();
+                path = Path.Combine(
+                    rootPath,
+                    "Documentos",
+                    paciente.ImgDocumento.ToString());
+                break;
+            case PacienteDocumentosEnum.Convenio:
+                var DocConvenio = paciente.ImgCarteiraConvenio;
+                if (DocConvenio == null)
+                {
+                    _logger.LogError("Paciente não tem documento de convenio");
+                    return Result.Fail("Paciente não tem documento de convenio");
+                }
+                DocName = DocConvenio.ToString();
+                path = Path.Combine(
+                    rootPath,
+                    "Convenios",
+                    DocConvenio.ToString());
+                break;
+            default:
+                _logger.LogError("Tipo de documento não encontrado");
+                return Result.Fail("Tipo de documento não encontrado");
+        }
+        if (!File.Exists(path))
+        {
+            _logger.LogError($"Arquivo não achado de nome: {DocName}");
+            return Result.Fail("Arquivo não achado");
+        }
+
+        _logger.LogInformation($"Arquivo achado de nome: {DocName}");
+        return Result.Ok(path);
+    }
+
+    public Result<string> GetPacienteDocumentoByGuid(
+        Guid guid, PacienteDocumentosEnum documentoTipo)
+    {
+        // TODO: deixar a controller que o id
+        _logger.LogInformation($"Buscando documento do paciente de guid: {guid.ToString()}");
+        var rootPath = _configuration["Paths:PacienteDocumentos"];
+        if (rootPath == null)
+        {
+            _logger.LogError("Diretório de documentos não encontrado");
+            throw new InvalidOperationException(
+                "Paths:PacienteDocumentos not found in appsettings.json");
+        }
+        // NOTE: feio
+        var path = String.Empty;
+        switch (documentoTipo)
+        {
+            case PacienteDocumentosEnum.Identificacao:
+                path = Path.Combine(
+                    rootPath,
+                    "Documentos",
+                    guid.ToString());
+                break;
+            case PacienteDocumentosEnum.Convenio:
+                path = Path.Combine(
+                    rootPath,
+                    "Convenios",
+                    guid.ToString());
+                break;
+            default:
+                _logger.LogError("Tipo de documento não encontrado");
+                return Result.Fail("Tipo de documento não encontrado");
+        }
         if (!File.Exists(path))
         {
             _logger.LogError($"Arquivo não achado de nome: {guid.ToString()}");
             return Result.Fail("Arquivo não achado");
         }
 
-        _logger.LogInformation($"Arquivo achado de nome: {guid}");
+        _logger.LogInformation($"Arquivo achado de nome: {guid.ToString()}");
         return Result.Ok(path);
     }
 
