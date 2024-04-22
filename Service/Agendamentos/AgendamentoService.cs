@@ -8,6 +8,7 @@ using Hospital.Dto.Atendimento.Create;
 using Hospital.Logs.Agendamentos.Success;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
+using Hospital.Models.Cadastro;
 using Hospital.Repository.Agendamentos.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Repository.Convenios.Ineterfaces;
@@ -71,38 +72,71 @@ public class AgendamentoService<T, TAgendamento, TCreation>
         AgendamentoCreateDto request)
     {
         _logger.LogInformation($"Criando agendamento - {typeof(T).Name}");
-        var results = new List<Result>();
-        var medico = _medicoRepo.GetMedicoById(request.MedicoId);
         var paciente = _pacienteRepo.GetPacienteById(request.PacienteId);
-        var convenio = _convenioRepo.GetConvenioById((Guid)request.ConvenioId);
+        if (paciente.IsFailed)
+        {
+            _logger.LogError($"Paciente não existe da requisição de agendamento - {typeof(T).Name}");
+            return Result.Fail("Paciente não existe");
+        }
+
+        var medico = _medicoRepo.GetMedicoById(request.MedicoId);
+        if (medico.IsFailed)
+        {
+            _logger.LogError($"Medico não existe da requisição de agendamento - {typeof(T).Name}");
+            return Result.Fail("Medico não existe");
+        }
+
+        Result<Convenio?>? convenio = null;
+        if (request.ConvenioId != null)
+        {
+            convenio = _convenioRepo
+                .GetConvenioById((Guid)request.ConvenioId);
+            if (convenio.IsFailed)
+            {
+                _logger.LogError($"Convenio de id: {request.ConvenioId} não existe da requisição de agendamento - {typeof(T).Name}");
+                return Result.Fail("Convenio não exite");
+            }
+        }
 
         if (request.DataHora < DateTime.Now)
         {
             _logger.LogError($"Data e hora inválida da requisição de agendamento - {typeof(T).Name}");
-            results.Add(Result.Fail("Data e hora inválida"));
-        }
-        if (medico.Value == null)
-        {
-            _logger.LogError($"Medico não existe da requisição de agendamento - {typeof(T).Name}");
-            results.Add(Result.Fail("Medico não existe"));
-        }
-        if (paciente.Value == null)
-        {
-            _logger.LogError($"Paciente não existe da requisição de agendamento - {typeof(T).Name}");
-            results.Add(Result.Fail("Paciente não existe"));
+            return Result.Fail("Data e hora inválida");
         }
 
-        var mergedResult = results.Merge();
-
-        if (mergedResult.IsFailed || convenio.IsFailed)
+        // NOTE: validar se o horario não está ocupado
+        var horarioOffset = 30;
+        var agendamentos = await _repo.GetAgendamentoByQuery(
+        new AgendamentoGetByQueryDto
         {
-            _logger.LogError($"Falha na requisição de agendamento - {typeof(T).Name}");
-            return mergedResult;
+            MedicoId = request.MedicoId,
+            MinDate = request.DataHora.AddMinutes(-horarioOffset),
+            MaxDate = request.DataHora.AddMinutes(horarioOffset),
+            Limit = 100,
+            Page = 0
+        });
+        if (agendamentos.IsFailed)
+        {
+            _logger.LogError($"Erro ao buscar agendamentos - {typeof(T).Name}");
+            return Result.Fail("Erro ao buscar agendamentos");
+        }
+
+        if (agendamentos.Value.Count > 0)
+        {
+            _logger.LogError($"Horario para agendament ocupado - {typeof(T).Name}");
+            return Result.Fail("Horario ocupado");
         }
 
         var CustoFinal = request.Custo;
-        if (convenio.Value != null)
+        if (convenio != null && convenio.Value != null)
             CustoFinal -= request.Custo * convenio.Value.Desconto;
+
+        // NOTE: if para tirar os warns
+        if (paciente.Value == null || medico.Value == null)
+        {
+            _logger.LogError($"Medico ou Paciente não existem na requisição de agendamento - {typeof(T).Name}");
+            return Result.Fail("Medico ou Paciente não existem");
+        }
 
         TAgendamento agendamento = new()
         {
@@ -114,7 +148,7 @@ public class AgendamentoService<T, TAgendamento, TCreation>
             TipoId = default,
             Status = AgendamentoStatus.Agendado,
             Custo = request.Custo,
-            Convenio = convenio.Value,
+            Convenio = convenio?.Value,
             CustoFinal = CustoFinal,
             Deletado = false
         };

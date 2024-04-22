@@ -73,7 +73,7 @@ public class AgendamentoRepository<T, TAgendamento>
                 queryList = queryList.Where(e =>
                     e.PacienteId == query.PacienteId);
 
-            if (query.MinDate != null)
+            if (query.MinDate != null && query.MaxDate != null)
                 queryList = queryList.Where(
                     e => e.DataHora >= query.MinDate
                     && e.DataHora <= query.MaxDate);
