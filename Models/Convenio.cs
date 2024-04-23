@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-using Hospital.Dto.Convenios;
+using Hospital.Dtos.Input.Convenios;
 
 namespace Hospital.Models.Cadastro;
 public class Convenio
@@ -18,7 +18,7 @@ public class Convenio
     public string? Site { get; set; }
     public DateTime Criado { get; set; }
     public bool Deletado { get; set; }
-    public virtual ICollection<Paciente> Pacientes { get; set; }
+    public virtual ICollection<Paciente>? Pacientes { get; set; }
 
     public void Deletar() => Deletado = true;
 

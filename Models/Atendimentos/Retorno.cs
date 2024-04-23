@@ -1,3 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+
+using Hospital.Enums;
+
 namespace Hospital.Models.Atendimento;
 public class Retorno
 : Atendimento
@@ -5,6 +9,13 @@ public class Retorno
     public Guid ConsultaId { get; set; }
     public Guid? NovaConsultaId { get; set; }
 
-    public Consulta? Consulta { get; set; }
-    public Consulta? NovaConsulta { get; set; }
+    public virtual Consulta? Consulta { get; set; }
+    public virtual Consulta? NovaConsulta { get; set; }
+
+    [EnumDataType(typeof(RetornoStatus))]
+    public RetornoStatus Status { get; set; }
+
+    public void Realizar() => Status = RetornoStatus.Realizado;
+    public void AgendarNovaConsulta() => Status = RetornoStatus.NovaConsulta;
+    public void Cancelar() => Status = RetornoStatus.Cancelado;
 }

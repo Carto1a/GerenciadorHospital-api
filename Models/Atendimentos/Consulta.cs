@@ -9,16 +9,11 @@ public class Consulta
     public virtual ICollection<Exame>? Exames { get; set; }
     public virtual ICollection<Laudo>? Laudos { get; set; }
 
-    [EnumDataType(typeof(AtendimentoStatus))]
-    public AtendimentoStatus Status { get; set; }
+    [EnumDataType(typeof(ConsultaStatus))]
+    public ConsultaStatus Status { get; set; }
 
-    /* public void Creation( */
-    /*     ConsultaCreationDto request, */
-    /*     Medico medico, */
-    /*     Paciente paciente) */
-    /* { */
-    /*     base.Creation(request, medico, paciente); */
-    /*     Diagnostico = request.Diagnostico; */
-    /*     Observacoes = request.Observacoes; */
-    /* } */
+    public void Realizar() => Status = ConsultaStatus.Realizado;
+    public void Processar() => Status = ConsultaStatus.Processando;
+    public void Terminar() => Status = ConsultaStatus.Terminado;
+    public void Ausente() => Status = ConsultaStatus.Ausencia;
 }

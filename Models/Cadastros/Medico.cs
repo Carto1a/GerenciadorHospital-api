@@ -1,6 +1,6 @@
 using FluentResults;
 
-using Hospital.Dto.Auth;
+using Hospital.Dtos.Input.Authentications;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 
@@ -33,8 +33,8 @@ public class Medico
                 request.DataNascimento),
             Genero = request.Genero,
             Telefone = request.Telefone,
-            Cpf = request.Cpf,
-            Cep = request.Cep,
+            CPF = request.CPF,
+            CEP = request.CEP,
             NumeroCasa = request.NumeroCasa,
             UserName = request.Email,
             SecurityStamp = Guid.NewGuid().ToString()

@@ -18,4 +18,8 @@ public class Exame
 
     [EnumDataType(typeof(ExameStatus))]
     public ExameStatus Status { get; set; }
+
+    public void Processar() => Status = ExameStatus.Processando;
+    public void Completar() => Status = ExameStatus.Completado;
+    public void Cancelar() => Status = ExameStatus.Cancelado;
 }

@@ -1,5 +1,5 @@
 namespace Hospital.Enums;
-public enum AtendimentoStatus
+public enum ConsultaStatus
 {
     Realizado,
     Processando,

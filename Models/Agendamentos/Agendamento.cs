@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-using Hospital.Dto.Agendamento.Update;
+using Hospital.Dtos.Input.Agendamentos;
 using Hospital.Enums;
 using Hospital.Models.Cadastro;
 

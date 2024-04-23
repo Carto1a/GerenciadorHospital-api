@@ -5,5 +5,6 @@ public enum AgendamentoStatus
     Realizado,
     EmEspera,
     EmAndamento,
+    Ausencia,
     Cancelado,
 }

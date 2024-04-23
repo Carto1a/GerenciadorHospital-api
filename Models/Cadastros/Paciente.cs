@@ -1,6 +1,6 @@
 using FluentResults;
 
-using Hospital.Dto.Auth;
+using Hospital.Dtos.Input.Authentications;
 using Hospital.Models.Atendimento;
 
 namespace Hospital.Models.Cadastro;
@@ -22,40 +22,39 @@ public class Paciente
         Convenio? convenio,
         string path)
     {
-        Result<string>? DocConvenioName = null;
+        Result<string>? DocConvenioResult = null;
 
         if (request.ConvenioId != null)
         {
-            if (request.ConvenioImg == null)
-                throw new ArgumentNullException(
-                    nameof(request.ConvenioImg));
+            if (request.DocConvenioImg == null)
+                return Result.Fail("Imagem do Convenio esta nulo");
 
             var ConvenioPath = Path.Combine(path, "Convenios");
-            DocConvenioName = Cadastro
-                .SaveDocToPath(ConvenioPath, request.ConvenioImg);
-            if (DocConvenioName.IsFailed)
-                return Result.Fail(DocConvenioName.Errors);
+            DocConvenioResult = Cadastro
+                .SaveDocToPath(ConvenioPath, request.DocConvenioImg);
+            if (DocConvenioResult.IsFailed)
+                return Result.Fail(DocConvenioResult.Errors);
         }
 
         var DocumentoPath = Path.Combine(path, "Documentos");
-        var DocIntentifiName = Cadastro
-            .SaveDocToPath(DocumentoPath, request.DocumentoImg);
-        if (DocIntentifiName.IsFailed)
-            return Result.Fail(DocIntentifiName.Errors);
+        var DocIDResult = Cadastro
+            .SaveDocToPath(DocumentoPath, request.DocIDImg);
+        if (DocIDResult.IsFailed)
+            return Result.Fail(DocIDResult.Errors);
 
         return new Paciente
         {
             ConvenioId = request.ConvenioId,
-            DocConvenioPath = DocConvenioName?.Value,
-            DocIDPath = DocIntentifiName.Value,
+            DocConvenioPath = DocConvenioResult?.Value,
+            DocIDPath = DocIDResult.Value,
             Email = request.Email,
             Nome = request.Nome,
             DataNascimento = DateOnly.FromDateTime(
                 request.DataNascimento),
             Genero = request.Genero,
             Telefone = request.Telefone,
-            Cpf = request.Cpf,
-            Cep = request.Cep,
+            CPF = request.CPF,
+            CEP = request.CEP,
             NumeroCasa = request.NumeroCasa,
             UserName = request.Email,
             SecurityStamp = Guid.NewGuid().ToString()

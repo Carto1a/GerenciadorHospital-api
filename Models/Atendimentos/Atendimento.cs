@@ -11,6 +11,7 @@ public abstract class Atendimento
     public Guid MedicoId { get; set; }
     public Guid PacienteId { get; set; }
     public Guid? AgendamentoId { get; set; }
+    public Guid? ConvenioId { get; set; }
 
     public virtual Medico? Medico { get; set; }
     public virtual Paciente? Paciente { get; set; }
@@ -18,7 +19,6 @@ public abstract class Atendimento
 
     public DateTime Inicio { get; set; }
     public DateTime Fim { get; set; }
-    public bool Convenio { get; set; }
     public decimal Custo { get; set; }
     public decimal CustoFinal { get; set; }
 

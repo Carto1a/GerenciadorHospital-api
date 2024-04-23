@@ -4,5 +4,5 @@ namespace Hospital.Dtos.Input.Atendimentos;
 public record ConsultaUpdateDto
 : AtendimentoUpdateDto
 {
-    public AtendimentoStatus? Status { get; set; }
+    public ConsultaStatus? Status { get; set; }
 }
