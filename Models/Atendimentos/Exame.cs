@@ -1,23 +1,21 @@
-using Hospital.Dto.Atendimento.Create;
-using Hospital.Models.Agendamentos;
-using Hospital.Models.Atendimento.Interfaces;
-using Hospital.Models.Cadastro;
+using System.ComponentModel.DataAnnotations;
+
+using Hospital.Enums;
 
 namespace Hospital.Models.Atendimento;
 public class Exame
-: Atendimento,
-IAtendimento<ExameCreationDto>
+: Atendimento
 {
-    // tipo de exame
-    public ExameAgendamento Agendamento { get; set; }
+    // TODO: colocar o tipo de exame
+    public Guid LaudoId { get; set; }
+    public Guid ConsultaId { get; set; }
+
+    public virtual Laudo? Laudo { get; set; }
+    public virtual Consulta? Consulta { get; set; }
+
+    // TODO: criar uma entidade para exame resultado
     public string Resultado { get; set; }
 
-    public void Creation(
-        ExameCreationDto request,
-        Medico medico,
-        Paciente paciente)
-    {
-        base.Creation(request, medico, paciente);
-        Resultado = request.Resultado;
-    }
+    [EnumDataType(typeof(ExameStatus))]
+    public ExameStatus Status { get; set; }
 }
