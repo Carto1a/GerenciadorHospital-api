@@ -8,7 +8,11 @@ namespace Hospital.Models.Cadastro;
 public class Medico
 : Cadastro
 {
-    public required string Especialidade { get; set; }
+    public string CRM { get; set; }
+    public string? DocCRMPath { get; set; }
+    public string Especialidade { get; set; }
+    public bool Ativo { get; set; }
+
     public virtual ICollection<Consulta>? Consultas { get; set; }
     public virtual ICollection<Exame>? Exames { get; set; }
     public virtual ICollection<Retorno>? Retornos { get; set; }

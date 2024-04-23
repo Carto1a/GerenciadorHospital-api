@@ -8,12 +8,14 @@ public class Paciente
 : Cadastro
 {
     public Guid? ConvenioId { get; set; }
+
     public virtual Convenio? Convenio { get; set; }
-    public string? ImgCarteiraConvenio { get; set; }
-    public required string ImgDocumento { get; set; }
     public virtual ICollection<Consulta>? Consultas { get; set; }
     public virtual ICollection<Exame>? Exames { get; set; }
     public virtual ICollection<Retorno>? Retornos { get; set; }
+
+    public string? DocConvenioPath { get; set; }
+    public string? DocIDPath { get; set; }
 
     public static Result<Paciente> Create(
         RegisterRequestPacienteDto request,
@@ -29,21 +31,23 @@ public class Paciente
                     nameof(request.ConvenioImg));
 
             var ConvenioPath = Path.Combine(path, "Convenios");
-            DocConvenioName = SaveDocs(ConvenioPath, request.ConvenioImg);
+            DocConvenioName = Cadastro
+                .SaveDocToPath(ConvenioPath, request.ConvenioImg);
             if (DocConvenioName.IsFailed)
                 return Result.Fail(DocConvenioName.Errors);
         }
 
         var DocumentoPath = Path.Combine(path, "Documentos");
-        var DocIntentifiName = SaveDocs(DocumentoPath, request.DocumentoImg);
+        var DocIntentifiName = Cadastro
+            .SaveDocToPath(DocumentoPath, request.DocumentoImg);
         if (DocIntentifiName.IsFailed)
             return Result.Fail(DocIntentifiName.Errors);
 
         return new Paciente
         {
             ConvenioId = request.ConvenioId,
-            ImgCarteiraConvenio = DocConvenioName?.Value,
-            ImgDocumento = DocIntentifiName.Value,
+            DocConvenioPath = DocConvenioName?.Value,
+            DocIDPath = DocIntentifiName.Value,
             Email = request.Email,
             Nome = request.Nome,
             DataNascimento = DateOnly.FromDateTime(
@@ -56,32 +60,5 @@ public class Paciente
             UserName = request.Email,
             SecurityStamp = Guid.NewGuid().ToString()
         };
-    }
-
-    private static Result<string> SaveDocs(string path, IFormFile Doc)
-    {
-        try
-        {
-            var DocGuid = Guid.NewGuid().ToString();
-            while (File.Exists(Path.Combine(path, DocGuid)))
-            {
-                DocGuid = Guid.NewGuid().ToString();
-            }
-
-            var DocPath = Path.Combine(path, DocGuid);
-
-            Stream fileStream =
-                new FileStream(DocPath, FileMode.Create);
-
-            Task task = Doc.CopyToAsync(fileStream)
-                .ContinueWith(task => fileStream.Close());
-
-            return DocGuid;
-        }
-        catch (Exception e)
-        {
-            // TODO: arrumar para um jeito mais bonito
-            return Result.Fail(e.Message);
-        }
     }
 }
