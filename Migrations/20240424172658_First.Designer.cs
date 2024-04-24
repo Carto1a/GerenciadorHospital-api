@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240419193756_First")]
+    [Migration("20240424172658_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -29,7 +29,7 @@ namespace Hospital.Migrations
                     b.Property<Guid?>("ConvenioId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Criação")
+                    b.Property<DateTime>("Criado")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Custo")
@@ -53,9 +53,6 @@ namespace Hospital.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("TipoId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ConvenioId");
@@ -64,8 +61,7 @@ namespace Hospital.Migrations
 
                     b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoId")
-                        .IsUnique();
+                    b.HasIndex("Status");
 
                     b.ToTable("AgendamentosConsultas");
                 });
@@ -79,7 +75,7 @@ namespace Hospital.Migrations
                     b.Property<Guid?>("ConvenioId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Criação")
+                    b.Property<DateTime>("Criado")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Custo")
@@ -103,9 +99,6 @@ namespace Hospital.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("TipoId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ConvenioId");
@@ -114,8 +107,7 @@ namespace Hospital.Migrations
 
                     b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoId")
-                        .IsUnique();
+                    b.HasIndex("Status");
 
                     b.ToTable("AgendamentosExames");
                 });
@@ -126,10 +118,13 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ConsultaId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid?>("ConvenioId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Criação")
+                    b.Property<DateTime>("Criado")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Custo")
@@ -153,10 +148,9 @@ namespace Hospital.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("TipoId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ConsultaId");
 
                     b.HasIndex("ConvenioId");
 
@@ -164,8 +158,7 @@ namespace Hospital.Migrations
 
                     b.HasIndex("PacienteId");
 
-                    b.HasIndex("TipoId")
-                        .IsUnique();
+                    b.HasIndex("Status");
 
                     b.ToTable("AgendamentosRetornos");
                 });
@@ -176,8 +169,11 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Convenio")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid?>("AgendamentoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ConvenioId")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Criado")
                         .HasColumnType("TEXT");
@@ -185,8 +181,7 @@ namespace Hospital.Migrations
                     b.Property<decimal>("Custo")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Diagnostico")
-                        .IsRequired()
+                    b.Property<decimal>("CustoFinal")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Fim")
@@ -198,17 +193,24 @@ namespace Hospital.Migrations
                     b.Property<Guid>("MedicoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Observacoes")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("PacienteId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AgendamentoId")
+                        .IsUnique();
+
+                    b.HasIndex("ConvenioId");
 
                     b.HasIndex("MedicoId");
 
                     b.HasIndex("PacienteId");
+
+                    b.HasIndex("Status");
 
                     b.ToTable("Consultas");
                 });
@@ -219,8 +221,14 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Convenio")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid?>("AgendamentoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ConsultaId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ConvenioId")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Criado")
                         .HasColumnType("TEXT");
@@ -228,10 +236,16 @@ namespace Hospital.Migrations
                     b.Property<decimal>("Custo")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("CustoFinal")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Fim")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Inicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("LaudoId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("MedicoId")
@@ -244,11 +258,23 @@ namespace Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AgendamentoId")
+                        .IsUnique();
+
+                    b.HasIndex("ConsultaId");
+
+                    b.HasIndex("ConvenioId");
 
                     b.HasIndex("MedicoId");
 
                     b.HasIndex("PacienteId");
+
+                    b.HasIndex("Status");
 
                     b.ToTable("Exames");
                 });
@@ -259,16 +285,22 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("AgendamentoId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("ConsultaId")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Convenio")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid?>("ConvenioId")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Criado")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Custo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("CustoFinal")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Fim")
@@ -280,20 +312,33 @@ namespace Hospital.Migrations
                     b.Property<Guid>("MedicoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Observacoes")
-                        .IsRequired()
+                    b.Property<Guid?>("NovaConsultaId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("PacienteId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ConsultaId");
+                    b.HasIndex("AgendamentoId")
+                        .IsUnique();
+
+                    b.HasIndex("ConsultaId")
+                        .IsUnique();
+
+                    b.HasIndex("ConvenioId");
 
                     b.HasIndex("MedicoId");
 
+                    b.HasIndex("NovaConsultaId")
+                        .IsUnique();
+
                     b.HasIndex("PacienteId");
+
+                    b.HasIndex("Status");
 
                     b.ToTable("Retornos");
                 });
@@ -307,15 +352,18 @@ namespace Hospital.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Cep")
+                    b.Property<int>("CEP")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CPF")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Cpf")
-                        .HasColumnType("INTEGER");
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("DataNascimento")
                         .HasColumnType("TEXT");
@@ -375,6 +423,9 @@ namespace Hospital.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CPF")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -428,7 +479,191 @@ namespace Hospital.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CNPJ")
+                        .IsUnique();
+
+                    b.HasIndex("Deletado")
+                        .IsUnique();
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Convenios");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Laudo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ConsultaId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("DocPath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ExameId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsultaId");
+
+                    b.HasIndex("DocPath")
+                        .IsUnique();
+
+                    b.HasIndex("ExameId")
+                        .IsUnique();
+
+                    b.HasIndex("MedicoId");
+
+                    b.HasIndex("PacienteId");
+
+                    b.ToTable("Laudos");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Medicamentos.Medicamento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CodigoDeBarras")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Composicao")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("Criado")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Preco")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PrincipioAtivo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuantidadeMinima")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CodigoDeBarras")
+                        .IsUnique();
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("Medicamentos");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Medicamentos.MedicamentoLote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("DataCadastro")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("DataFabricacao")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("DataVencimento")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Fabricante")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MedicamentoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PrecoUnitario")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuantidadeDisponivel")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Codigo")
+                        .IsUnique();
+
+                    b.HasIndex("MedicamentoId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("MedicamentoLotes");
+                });
+
+            modelBuilder.Entity("LaudoMedicamento", b =>
+                {
+                    b.Property<Guid>("LaudosId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MedicamentosId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LaudosId", "MedicamentosId");
+
+                    b.HasIndex("MedicamentosId");
+
+                    b.ToTable("LaudoMedicamento");
+                });
+
+            modelBuilder.Entity("MedicamentoPaciente", b =>
+                {
+                    b.Property<Guid>("MedicamentosId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PacientesId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("MedicamentosId", "PacientesId");
+
+                    b.HasIndex("PacientesId");
+
+                    b.ToTable("MedicamentoPaciente");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -568,9 +803,27 @@ namespace Hospital.Migrations
                 {
                     b.HasBaseType("Hospital.Models.Cadastro.Cadastro");
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CRM")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("DocCRMPath")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Especialidade")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.HasIndex("Ativo");
+
+                    b.HasIndex("CRM")
+                        .IsUnique();
+
+                    b.HasIndex("DocCRMPath")
+                        .IsUnique();
 
                     b.ToTable("Medicos");
                 });
@@ -582,22 +835,27 @@ namespace Hospital.Migrations
                     b.Property<Guid?>("ConvenioId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImgCarteiraConvenio")
+                    b.Property<Guid?>("DocConvenioPath")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImgDocumento")
-                        .IsRequired()
+                    b.Property<Guid?>("DocIDPath")
                         .HasColumnType("TEXT");
 
                     b.HasIndex("ConvenioId");
 
-                    b.ToTable("Pacientes", (string)null);
+                    b.HasIndex("DocConvenioPath")
+                        .IsUnique();
+
+                    b.HasIndex("DocIDPath")
+                        .IsUnique();
+
+                    b.ToTable("Pacientes");
                 });
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.ConsultaAgendamento", b =>
                 {
                     b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
-                        .WithMany()
+                        .WithMany("AgendamentosConsultas")
                         .HasForeignKey("ConvenioId");
 
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
@@ -607,28 +865,22 @@ namespace Hospital.Migrations
                         .IsRequired();
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
-                        .WithMany()
+                        .WithMany("AgendamentosConsultas")
                         .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Hospital.Models.Atendimento.Consulta", "Tipo")
-                        .WithOne("Agendamento")
-                        .HasForeignKey("Hospital.Models.Agendamentos.ConsultaAgendamento", "TipoId");
 
                     b.Navigation("Convenio");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
-
-                    b.Navigation("Tipo");
                 });
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.ExameAgendamento", b =>
                 {
                     b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
-                        .WithMany()
+                        .WithMany("AgendamentosExames")
                         .HasForeignKey("ConvenioId");
 
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
@@ -638,28 +890,28 @@ namespace Hospital.Migrations
                         .IsRequired();
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
-                        .WithMany()
+                        .WithMany("AgendamentosExames")
                         .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Hospital.Models.Atendimento.Exame", "Tipo")
-                        .WithOne("Agendamento")
-                        .HasForeignKey("Hospital.Models.Agendamentos.ExameAgendamento", "TipoId");
 
                     b.Navigation("Convenio");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
-
-                    b.Navigation("Tipo");
                 });
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.RetornoAgendamento", b =>
                 {
-                    b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
+                    b.HasOne("Hospital.Models.Atendimento.Consulta", "Consulta")
                         .WithMany()
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
+                        .WithMany("AgendamentosRetornos")
                         .HasForeignKey("ConvenioId");
 
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
@@ -669,26 +921,30 @@ namespace Hospital.Migrations
                         .IsRequired();
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
-                        .WithMany()
+                        .WithMany("AgendamentosRetornos")
                         .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Atendimento.Retorno", "Tipo")
-                        .WithOne("Agendamento")
-                        .HasForeignKey("Hospital.Models.Agendamentos.RetornoAgendamento", "TipoId");
+                    b.Navigation("Consulta");
 
                     b.Navigation("Convenio");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
-
-                    b.Navigation("Tipo");
                 });
 
             modelBuilder.Entity("Hospital.Models.Atendimento.Consulta", b =>
                 {
+                    b.HasOne("Hospital.Models.Agendamentos.ConsultaAgendamento", "Agendamento")
+                        .WithOne("Consulta")
+                        .HasForeignKey("Hospital.Models.Atendimento.Consulta", "AgendamentoId");
+
+                    b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
+                        .WithMany("Consultas")
+                        .HasForeignKey("ConvenioId");
+
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
                         .WithMany("Consultas")
                         .HasForeignKey("MedicoId")
@@ -700,6 +956,10 @@ namespace Hospital.Migrations
                         .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Agendamento");
+
+                    b.Navigation("Convenio");
 
                     b.Navigation("Medico");
 
@@ -708,6 +968,20 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Models.Atendimento.Exame", b =>
                 {
+                    b.HasOne("Hospital.Models.Agendamentos.ExameAgendamento", "Agendamento")
+                        .WithOne("Exame")
+                        .HasForeignKey("Hospital.Models.Atendimento.Exame", "AgendamentoId");
+
+                    b.HasOne("Hospital.Models.Atendimento.Consulta", "Consulta")
+                        .WithMany("Exames")
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
+                        .WithMany("Exames")
+                        .HasForeignKey("ConvenioId");
+
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
                         .WithMany("Exames")
                         .HasForeignKey("MedicoId")
@@ -719,6 +993,12 @@ namespace Hospital.Migrations
                         .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Agendamento");
+
+                    b.Navigation("Consulta");
+
+                    b.Navigation("Convenio");
 
                     b.Navigation("Medico");
 
@@ -727,11 +1007,19 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Models.Atendimento.Retorno", b =>
                 {
+                    b.HasOne("Hospital.Models.Agendamentos.RetornoAgendamento", "Agendamento")
+                        .WithOne("Retorno")
+                        .HasForeignKey("Hospital.Models.Atendimento.Retorno", "AgendamentoId");
+
                     b.HasOne("Hospital.Models.Atendimento.Consulta", "Consulta")
-                        .WithMany()
-                        .HasForeignKey("ConsultaId")
+                        .WithOne("Retorno")
+                        .HasForeignKey("Hospital.Models.Atendimento.Retorno", "ConsultaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
+                        .WithMany("Retornos")
+                        .HasForeignKey("ConvenioId");
 
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
                         .WithMany("Retornos")
@@ -739,17 +1027,103 @@ namespace Hospital.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Hospital.Models.Atendimento.Consulta", "NovaConsulta")
+                        .WithOne("VeioDeRetorno")
+                        .HasForeignKey("Hospital.Models.Atendimento.Retorno", "NovaConsultaId");
+
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("Retornos")
                         .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Agendamento");
+
                     b.Navigation("Consulta");
+
+                    b.Navigation("Convenio");
+
+                    b.Navigation("Medico");
+
+                    b.Navigation("NovaConsulta");
+
+                    b.Navigation("Paciente");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Laudo", b =>
+                {
+                    b.HasOne("Hospital.Models.Atendimento.Consulta", "Consulta")
+                        .WithMany("Laudos")
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Models.Atendimento.Exame", "Exame")
+                        .WithOne("Laudo")
+                        .HasForeignKey("Hospital.Models.Laudo", "ExameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
+                        .WithMany("Laudos")
+                        .HasForeignKey("MedicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
+                        .WithMany("Laudos")
+                        .HasForeignKey("PacienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Consulta");
+
+                    b.Navigation("Exame");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Medicamentos.MedicamentoLote", b =>
+                {
+                    b.HasOne("Hospital.Models.Medicamentos.Medicamento", "Medicamento")
+                        .WithMany("MedicamentoLotes")
+                        .HasForeignKey("MedicamentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Medicamento");
+                });
+
+            modelBuilder.Entity("LaudoMedicamento", b =>
+                {
+                    b.HasOne("Hospital.Models.Laudo", null)
+                        .WithMany()
+                        .HasForeignKey("LaudosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Models.Medicamentos.Medicamento", null)
+                        .WithMany()
+                        .HasForeignKey("MedicamentosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicamentoPaciente", b =>
+                {
+                    b.HasOne("Hospital.Models.Medicamentos.Medicamento", null)
+                        .WithMany()
+                        .HasForeignKey("MedicamentosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Models.Cadastro.Paciente", null)
+                        .WithMany()
+                        .HasForeignKey("PacientesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -803,6 +1177,24 @@ namespace Hospital.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Hospital.Models.Cadastro.Admin", b =>
+                {
+                    b.HasOne("Hospital.Models.Cadastro.Cadastro", null)
+                        .WithOne()
+                        .HasForeignKey("Hospital.Models.Cadastro.Admin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Models.Cadastro.Medico", b =>
+                {
+                    b.HasOne("Hospital.Models.Cadastro.Cadastro", null)
+                        .WithOne()
+                        .HasForeignKey("Hospital.Models.Cadastro.Medico", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Hospital.Models.Cadastro.Paciente", b =>
                 {
                     b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
@@ -818,27 +1210,57 @@ namespace Hospital.Migrations
                     b.Navigation("Convenio");
                 });
 
+            modelBuilder.Entity("Hospital.Models.Agendamentos.ConsultaAgendamento", b =>
+                {
+                    b.Navigation("Consulta");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Agendamentos.ExameAgendamento", b =>
+                {
+                    b.Navigation("Exame");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Agendamentos.RetornoAgendamento", b =>
+                {
+                    b.Navigation("Retorno");
+                });
+
             modelBuilder.Entity("Hospital.Models.Atendimento.Consulta", b =>
                 {
-                    b.Navigation("Agendamento")
-                        .IsRequired();
+                    b.Navigation("Exames");
+
+                    b.Navigation("Laudos");
+
+                    b.Navigation("Retorno");
+
+                    b.Navigation("VeioDeRetorno");
                 });
 
             modelBuilder.Entity("Hospital.Models.Atendimento.Exame", b =>
                 {
-                    b.Navigation("Agendamento")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Hospital.Models.Atendimento.Retorno", b =>
-                {
-                    b.Navigation("Agendamento")
-                        .IsRequired();
+                    b.Navigation("Laudo");
                 });
 
             modelBuilder.Entity("Hospital.Models.Cadastro.Convenio", b =>
                 {
+                    b.Navigation("AgendamentosConsultas");
+
+                    b.Navigation("AgendamentosExames");
+
+                    b.Navigation("AgendamentosRetornos");
+
+                    b.Navigation("Consultas");
+
+                    b.Navigation("Exames");
+
                     b.Navigation("Pacientes");
+
+                    b.Navigation("Retornos");
+                });
+
+            modelBuilder.Entity("Hospital.Models.Medicamentos.Medicamento", b =>
+                {
+                    b.Navigation("MedicamentoLotes");
                 });
 
             modelBuilder.Entity("Hospital.Models.Cadastro.Medico", b =>
@@ -853,14 +1275,24 @@ namespace Hospital.Migrations
 
                     b.Navigation("Exames");
 
+                    b.Navigation("Laudos");
+
                     b.Navigation("Retornos");
                 });
 
             modelBuilder.Entity("Hospital.Models.Cadastro.Paciente", b =>
                 {
+                    b.Navigation("AgendamentosConsultas");
+
+                    b.Navigation("AgendamentosExames");
+
+                    b.Navigation("AgendamentosRetornos");
+
                     b.Navigation("Consultas");
 
                     b.Navigation("Exames");
+
+                    b.Navigation("Laudos");
 
                     b.Navigation("Retornos");
                 });
