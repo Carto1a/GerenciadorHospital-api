@@ -15,6 +15,7 @@ public class Cadastro
     public string? NumeroCasa { get; set; }
 
     public DateTime Criado { get; set; }
+    public bool Ativo { get; set; }
 
     protected static Result<Guid> SaveDocToPath(
         string path, IFormFile Doc)

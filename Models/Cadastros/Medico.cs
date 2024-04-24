@@ -11,7 +11,6 @@ public class Medico
     public string CRM { get; set; }
     public Guid? DocCRMPath { get; set; }
     public string Especialidade { get; set; }
-    public bool Ativo { get; set; }
 
     public virtual ICollection<Consulta>? Consultas { get; set; }
     public virtual ICollection<Exame>? Exames { get; set; }
