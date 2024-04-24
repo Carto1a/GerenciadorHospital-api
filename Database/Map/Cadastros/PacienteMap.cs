@@ -44,6 +44,9 @@ public class PacienteMap
             .WithOne(a => a.Paciente)
             .HasForeignKey(x => x.PacienteId);
 
+        builder.HasMany(x => x.Medicamentos)
+            .WithMany(m => m.Pacientes);
+
         builder.HasIndex(x => x.DocIDPath).IsUnique();
         builder.HasIndex(x => x.DocConvenioPath).IsUnique();
     }

@@ -1,5 +1,6 @@
 using Hospital.Models.Atendimento;
 using Hospital.Models.Cadastro;
+using Hospital.Models.Medicamentos;
 
 namespace Hospital.Models;
 public class Laudo
@@ -14,6 +15,7 @@ public class Laudo
     public virtual Paciente? Paciente { get; set; }
     public virtual Exame? Exame { get; set; }
     public virtual Consulta? Consulta { get; set; }
+    public virtual ICollection<Medicamento>? Medicamentos { get; set; }
 
     public string Descricao { get; set; }
     public Guid? DocPath { get; set; }

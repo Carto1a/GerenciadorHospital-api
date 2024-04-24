@@ -22,8 +22,6 @@ public static class SeedManager
     }
     private static async Task SeedAdminUser(IServiceProvider services)
     {
-        // não esta conpleto, ele so cadastra o login
-        // mas falta cadastrar no admin
         var context = services.GetRequiredService<AppDbContext>();
         var userManager = services.GetRequiredService<UserManager<Admin>>();
         var medicoManager = services.GetRequiredService<UserManager<Medico>>();
@@ -34,7 +32,6 @@ public static class SeedManager
         );
 
         var medicoUser = await medicoManager.FindByEmailAsync("medico@medico.medico");
-
 
         if (adminUser == null)
         {

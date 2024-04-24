@@ -25,6 +25,9 @@ public class LaudoMap
             .WithMany(c => c.Laudos)
             .HasForeignKey(x => x.ConsultaId);
 
+        builder.HasMany(x => x.Medicamentos)
+            .WithMany(m => m.Laudos);
+
         builder.HasIndex(x => x.DocPath).IsUnique();
     }
 }

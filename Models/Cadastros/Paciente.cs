@@ -3,6 +3,7 @@ using FluentResults;
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
+using Hospital.Models.Medicamentos;
 
 namespace Hospital.Models.Cadastro;
 public class Paciente
@@ -15,6 +16,7 @@ public class Paciente
     public virtual ICollection<Exame>? Exames { get; set; }
     public virtual ICollection<Retorno>? Retornos { get; set; }
     public virtual ICollection<Laudo>? Laudos { get; set; }
+    public virtual ICollection<Medicamento>? Medicamentos { get; set; }
     public virtual ICollection<ConsultaAgendamento>? AgendamentosConsultas { get; set; }
     public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
     public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }

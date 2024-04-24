@@ -2,10 +2,12 @@ using Hospital.Database.Map;
 using Hospital.Database.Map.Agendamentos;
 using Hospital.Database.Map.Atendimentos;
 using Hospital.Database.Map.Cadastros;
+using Hospital.Database.Map.Medicamentos;
 using Hospital.Models;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 using Hospital.Models.Cadastro;
+using Hospital.Models.Medicamentos;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -31,6 +33,10 @@ public class AppDbContext
     public DbSet<Medico> Medicos { get; set; }
     public DbSet<Admin> Admins { get; set; }
 
+    // Medicamento
+    public DbSet<Medicamento> Medicamentos { get; set; }
+    public DbSet<MedicamentoLote> MedicamentoLotes { get; set; }
+
     // Outros
     public DbSet<Convenio> Convenios { get; set; }
     public DbSet<Laudo> Laudos { get; set; }
@@ -50,6 +56,9 @@ public class AppDbContext
         builder.ApplyConfiguration(new ConsultaMap());
         builder.ApplyConfiguration(new ExameMap());
         builder.ApplyConfiguration(new RetornoMap());
+
+        builder.ApplyConfiguration(new MedicamentoMap());
+        builder.ApplyConfiguration(new MedicamentoLoteMap());
 
         builder.ApplyConfiguration(new CadastroMap());
         builder.ApplyConfiguration(new PacienteMap());
