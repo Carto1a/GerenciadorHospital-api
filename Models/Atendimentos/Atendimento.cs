@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-using Hospital.Models.Agendamentos;
 using Hospital.Models.Cadastro;
 
 namespace Hospital.Models.Atendimento;
@@ -15,7 +14,7 @@ public abstract class Atendimento
 
     public virtual Medico? Medico { get; set; }
     public virtual Paciente? Paciente { get; set; }
-    public virtual Agendamento? Agendamento { get; set; }
+    public virtual Convenio? Convenio { get; set; }
 
     public DateTime Inicio { get; set; }
     public DateTime Fim { get; set; }

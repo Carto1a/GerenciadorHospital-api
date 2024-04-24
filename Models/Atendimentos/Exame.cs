@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 using Hospital.Enums;
+using Hospital.Models.Agendamentos;
 
 namespace Hospital.Models.Atendimento;
 public class Exame
@@ -10,6 +11,7 @@ public class Exame
     public Guid LaudoId { get; set; }
     public Guid ConsultaId { get; set; }
 
+    public virtual ExameAgendamento? Agendamento { get; set; }
     public virtual Laudo? Laudo { get; set; }
     public virtual Consulta? Consulta { get; set; }
 

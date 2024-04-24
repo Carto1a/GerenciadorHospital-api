@@ -6,5 +6,6 @@ public class RetornoAgendamento
 {
     public Guid ConsultaId { get; set; }
 
-    public Consulta? Consulta { get; set; }
+    public virtual Consulta? Consulta { get; set; }
+    public virtual Retorno? Retorno { get; set; }
 }

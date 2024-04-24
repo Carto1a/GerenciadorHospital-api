@@ -26,29 +26,62 @@ public static class SeedManager
         // mas falta cadastrar no admin
         var context = services.GetRequiredService<AppDbContext>();
         var userManager = services.GetRequiredService<UserManager<Admin>>();
+        var medicoManager = services.GetRequiredService<UserManager<Medico>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
         var adminUser = await context.Admins.FirstOrDefaultAsync(user =>
-            user.UserName == "AuthenticationAdmin"
+            user.UserName == "admim@admin.admin"
         );
+
+        var medicoUser = await medicoManager.FindByEmailAsync("medico@medico.medico");
+
 
         if (adminUser == null)
         {
             adminUser = new Admin
             {
-                UserName = "AuthenticationAdmin",
+                UserName = "admin@admin.admin",
                 Email = "admin@admin.admin",
                 Nome = "ze",
                 DataNascimento = DateOnly.FromDateTime(DateTime.Now),
                 Genero = false,
-                Cpf = 00000001,
-                Cep = 123,
+                CPF = 00000001,
+                CEP = 123,
                 NumeroCasa = "2",
                 Telefone = "44040404",
                 SecurityStamp = Guid.NewGuid().ToString()
             };
             await userManager.CreateAsync(adminUser, "123Carlos@");
             await userManager.AddToRoleAsync(adminUser, Roles.Admin);
+        }
+
+        if (medicoUser == null)
+        {
+            var medico = new Medico
+            {
+                UserName = "medico@medico.medico",
+                Email = "medico@medico.medico",
+                Nome = "ze",
+                DataNascimento = DateOnly.FromDateTime(DateTime.Now),
+                Genero = false,
+                CPF = 00000011,
+                CEP = 123,
+                NumeroCasa = "2",
+                Telefone = "44040404",
+                SecurityStamp = Guid.NewGuid().ToString(),
+                CRM = "123",
+                Especialidade = "cardiologista",
+                Ativo = true
+            };
+            try
+            {
+                await medicoManager.CreateAsync(medico, "123Carlos@");
+                await medicoManager.AddToRoleAsync(medico, Roles.Medico);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

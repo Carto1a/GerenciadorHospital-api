@@ -16,7 +16,7 @@ public class Laudo
     public virtual Consulta? Consulta { get; set; }
 
     public string Descricao { get; set; }
-    public string? Path { get; set; }
+    public Guid? DocPath { get; set; }
 
     public DateTime Criado { get; set; }
 }

@@ -1,4 +1,8 @@
 using Hospital.Database.Map;
+using Hospital.Database.Map.Agendamentos;
+using Hospital.Database.Map.Atendimentos;
+using Hospital.Database.Map.Cadastros;
+using Hospital.Models;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 using Hospital.Models.Cadastro;
@@ -12,30 +16,47 @@ namespace Hospital.Database;
 public class AppDbContext
 : IdentityDbContext<Cadastro, IdentityRole<Guid>, Guid>
 {
-    public DbSet<Paciente> Pacientes { get; set; }
-    public DbSet<Admin> Admins { get; set; }
-    public DbSet<Medico> Medicos { get; set; }
-    public DbSet<Convenio> Convenios { get; set; }
-    public DbSet<Retorno> Retornos { get; set; }
-    public DbSet<Exame> Exames { get; set; }
-    public DbSet<Consulta> Consultas { get; set; }
+    // Agendamentos
     public DbSet<ConsultaAgendamento> AgendamentosConsultas { get; set; }
     public DbSet<ExameAgendamento> AgendamentosExames { get; set; }
     public DbSet<RetornoAgendamento> AgendamentosRetornos { get; set; }
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+
+    // Atendimentos
+    public DbSet<Consulta> Consultas { get; set; }
+    public DbSet<Exame> Exames { get; set; }
+    public DbSet<Retorno> Retornos { get; set; }
+
+    // Cadastro
+    public DbSet<Paciente> Pacientes { get; set; }
+    public DbSet<Medico> Medicos { get; set; }
+    public DbSet<Admin> Admins { get; set; }
+
+    // Outros
+    public DbSet<Convenio> Convenios { get; set; }
+    public DbSet<Laudo> Laudos { get; set; }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+    : base(options)
     { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        builder.ApplyConfiguration(new ConvenioMap());
-        builder.ApplyConfiguration(new PacienteMap());
         builder.ApplyConfiguration(new ConsultaAgendamentoMap());
         builder.ApplyConfiguration(new ExameAgendamentoMap());
         builder.ApplyConfiguration(new RetornoAgendamentoMap());
+
         builder.ApplyConfiguration(new ConsultaMap());
         builder.ApplyConfiguration(new ExameMap());
         builder.ApplyConfiguration(new RetornoMap());
+
+        builder.ApplyConfiguration(new CadastroMap());
+        builder.ApplyConfiguration(new PacienteMap());
+        builder.ApplyConfiguration(new MedicoMap());
+        builder.ApplyConfiguration(new AdminMap());
+
+        builder.ApplyConfiguration(new ConvenioMap());
+        builder.ApplyConfiguration(new LaudoMap());
     }
 }

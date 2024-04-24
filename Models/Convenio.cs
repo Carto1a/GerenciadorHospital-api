@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
 using Hospital.Dtos.Input.Convenios;
+using Hospital.Models.Agendamentos;
+using Hospital.Models.Atendimento;
 
 namespace Hospital.Models.Cadastro;
 public class Convenio
@@ -19,6 +21,12 @@ public class Convenio
     public DateTime Criado { get; set; }
     public bool Deletado { get; set; }
     public virtual ICollection<Paciente>? Pacientes { get; set; }
+    public virtual ICollection<Consulta>? Consultas { get; set; }
+    public virtual ICollection<Exame>? Exames { get; set; }
+    public virtual ICollection<Retorno>? Retornos { get; set; }
+    public virtual ICollection<ConsultaAgendamento>? AgendamentosConsultas { get; set; }
+    public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
+    public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }
 
     public void Deletar() => Deletado = true;
 

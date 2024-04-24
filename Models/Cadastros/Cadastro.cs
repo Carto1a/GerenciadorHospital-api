@@ -14,18 +14,20 @@ public class Cadastro
     public int CEP { get; set; }
     public string? NumeroCasa { get; set; }
 
-    protected static Result<string> SaveDocToPath(
+    public DateTime Criado { get; set; }
+
+    protected static Result<Guid> SaveDocToPath(
         string path, IFormFile Doc)
     {
         try
         {
-            var DocGuid = Guid.NewGuid().ToString();
-            while (File.Exists(Path.Combine(path, DocGuid)))
+            var DocGuid = Guid.NewGuid();
+            while (File.Exists(Path.Combine(path, DocGuid.ToString())))
             {
-                DocGuid = Guid.NewGuid().ToString();
+                DocGuid = Guid.NewGuid();
             }
 
-            var DocPath = Path.Combine(path, DocGuid);
+            var DocPath = Path.Combine(path, DocGuid.ToString());
 
             Stream fileStream =
                 new FileStream(DocPath, FileMode.Create);

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 using Hospital.Enums;
+using Hospital.Models.Agendamentos;
 
 namespace Hospital.Models.Atendimento;
 public class Retorno
@@ -9,6 +10,7 @@ public class Retorno
     public Guid ConsultaId { get; set; }
     public Guid? NovaConsultaId { get; set; }
 
+    public virtual RetornoAgendamento? Agendamento { get; set; }
     public virtual Consulta? Consulta { get; set; }
     public virtual Consulta? NovaConsulta { get; set; }
 

@@ -9,13 +9,14 @@ public class Medico
 : Cadastro
 {
     public string CRM { get; set; }
-    public string? DocCRMPath { get; set; }
+    public Guid? DocCRMPath { get; set; }
     public string Especialidade { get; set; }
     public bool Ativo { get; set; }
 
     public virtual ICollection<Consulta>? Consultas { get; set; }
     public virtual ICollection<Exame>? Exames { get; set; }
     public virtual ICollection<Retorno>? Retornos { get; set; }
+    public virtual ICollection<Laudo>? Laudos { get; set; }
     public virtual ICollection<ConsultaAgendamento>? AgendamentosConsultas { get; set; }
     public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
     public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }

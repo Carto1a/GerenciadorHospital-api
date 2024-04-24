@@ -1,6 +1,7 @@
 using FluentResults;
 
 using Hospital.Dtos.Input.Authentications;
+using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 
 namespace Hospital.Models.Cadastro;
@@ -13,16 +14,20 @@ public class Paciente
     public virtual ICollection<Consulta>? Consultas { get; set; }
     public virtual ICollection<Exame>? Exames { get; set; }
     public virtual ICollection<Retorno>? Retornos { get; set; }
+    public virtual ICollection<Laudo>? Laudos { get; set; }
+    public virtual ICollection<ConsultaAgendamento>? AgendamentosConsultas { get; set; }
+    public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
+    public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }
 
-    public string? DocConvenioPath { get; set; }
-    public string? DocIDPath { get; set; }
+    public Guid? DocConvenioPath { get; set; }
+    public Guid? DocIDPath { get; set; }
 
     public static Result<Paciente> Create(
         RegisterRequestPacienteDto request,
         Convenio? convenio,
         string path)
     {
-        Result<string>? DocConvenioResult = null;
+        Result<Guid>? DocConvenioResult = null;
 
         if (request.ConvenioId != null)
         {

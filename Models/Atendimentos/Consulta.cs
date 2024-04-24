@@ -1,11 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 
 using Hospital.Enums;
+using Hospital.Models.Agendamentos;
 
 namespace Hospital.Models.Atendimento;
 public class Consulta
 : Atendimento
 {
+    public virtual ConsultaAgendamento? Agendamento { get; set; }
+    public virtual Retorno? Retorno { get; set; }
+    public virtual Retorno? VeioDeRetorno { get; set; }
     public virtual ICollection<Exame>? Exames { get; set; }
     public virtual ICollection<Laudo>? Laudos { get; set; }
 
