@@ -11,5 +11,8 @@ public class CadastroMap
     {
         builder.UseTptMappingStrategy();
         builder.HasIndex(x => x.CPF).IsUnique();
+        builder.HasIndex(x => x.Email).IsUnique();
+        builder.HasIndex(x => x.Ativo).IsUnique();
+        builder.HasIndex(x => x.Genero);
     }
 }

@@ -349,6 +349,9 @@ namespace Hospital.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("CEP")
                         .HasColumnType("INTEGER");
 
@@ -372,7 +375,7 @@ namespace Hospital.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Genero")
+                    b.Property<int>("Genero")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("LockoutEnabled")
@@ -420,8 +423,16 @@ namespace Hospital.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Ativo")
+                        .IsUnique();
+
                     b.HasIndex("CPF")
                         .IsUnique();
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Genero");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -800,9 +811,6 @@ namespace Hospital.Migrations
                 {
                     b.HasBaseType("Hospital.Models.Cadastro.Cadastro");
 
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("CRM")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -813,8 +821,6 @@ namespace Hospital.Migrations
                     b.Property<string>("Especialidade")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.HasIndex("Ativo");
 
                     b.HasIndex("CRM")
                         .IsUnique();

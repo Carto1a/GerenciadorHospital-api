@@ -43,6 +43,5 @@ public class MedicoMap
             .HasForeignKey(x => x.MedicoId);
 
         builder.HasIndex(x => x.DocCRMPath).IsUnique();
-        builder.HasIndex(x => x.Ativo);
     }
 }

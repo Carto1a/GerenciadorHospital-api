@@ -1,3 +1,5 @@
+using Hospital.Enums;
+
 namespace Hospital.Dtos.Output.Cadastros;
 public record CadastroOutputDto
 {
@@ -5,21 +7,22 @@ public record CadastroOutputDto
     string Email { get; set; }
     string Nome { get; set; }
     DateOnly DataNascimento { get; set; }
-    bool Genero { get; set; }
+    GeneroEnum Genero { get; set; }
     string? Telefone { get; set; }
     int CPF { get; set; }
     int CEP { get; set; }
     string? NumeroCasa { get; set; }
+    bool Ativo { get; set; }
 
     public CadastroOutputDto(
         string id,
         string email,
         string nome,
         DateOnly dataNascimento,
-        bool genero,
+        GeneroEnum genero,
         string? telefone,
-        int cPF,
-        int cEP,
+        int cpf,
+        int cep,
         string? numeroCasa)
     {
         Id = id;
@@ -28,8 +31,8 @@ public record CadastroOutputDto
         DataNascimento = dataNascimento;
         Genero = genero;
         Telefone = telefone;
-        CPF = cPF;
-        CEP = cEP;
+        CPF = cpf;
+        CEP = cep;
         NumeroCasa = numeroCasa;
     }
 };

@@ -1,7 +1,7 @@
+using Hospital.Enums;
 using Hospital.Models.Cadastro;
 
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Database;
 public static class SeedManager
@@ -27,9 +27,7 @@ public static class SeedManager
         var medicoManager = services.GetRequiredService<UserManager<Medico>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
-        var adminUser = await context.Admins.FirstOrDefaultAsync(user =>
-            user.UserName == "admim@admin.admin"
-        );
+        var adminUser = await userManager.FindByEmailAsync("admin@admin.admin");
 
         var medicoUser = await medicoManager.FindByEmailAsync("medico@medico.medico");
 
@@ -41,12 +39,13 @@ public static class SeedManager
                 Email = "admin@admin.admin",
                 Nome = "ze",
                 DataNascimento = DateOnly.FromDateTime(DateTime.Now),
-                Genero = false,
+                Genero = GeneroEnum.Outro,
                 CPF = 00000001,
                 CEP = 123,
                 NumeroCasa = "2",
                 Telefone = "44040404",
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
+                Ativo = true
             };
             await userManager.CreateAsync(adminUser, "123Carlos@");
             await userManager.AddToRoleAsync(adminUser, Roles.Admin);
@@ -60,7 +59,7 @@ public static class SeedManager
                 Email = "medico@medico.medico",
                 Nome = "ze",
                 DataNascimento = DateOnly.FromDateTime(DateTime.Now),
-                Genero = false,
+                Genero = GeneroEnum.Outro,
                 CPF = 00000011,
                 CEP = 123,
                 NumeroCasa = "2",

@@ -1,6 +1,5 @@
-namespace Hospital;
-
-public static class Consts
+namespace Hospital.Consts;
+public static class ValidationsConsts
 {
     public const int UsernameMinLength = 5;
     public const string PasswordRegex =

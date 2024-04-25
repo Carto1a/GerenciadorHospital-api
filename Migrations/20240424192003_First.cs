@@ -32,12 +32,13 @@ namespace Hospital.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false),
                     DataNascimento = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    Genero = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Genero = table.Column<int>(type: "INTEGER", nullable: false),
                     Telefone = table.Column<string>(type: "TEXT", nullable: true),
                     CPF = table.Column<int>(type: "INTEGER", nullable: false),
                     CEP = table.Column<int>(type: "INTEGER", nullable: false),
                     NumeroCasa = table.Column<string>(type: "TEXT", nullable: true),
                     Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Ativo = table.Column<bool>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -231,8 +232,7 @@ namespace Hospital.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     CRM = table.Column<string>(type: "TEXT", nullable: false),
                     DocCRMPath = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Especialidade = table.Column<string>(type: "TEXT", nullable: false),
-                    Ativo = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Especialidade = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -753,10 +753,27 @@ namespace Hospital.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Ativo",
+                table: "AspNetUsers",
+                column: "Ativo",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_CPF",
                 table: "AspNetUsers",
                 column: "CPF",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Email",
+                table: "AspNetUsers",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Genero",
+                table: "AspNetUsers",
+                column: "Genero");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -902,11 +919,6 @@ namespace Hospital.Migrations
                 name: "IX_Medicamentos_Status",
                 table: "Medicamentos",
                 column: "Status");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Medicos_Ativo",
-                table: "Medicos",
-                column: "Ativo");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Medicos_CRM",

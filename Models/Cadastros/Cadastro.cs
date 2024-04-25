@@ -1,5 +1,7 @@
 using FluentResults;
 
+using Hospital.Enums;
+
 using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Models.Cadastro;
@@ -8,7 +10,7 @@ public class Cadastro
 {
     public required string Nome { get; set; }
     public DateOnly DataNascimento { get; set; }
-    public bool Genero { get; set; }
+    public GeneroEnum Genero { get; set; }
     public string? Telefone { get; set; }
     public int CPF { get; set; }
     public int CEP { get; set; }

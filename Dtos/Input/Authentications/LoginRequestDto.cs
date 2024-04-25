@@ -1,12 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 
+using Hospital.Consts;
+
 namespace Hospital.Dtos.Input.Authentications;
 public class LoginRequestDto
 {
     [Required]
-    [EmailAddress(ErrorMessage = Consts.EmailValidationError)]
+    [EmailAddress(ErrorMessage = 
+        ValidationsConsts.EmailValidationError)]
     public string Email { get; set; }
     [Required]
-    [RegularExpression(Consts.PasswordRegex, ErrorMessage = Consts.PasswordValidationError)]
+    [RegularExpression(ValidationsConsts.PasswordRegex, ErrorMessage =
+        ValidationsConsts.PasswordValidationError)]
     public string Password { get; set; }
 }

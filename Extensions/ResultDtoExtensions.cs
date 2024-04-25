@@ -1,6 +1,6 @@
 using FluentResults;
 
-using Hospital.Dto.Result;
+using Hospital.Dtos.Result;
 
 namespace Hospital.Extensions;
 public static class ResultDtoExtensions
