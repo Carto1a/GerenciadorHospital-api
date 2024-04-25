@@ -1,6 +1,7 @@
+using System.Net;
+
 using Hospital.Exceptions;
 
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Hospital.Filter;
@@ -26,21 +27,16 @@ public class ExceptionFilter
             return;
         }
 
-        if (context.Exception is RequestListError)
-        {
-            RequestListError error =
-                (RequestListError)context.Exception;
-
-            context.Result = new RequestListErrorResponse(error);
-
-            if (error.LoggerMessage != null)
-                _logger.LogError(error.LoggerMessage);
-            return;
-        }
-
         // TODO: mudar isso
         context.Result =
-            new BadRequestObjectResult("Erro interno no servidor");
+            new RequestErrorResponse(
+                new RequestError(
+                    context.Exception.Message,
+                    "Error interno no servidor: "
+                    + context.Exception.Message,
+                    HttpStatusCode.InternalServerError
+                )
+            );
         _logger.LogError(context.Exception.Message);
     }
 }
