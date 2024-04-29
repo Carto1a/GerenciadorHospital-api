@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240424192003_First")]
+    [Migration("20240429171717_First")]
     partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.ConsultaAgendamento", b =>
                 {
@@ -47,7 +47,7 @@ namespace Hospital.Migrations
                     b.Property<Guid>("MedicoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -93,7 +93,7 @@ namespace Hospital.Migrations
                     b.Property<Guid>("MedicoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -142,7 +142,7 @@ namespace Hospital.Migrations
                     b.Property<Guid>("MedicoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -190,10 +190,10 @@ namespace Hospital.Migrations
                     b.Property<DateTime>("Inicio")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("MedicoId")
+                    b.Property<Guid?>("MedicoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -248,10 +248,10 @@ namespace Hospital.Migrations
                     b.Property<Guid>("LaudoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("MedicoId")
+                    b.Property<Guid?>("MedicoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Resultado")
@@ -309,13 +309,13 @@ namespace Hospital.Migrations
                     b.Property<DateTime>("Inicio")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("MedicoId")
+                    b.Property<Guid?>("MedicoId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("NovaConsultaId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -355,11 +355,14 @@ namespace Hospital.Migrations
                     b.Property<bool>("Ativo")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CEP")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CEP")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("CPF")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -400,6 +403,7 @@ namespace Hospital.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NumeroCasa")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
@@ -414,8 +418,12 @@ namespace Hospital.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Telefone")
+                    b.Property<string>("Sobrenome")
+                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<long?>("Telefone")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
@@ -426,8 +434,7 @@ namespace Hospital.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Ativo")
-                        .IsUnique();
+                    b.HasIndex("Ativo");
 
                     b.HasIndex("CPF")
                         .IsUnique();
@@ -521,13 +528,13 @@ namespace Hospital.Migrations
                     b.Property<Guid?>("DocPath")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ExameId")
+                    b.Property<Guid?>("ExameId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("MedicoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PacienteId")
+                    b.Property<Guid?>("PacienteId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -814,8 +821,12 @@ namespace Hospital.Migrations
                 {
                     b.HasBaseType("Hospital.Models.Cadastro.Cadastro");
 
-                    b.Property<string>("CRM")
+                    b.Property<int>("CRM")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CRMUF")
                         .IsRequired()
+                        .HasMaxLength(2)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("DocCRMPath")
@@ -872,9 +883,7 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("AgendamentosConsultas")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PacienteId");
 
                     b.Navigation("Convenio");
 
@@ -897,9 +906,7 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("AgendamentosExames")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PacienteId");
 
                     b.Navigation("Convenio");
 
@@ -928,9 +935,7 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("AgendamentosRetornos")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PacienteId");
 
                     b.Navigation("Consulta");
 
@@ -953,15 +958,11 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
                         .WithMany("Consultas")
-                        .HasForeignKey("MedicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MedicoId");
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("Consultas")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PacienteId");
 
                     b.Navigation("Agendamento");
 
@@ -990,15 +991,11 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
                         .WithMany("Exames")
-                        .HasForeignKey("MedicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MedicoId");
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("Exames")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PacienteId");
 
                     b.Navigation("Agendamento");
 
@@ -1029,9 +1026,7 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
                         .WithMany("Retornos")
-                        .HasForeignKey("MedicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MedicoId");
 
                     b.HasOne("Hospital.Models.Atendimento.Consulta", "NovaConsulta")
                         .WithOne("VeioDeRetorno")
@@ -1039,9 +1034,7 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("Retornos")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PacienteId");
 
                     b.Navigation("Agendamento");
 
@@ -1066,9 +1059,7 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Atendimento.Exame", "Exame")
                         .WithOne("Laudo")
-                        .HasForeignKey("Hospital.Models.Laudo", "ExameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Hospital.Models.Laudo", "ExameId");
 
                     b.HasOne("Hospital.Models.Cadastro.Medico", "Medico")
                         .WithMany("Laudos")
@@ -1078,9 +1069,7 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("Laudos")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PacienteId");
 
                     b.Navigation("Consulta");
 

@@ -1,25 +1,10 @@
 using System.Text;
 
+using Hospital;
+using Hospital.Consts;
 using Hospital.Database;
+using Hospital.Filter;
 using Hospital.Models.Cadastro;
-using Hospital.Repository.Agendamentos;
-using Hospital.Repository.Agendamentos.Interfaces;
-using Hospital.Repository.Atendimentos;
-using Hospital.Repository.Atendimentos.Interfaces;
-using Hospital.Repository.Cadastros;
-using Hospital.Repository.Cadastros.Authentications;
-using Hospital.Repository.Cadastros.Authentications.Interfaces;
-using Hospital.Repository.Cadastros.Interfaces;
-using Hospital.Repository.Convenios;
-using Hospital.Repository.Convenios.Ineterfaces;
-using Hospital.Service.Agendamentos;
-using Hospital.Service.Agendamentos.Interfaces;
-using Hospital.Service.Atendimentos;
-using Hospital.Service.Atendimentos.Interfaces;
-using Hospital.Service.Cadastros;
-using Hospital.Service.Convenios;
-using Hospital.Service.Convenios.Interfaces;
-using Hospital.Service.Interfaces;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -64,13 +49,19 @@ AppDomain.CurrentDomain
 // NOTE: Cade? Achei
 Directory.CreateDirectory($"{basedir}\\logs");
 
+// Exceptions Filter
+builder.Services.AddMvc(options =>
+    options.Filters.Add(typeof(ExceptionFilter)
+));
+
 // 1. DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(configuration.GetConnectionString("DbSqlite"))
+    /* options.UseSqlite(configuration.GetConnectionString("DbSqlServer")) */
 );
 
 // 2. Identity
-builder.Services.AddIdentity<Cadastro, IdentityRole<Guid>>()
+builder.Services.AddIdentityCore<Cadastro>()
     .AddRoles<IdentityRole<Guid>>()
     .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
     .AddEntityFrameworkStores<AppDbContext>()
@@ -118,124 +109,19 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ElevatedRights", policy =>
+    options.AddPolicy(PoliciesConsts.Elevated, policy =>
         policy.RequireRole(Roles.Admin)
     );
-    options.AddPolicy("StandardRights", policy =>
+    options.AddPolicy(PoliciesConsts.Standard, policy =>
         policy.RequireRole(Roles.Admin, Roles.Medico, Roles.Paciente)
     );
-    options.AddPolicy("OperationalRights", policy =>
+    options.AddPolicy(PoliciesConsts.Operational, policy =>
         policy.RequireRole(Roles.Admin, Roles.Medico)
     );
 });
 
-// Repositorys
-builder.Services.AddScoped(
-    typeof(IAgendamentoRepository<,>),
-    typeof(AgendamentoRepository<,>));
-//   - Atendimentos
-builder.Services.AddScoped<
-    IConsultaRepository,
-    ConsultaRepository>();
-
-builder.Services.AddScoped(
-    typeof(IAtendimentoRepository<>),
-    typeof(AtendimentoRepository<>));
-builder.Services.AddScoped<
-    IExameRepository,
-    ExameRepository>();
-
-builder.Services.AddScoped<
-    IRetornoRepository,
-    RetornoRepository>();
-
-//   - Agendamentos
-builder.Services.AddScoped<
-    IConsultaAgendamentoRepository,
-    ConsultaAgendamentoRepository>();
-
-builder.Services.AddScoped<
-    IExameAgendamentoRepository,
-    ExameAgendamentoRepository>();
-
-builder.Services.AddScoped<
-    IRetornoAgendamentoRepository,
-    RetornoAgendamentoRepository>();
-
-//  - Cadastros
-builder.Services.AddScoped<
-    IAuthPacienteRepository,
-    AuthPacienteRepository>();
-
-builder.Services.AddScoped<
-    IAuthMedicoRepository,
-    AuthMedicoRepository>();
-
-builder.Services.AddScoped<
-    IAuthAdminRepository,
-    AuthAdminRepository>();
-
-builder.Services.AddScoped<
-    IPacienteRepository,
-    PacienteRepository>();
-
-builder.Services.AddScoped<
-    IMedicoRepository,
-    MedicoRepository>();
-
-builder.Services.AddScoped<
-    IConvenioRepository,
-    ConvenioRepository>();
-
-// Services
-builder.Services.AddScoped(
-    typeof(IAgendamentoService<,,>),
-    typeof(AgendamentoService<,,>));
-//   - Atendimentos
-builder.Services.AddScoped<
-    IConsultaService,
-    ConsultaService>();
-
-builder.Services.AddScoped(
-    typeof(IAtendimentoService<,,,>),
-    typeof(AtendimentoService<,,,>));
-builder.Services.AddScoped<
-    IExameService,
-    ExameService>();
-
-builder.Services.AddScoped<
-    IRetornoService,
-    RetornoService>();
-
-//  - Agendamento
-builder.Services.AddScoped<
-    IConsultaAgendamentoService,
-    ConsultaAgendamentoService>();
-
-builder.Services.AddScoped<
-    IExameAgendamentoService,
-    ExameAgendamentoService>();
-
-builder.Services.AddScoped<
-    IRetornoAgendamentoService,
-    RetornoAgendamentoService>();
-
-//  - Cadastros
-builder.Services.AddScoped<
-    IAuthenticationService,
-    AuthenticationService>();
-
-builder.Services.AddScoped<
-    IPacienteService,
-    PacienteService>();
-
-builder.Services.AddScoped<
-    IMedicoService,
-    MedicoService>();
-
-builder.Services.AddScoped<
-    IConvenioService,
-    ConvenioService>();
+// 4. Dependency Injection
+builder.Services.RegisterServices();
 
 // Add services to the container.
 builder.Services.AddControllers();

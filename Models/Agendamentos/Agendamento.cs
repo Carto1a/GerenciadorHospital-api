@@ -10,7 +10,7 @@ public abstract class Agendamento
     [Key]
     public Guid Id { get; set; }
     public Guid MedicoId { get; set; }
-    public Guid PacienteId { get; set; }
+    public Guid? PacienteId { get; set; }
     public Guid? ConvenioId { get; set; }
 
     public virtual Medico? Medico { get; set; }

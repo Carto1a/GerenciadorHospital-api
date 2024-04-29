@@ -7,8 +7,8 @@ public class Laudo
 {
     public Guid Id { get; set; }
     public Guid MedicoId { get; set; }
-    public Guid PacienteId { get; set; }
-    public Guid ExameId { get; set; }
+    public Guid? PacienteId { get; set; }
+    public Guid? ExameId { get; set; }
     public Guid ConsultaId { get; set; }
 
     public virtual Medico? Medico { get; set; }

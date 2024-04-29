@@ -6,7 +6,7 @@ namespace Hospital.Dtos.Input.Authentications;
 public class LoginRequestDto
 {
     [Required]
-    [EmailAddress(ErrorMessage = 
+    [EmailAddress(ErrorMessage =
         ValidationsConsts.EmailValidationError)]
     public string Email { get; set; }
     [Required]

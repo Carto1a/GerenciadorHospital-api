@@ -37,13 +37,14 @@ public static class SeedManager
             {
                 UserName = "admin@admin.admin",
                 Email = "admin@admin.admin",
-                Nome = "ze",
+                Nome = "ANA",
+                Sobrenome = "DOS SANTOS",
                 DataNascimento = DateOnly.FromDateTime(DateTime.Now),
                 Genero = GeneroEnum.Outro,
-                CPF = 00000001,
-                CEP = 123,
+                CPF = "09787717027",
+                CEP = "69200970",
                 NumeroCasa = "2",
-                Telefone = "44040404",
+                Telefone = 1130654894,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 Ativo = true
             };
@@ -57,15 +58,17 @@ public static class SeedManager
             {
                 UserName = "medico@medico.medico",
                 Email = "medico@medico.medico",
-                Nome = "ze",
+                Nome = "CARLOS EDUARDO",
+                Sobrenome = "DA SILVA",
                 DataNascimento = DateOnly.FromDateTime(DateTime.Now),
                 Genero = GeneroEnum.Outro,
-                CPF = 00000011,
-                CEP = 123,
+                CPF = "01905130040",
+                CEP = "64034538",
                 NumeroCasa = "2",
-                Telefone = "44040404",
+                Telefone = 11984825657,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                CRM = "123",
+                CRM = 124901,
+                CRMUF = "SP",
                 Especialidade = "cardiologista",
                 Ativo = true
             };

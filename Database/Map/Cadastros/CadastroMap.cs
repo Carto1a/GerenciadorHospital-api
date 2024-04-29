@@ -10,9 +10,11 @@ public class CadastroMap
     public void Configure(EntityTypeBuilder<Cadastro> builder)
     {
         builder.UseTptMappingStrategy();
+        builder.Property(x => x.CPF).HasMaxLength(11);
+
         builder.HasIndex(x => x.CPF).IsUnique();
         builder.HasIndex(x => x.Email).IsUnique();
-        builder.HasIndex(x => x.Ativo).IsUnique();
+        builder.HasIndex(x => x.Ativo);
         builder.HasIndex(x => x.Genero);
     }
 }

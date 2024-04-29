@@ -1,5 +1,3 @@
-using System.Net;
-
 using Hospital.Exceptions;
 
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -32,9 +30,8 @@ public class ExceptionFilter
             new RequestErrorResponse(
                 new RequestError(
                     context.Exception.Message,
-                    "Error interno no servidor: "
-                    + context.Exception.Message,
-                    HttpStatusCode.InternalServerError
+                    "Error interno no servidor",
+                    StatusCodes.Status500InternalServerError
                 )
             );
         _logger.LogError(context.Exception.Message);

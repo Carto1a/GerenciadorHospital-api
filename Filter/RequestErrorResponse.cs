@@ -8,6 +8,7 @@ public class RequestErrorResponse
     public IList<string> ErrorList { get; set; }
     public int StatusCode { get; set; }
 
+    // TODO: refazer isso
     public RequestErrorResponse(RequestError error)
     {
         ErrorList = error.ErrorList;

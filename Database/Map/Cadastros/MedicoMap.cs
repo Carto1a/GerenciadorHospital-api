@@ -9,8 +9,8 @@ public class MedicoMap
 {
     public void Configure(EntityTypeBuilder<Medico> builder)
     {
-        /* builder.ToTable("Medicos"); */
-        /* builder.HasIndex(x => x.CPF).IsUnique(); */
+        builder.Property(x => x.CRMUF).HasMaxLength(2);
+
         builder.HasIndex(x => x.CRM).IsUnique();
         builder.HasIndex(x => x.DocCRMPath).IsUnique();
 

@@ -31,12 +31,13 @@ namespace Hospital.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false),
+                    Sobrenome = table.Column<string>(type: "TEXT", nullable: false),
                     DataNascimento = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Genero = table.Column<int>(type: "INTEGER", nullable: false),
-                    Telefone = table.Column<string>(type: "TEXT", nullable: true),
-                    CPF = table.Column<int>(type: "INTEGER", nullable: false),
-                    CEP = table.Column<int>(type: "INTEGER", nullable: false),
-                    NumeroCasa = table.Column<string>(type: "TEXT", nullable: true),
+                    Telefone = table.Column<long>(type: "INTEGER", nullable: true),
+                    CPF = table.Column<string>(type: "TEXT", maxLength: 11, nullable: false),
+                    CEP = table.Column<string>(type: "TEXT", nullable: false),
+                    NumeroCasa = table.Column<string>(type: "TEXT", nullable: false),
                     Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Ativo = table.Column<bool>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -230,7 +231,8 @@ namespace Hospital.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CRM = table.Column<string>(type: "TEXT", nullable: false),
+                    CRM = table.Column<int>(type: "INTEGER", nullable: false),
+                    CRMUF = table.Column<string>(type: "TEXT", maxLength: 2, nullable: false),
                     DocCRMPath = table.Column<Guid>(type: "TEXT", nullable: true),
                     Especialidade = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -303,7 +305,7 @@ namespace Hospital.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -330,8 +332,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosConsultas_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -340,7 +341,7 @@ namespace Hospital.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -367,8 +368,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosExames_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -401,8 +401,8 @@ namespace Hospital.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
                     AgendamentoId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -428,14 +428,12 @@ namespace Hospital.Migrations
                         name: "FK_Consultas_Medicos_MedicoId",
                         column: x => x.MedicoId,
                         principalTable: "Medicos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Consultas_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -445,7 +443,7 @@ namespace Hospital.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
                     MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     Custo = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -478,8 +476,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosRetornos_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -491,8 +488,8 @@ namespace Hospital.Migrations
                     ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Resultado = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
                     AgendamentoId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -524,14 +521,12 @@ namespace Hospital.Migrations
                         name: "FK_Exames_Medicos_MedicoId",
                         column: x => x.MedicoId,
                         principalTable: "Medicos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Exames_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -542,8 +537,8 @@ namespace Hospital.Migrations
                     ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
                     NovaConsultaId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
                     AgendamentoId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -580,14 +575,12 @@ namespace Hospital.Migrations
                         name: "FK_Retornos_Medicos_MedicoId",
                         column: x => x.MedicoId,
                         principalTable: "Medicos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Retornos_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -596,8 +589,8 @@ namespace Hospital.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ExameId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ExameId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Descricao = table.Column<string>(type: "TEXT", nullable: false),
                     DocPath = table.Column<Guid>(type: "TEXT", nullable: true),
@@ -616,8 +609,7 @@ namespace Hospital.Migrations
                         name: "FK_Laudos_Exames_ExameId",
                         column: x => x.ExameId,
                         principalTable: "Exames",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Laudos_Medicos_MedicoId",
                         column: x => x.MedicoId,
@@ -628,8 +620,7 @@ namespace Hospital.Migrations
                         name: "FK_Laudos_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -755,8 +746,7 @@ namespace Hospital.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_Ativo",
                 table: "AspNetUsers",
-                column: "Ativo",
-                unique: true);
+                column: "Ativo");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_CPF",

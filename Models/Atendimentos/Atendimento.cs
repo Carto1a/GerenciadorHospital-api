@@ -7,8 +7,8 @@ public abstract class Atendimento
 {
     [Key]
     public Guid Id { get; set; }
-    public Guid MedicoId { get; set; }
-    public Guid PacienteId { get; set; }
+    public Guid? MedicoId { get; set; }
+    public Guid? PacienteId { get; set; }
     public Guid? AgendamentoId { get; set; }
     public Guid? ConvenioId { get; set; }
 

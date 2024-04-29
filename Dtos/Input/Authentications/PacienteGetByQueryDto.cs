@@ -1,7 +1,7 @@
 using Hospital.Enums;
 
 namespace Hospital.Dtos.Input.Authentications;
-public record Paciente(
+public record PacienteGetByQueryDto(
     Guid? ConvenioId,
     bool? Ativo,
     DateTime? MinDateNasc,

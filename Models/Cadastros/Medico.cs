@@ -1,4 +1,4 @@
-using FluentResults;
+using System.Diagnostics.CodeAnalysis;
 
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Models.Agendamentos;
@@ -8,9 +8,10 @@ namespace Hospital.Models.Cadastro;
 public class Medico
 : Cadastro
 {
-    public string CRM { get; set; }
+    public int CRM { get; set; }
+    public required string CRMUF { get; set; }
     public Guid? DocCRMPath { get; set; }
-    public string Especialidade { get; set; }
+    public required string Especialidade { get; set; }
 
     public virtual ICollection<Consulta>? Consultas { get; set; }
     public virtual ICollection<Exame>? Exames { get; set; }
@@ -20,26 +21,28 @@ public class Medico
     public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
     public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }
 
-    public static Result<Medico> Create(
+    public Medico() { }
+    [SetsRequiredMembers]
+    public Medico(
         RegisterRequestMedicoDto request)
+    : base(request)
     {
-        // NOTE: validar as coisa aqui?
-        var medico = new Medico
-        {
-            Especialidade = request.Especialidade,
-            Email = request.Email,
-            Nome = request.Nome,
-            DataNascimento = DateOnly.FromDateTime(
-                request.DataNascimento),
-            Genero = request.Genero,
-            Telefone = request.Telefone,
-            CPF = request.CPF,
-            CEP = request.CEP,
-            NumeroCasa = request.NumeroCasa,
-            UserName = request.Email,
-            SecurityStamp = Guid.NewGuid().ToString()
-        };
+        CRM = request.CRM;
+        CRMUF = request.CRMUF;
+        Especialidade = request.Especialidade;
 
-        return Result.Ok(medico);
+        Validate();
+    }
+
+    new void Validate()
+    {
+        var validation = new Validators(
+            $"Não foi possível validar o medico de email: {Email}");
+
+        validation.Crm(CRM, "CRM");
+        validation.CrmUf(CRMUF, "CRMUF");
+        validation.MinLength(Especialidade, 4, "Especialidade");
+
+        validation.Check();
     }
 }

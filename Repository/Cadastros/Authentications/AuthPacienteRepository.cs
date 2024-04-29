@@ -1,5 +1,5 @@
-using FluentResults;
-
+using Hospital.Dtos.Input.Authentications;
+using Hospital.Exceptions;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Authentications.Interfaces;
 
@@ -16,64 +16,73 @@ public class AuthPacienteRepository
         _manager = userManager;
     }
 
-    public async Task<Result> Create(
+    public async Task CreateAsync(
         Paciente paciente, string senha)
     {
         try
         {
             var result = await _manager
                 .CreateAsync(paciente, senha);
-            Result? roleResult = Result.Ok();
-            Result? createResult = Result.Ok();
             if (result.Succeeded)
             {
-                roleResult = await AddToRole(paciente);
-                if (roleResult.IsSuccess)
-                    return Result.Ok();
+                await AddToRoleAsync(paciente);
+                return;
             }
 
-            // TODO: melhorar essa aberração
-            createResult = Result.Fail(result.Errors.Select(e => e.Description));
-            if (roleResult != null)
-                createResult = Result.Merge(roleResult, createResult);
-            return createResult;
+            var requestError = new RequestError(
+                $"Erro ao criar usuário paciente: {paciente.Email}");
+            foreach (var error in result.Errors)
+                requestError.Add(error.Description);
+
+            throw requestError;
         }
-        catch (Exception e)
+        catch (Exception error)
         {
-            return Result.Fail(e.Message);
+            throw new Exception(error.Message);
         }
     }
 
-    public async Task<Result> AddToRole(Paciente paciente)
+    public async Task AddToRoleAsync(Paciente paciente)
     {
         try
         {
             var result = await _manager
                 .AddToRoleAsync(paciente, Roles.Paciente);
             if (result.Succeeded)
-                return Result.Ok();
+                return;
 
-            return Result.Fail(result.Errors.Select(e => e.Description));
+            var requestError = new RequestError(
+                $"Erro ao adicionar usuário paciente a role: {paciente.Email}");
+            foreach (var error in result.Errors)
+                requestError.Add(error.Description);
+
+            throw requestError;
         }
-        catch (Exception e)
+        catch (Exception error)
         {
-            return Result.Fail(e.Message);
+            throw new Exception(error.Message);
         }
     }
 
-    public Task<Paciente?> FindByEmail(string email)
+    public Task<Paciente?> FindByEmailAsync(string email)
     {
-        var user = _manager.FindByEmailAsync(email);
-        return user;
+        return _manager.FindByEmailAsync(email);
     }
 
-    public Task<bool> CheckPassword(Paciente admin, string senha)
+    public Task<bool> CheckPasswordAsync(Paciente admin, string senha)
     {
         return _manager.CheckPasswordAsync(admin, senha);
     }
 
-    public Task<IList<string>> GetRoles(Paciente admin)
+    public Task<IList<string>> GetRolesAsync(Paciente admin)
     {
         return _manager.GetRolesAsync(admin);
+    }
+
+    public bool CheckIfCadastroExists(RegisterRequestPacienteDto request)
+    {
+        return _manager.Users.FirstOrDefault(user =>
+            user.Email == request.Email
+            || user.CPF == request.CPF) != null;
     }
 }

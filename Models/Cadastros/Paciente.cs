@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 using FluentResults;
 
 using Hospital.Dtos.Input.Authentications;
@@ -23,6 +25,12 @@ public class Paciente
 
     public Guid? DocConvenioPath { get; set; }
     public Guid? DocIDPath { get; set; }
+
+    public Paciente() { }
+    [SetsRequiredMembers]
+    public Paciente(RegisterRequestPacienteDto request)
+    : base(request)
+    { }
 
     public static Result<Paciente> Create(
         RegisterRequestPacienteDto request,
@@ -52,6 +60,7 @@ public class Paciente
         return new Paciente
         {
             ConvenioId = request.ConvenioId,
+            Sobrenome = request.Sobrenome,
             DocConvenioPath = DocConvenioResult?.Value,
             DocIDPath = DocIDResult.Value,
             Email = request.Email,
