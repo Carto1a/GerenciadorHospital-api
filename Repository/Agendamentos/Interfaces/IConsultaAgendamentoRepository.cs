@@ -6,5 +6,4 @@ namespace Hospital.Repository.Atendimentos.Interfaces;
 
 public interface IConsultaAgendamentoRepository
 : IAgendamentoRepository<Consulta, ConsultaAgendamento>
-{
-}
+{ }

@@ -1,6 +1,6 @@
 using FluentResults;
 
-using Hospital.Dto.Agendamento.Get;
+using Hospital.Dtos.Input.Agendamentos;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 
@@ -9,13 +9,17 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace Hospital.Repository.Agendamentos.Interfaces;
 public interface IAgendamentoRepository<T, TAgendamento>
     where T : Atendimento
-    where TAgendamento : Agendamento<T>
+    where TAgendamento : Agendamento
 {
-    Task<Result<EntityEntry<TAgendamento>>> CreateAgentamento(TAgendamento agentamento);
-    Task<Result> UpdateAgentamento(TAgendamento NovoAgendamento);
-    Task<Result<TAgendamento?>> GetAgendamentoById(Guid id);
-    Result<List<TAgendamento>> GetAgendamentosByPaciente(Guid pacienteId, int limit, int page = 0);
-    Task<Result<List<TAgendamento>>> GetAgendamentosByMedico(Guid medicoId, int limit, int page = 0);
-    Result<List<TAgendamento>> GetAgendamentosByDate(DateTime minDate, DateTime maxDate, int limit, int page = 0);
-    Task<Result<List<TAgendamento>>> GetAgendamentoByQuery(AgendamentoGetByQueryDto query);
+    Result<EntityEntry<TAgendamento>>
+        Create(TAgendamento agentamento);
+
+    Result
+        Update(TAgendamento NovoAgendamento);
+
+    Result<TAgendamento?>
+        GetById(Guid id);
+
+    Result<List<TAgendamento>>
+        GetByQuery(AgendamentoGetByQueryDto query);
 }

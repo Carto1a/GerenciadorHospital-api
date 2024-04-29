@@ -1,5 +1,3 @@
-using FluentResults;
-
 using Hospital.Database;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
@@ -8,44 +6,74 @@ namespace Hospital.Repository.Cadastros;
 public class MedicoRepository
 : IMedicoRepository
 {
-    private readonly ILogger<MedicoRepository> _logger;
-    private readonly AppDbContext _ctx;
+    protected readonly AppDbContext _ctx;
+    private UnitOfWork _uow;
+
     public MedicoRepository(
         AppDbContext context,
-        ILogger<MedicoRepository> logger)
+        UnitOfWork uow)
     {
         _ctx = context;
-        _logger = logger;
-        _logger.LogDebug(1, $"NLog injected into MedicoRepository");
+        _uow = uow;
     }
-    public Result<Medico?> GetMedicoById(Guid id)
+
+    public Medico? GetMedicoById(Guid id)
     {
         try
         {
             var medico = _ctx.Medicos
                 .FirstOrDefault(e => e.Id == id);
-            return Result.Ok(medico);
+            return medico;
         }
         catch (Exception error)
         {
-            return Result.Fail(error.Message);
+            _uow.Dispose();
+            throw new Exception(error.Message);
         }
     }
 
-    public Result<List<Medico>> GetMedicos(int limit, int page = 0)
+    public Medico? GetMedicoByCRM(int crm)
     {
         try
         {
-            var medico = _ctx
+            return _ctx.Medicos
+                .FirstOrDefault(e => e.CRM == crm);
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public Medico? GetMedicoByCPF(string cpf)
+    {
+        try
+        {
+            return _ctx.Medicos
+                .FirstOrDefault(e => e.CPF == cpf);
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public List<Medico> GetMedicos(int limit, int page = 0)
+    {
+        try
+        {
+            return _ctx
                 .Medicos
                 .Skip(page)
                 .Take(limit)
                 .ToList();
-            return Result.Ok(medico);
         }
         catch (Exception error)
         {
-            return Result.Fail(error.Message);
+            _uow.Dispose();
+            throw new Exception(error.Message);
         }
     }
 }

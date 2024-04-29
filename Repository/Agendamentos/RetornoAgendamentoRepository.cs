@@ -1,163 +1,163 @@
 
-using Hospital.Database;
-using Hospital.Models.Agendamentos;
-using Hospital.Models.Atendimento;
-using Hospital.Repository.Atendimentos.Interfaces;
+/* using Hospital.Database; */
+/* using Hospital.Models.Agendamentos; */
+/* using Hospital.Models.Atendimento; */
+/* using Hospital.Repository.Atendimentos.Interfaces; */
 
 
-namespace Hospital.Repository.Agendamentos;
-public class RetornoAgendamentoRepository
-: AgendamentoRepository<
-    Retorno,
-    RetornoAgendamento>,
-IRetornoAgendamentoRepository
-{
-    private readonly ILogger<RetornoAgendamentoRepository> _logger;
-    private readonly AppDbContext _ctx;
-    public RetornoAgendamentoRepository(
-        AppDbContext context,
-        ILogger<RetornoAgendamentoRepository> logger)
-    : base(context, logger)
-    {
-        _ctx = context;
-        _logger = logger;
-        _logger.LogDebug(1, $"NLog injected into RetornoAgendamentoRepository");
-    }
+/* namespace Hospital.Repository.Agendamentos; */
+/* public class RetornoAgendamentoRepository */
+/* : AgendamentoRepository< */
+/*     Retorno, */
+/*     RetornoAgendamento>, */
+/* IRetornoAgendamentoRepository */
+/* { */
+/*     private readonly ILogger<RetornoAgendamentoRepository> _logger; */
+/*     private readonly AppDbContext _ctx; */
+/*     public RetornoAgendamentoRepository( */
+/*         AppDbContext context, */
+/*         ILogger<RetornoAgendamentoRepository> logger) */
+/*     : base(context, logger) */
+/*     { */
+/*         _ctx = context; */
+/*         _logger = logger; */
+/*         _logger.LogDebug(1, $"NLog injected into RetornoAgendamentoRepository"); */
+/*     } */
 
-    /* public async Task<Result> CreateAgentamento( */
-    /*     RetornoAgendamento agentamento) */
-    /* { */
-    /*     try */
-    /*     { */
-    /*         await _ctx.AgendamentosRetornos.AddAsync(agentamento); */
-    /*         await _ctx.SaveChangesAsync(); */
-    /*         return Result.Ok(); */
-    /*     } */
-    /*     catch (Exception error) */
-    /*     { */
-    /*         // jeito preguisa das ideias */
-    /*         return Result.Fail(error.Message); */
-    /*     } */
-    /* } */
+/*     /1* public async Task<Result> CreateAgentamento( *1/ */
+/*     /1*     RetornoAgendamento agentamento) *1/ */
+/*     /1* { *1/ */
+/*     /1*     try *1/ */
+/*     /1*     { *1/ */
+/*     /1*         await _ctx.AgendamentosRetornos.AddAsync(agentamento); *1/ */
+/*     /1*         await _ctx.SaveChangesAsync(); *1/ */
+/*     /1*         return Result.Ok(); *1/ */
+/*     /1*     } *1/ */
+/*     /1*     catch (Exception error) *1/ */
+/*     /1*     { *1/ */
+/*     /1*         // jeito preguisa das ideias *1/ */
+/*     /1*         return Result.Fail(error.Message); *1/ */
+/*     /1*     } *1/ */
+/*     /1* } *1/ */
 
-    /* public async Task<Result<RetornoAgendamento?>> GetAgendamentoById( */
-    /*     Guid id) */
-    /* { */
-    /*     try */
-    /*     { */
-    /*         var list = await _ctx.AgendamentosRetornos */
-    /*             .AsNoTracking() */
-    /*             .FirstOrDefaultAsync(e => e.Id == id); */
-    /*         return Result.Ok(list); */
-    /*     } */
-    /*     catch (Exception error) */
-    /*     { */
-    /*         return Result.Fail(error.Message); */
-    /*     } */
-    /* } */
+/*     /1* public async Task<Result<RetornoAgendamento?>> GetAgendamentoById( *1/ */
+/*     /1*     Guid id) *1/ */
+/*     /1* { *1/ */
+/*     /1*     try *1/ */
+/*     /1*     { *1/ */
+/*     /1*         var list = await _ctx.AgendamentosRetornos *1/ */
+/*     /1*             .AsNoTracking() *1/ */
+/*     /1*             .FirstOrDefaultAsync(e => e.Id == id); *1/ */
+/*     /1*         return Result.Ok(list); *1/ */
+/*     /1*     } *1/ */
+/*     /1*     catch (Exception error) *1/ */
+/*     /1*     { *1/ */
+/*     /1*         return Result.Fail(error.Message); *1/ */
+/*     /1*     } *1/ */
+/*     /1* } *1/ */
 
-    /* public async Task<Result<List<RetornoAgendamento>>> GetAgendamentoByQuery( */
-    /*     AgendamentoGetByQueryDto query) */
-    /* { */
-    /*     try */
-    /*     { */
-    /*         // TODO: adiciona pesquisa pela data de criação */
-    /*         var queryList = _ctx.AgendamentosRetornos.AsQueryable(); */
-    /*         if (query.MedicoId != null) */
-    /*             queryList = queryList.Where(e => */
-    /*                 e.MedicoId == query.MedicoId); */
+/*     /1* public async Task<Result<List<RetornoAgendamento>>> GetAgendamentoByQuery( *1/ */
+/*     /1*     AgendamentoGetByQueryDto query) *1/ */
+/*     /1* { *1/ */
+/*     /1*     try *1/ */
+/*     /1*     { *1/ */
+/*     /1*         // TODO: adiciona pesquisa pela data de criação *1/ */
+/*     /1*         var queryList = _ctx.AgendamentosRetornos.AsQueryable(); *1/ */
+/*     /1*         if (query.MedicoId != null) *1/ */
+/*     /1*             queryList = queryList.Where(e => *1/ */
+/*     /1*                 e.MedicoId == query.MedicoId); *1/ */
 
-    /*         if (query.PacienteId != null) */
-    /*             queryList = queryList.Where(e => */
-    /*                 e.PacienteId == query.PacienteId); */
+/*     /1*         if (query.PacienteId != null) *1/ */
+/*     /1*             queryList = queryList.Where(e => *1/ */
+/*     /1*                 e.PacienteId == query.PacienteId); *1/ */
 
-    /*         if (query.MinDate != null) */
-    /*             queryList = queryList.Where( */
-    /*                 e => e.DataHora >= query.MinDate */
-    /*                 && e.DataHora <= query.MaxDate); */
+/*     /1*         if (query.MinDate != null) *1/ */
+/*     /1*             queryList = queryList.Where( *1/ */
+/*     /1*                 e => e.DataHora >= query.MinDate *1/ */
+/*     /1*                 && e.DataHora <= query.MaxDate); *1/ */
 
-    /*         if (query.Limit == null || query.Page == null) */
-    /*             return Result.Fail("page e limit não deveriam ser nulls"); */
+/*     /1*         if (query.Limit == null || query.Page == null) *1/ */
+/*     /1*             return Result.Fail("page e limit não deveriam ser nulls"); *1/ */
 
-    /*         var result = await queryList */
-    /*             .Skip((int)query.Page) */
-    /*             .Take((int)query.Limit) */
-    /*             .ToListAsync(); */
+/*     /1*         var result = await queryList *1/ */
+/*     /1*             .Skip((int)query.Page) *1/ */
+/*     /1*             .Take((int)query.Limit) *1/ */
+/*     /1*             .ToListAsync(); *1/ */
 
-    /*         return Result.Ok(result); */
-    /*     } */
-    /*     catch (Exception error) */
-    /*     { */
-    /*         return Result.Fail(error.Message); */
-    /*     } */
-    /* } */
+/*     /1*         return Result.Ok(result); *1/ */
+/*     /1*     } *1/ */
+/*     /1*     catch (Exception error) *1/ */
+/*     /1*     { *1/ */
+/*     /1*         return Result.Fail(error.Message); *1/ */
+/*     /1*     } *1/ */
+/*     /1* } *1/ */
 
-    /* public Result<List<RetornoAgendamento>> GetAgendamentosByDate( */
-    /*     DateTime minDate, DateTime maxDate, int limit, int page = 0) */
-    /* { */
-    /*     try */
-    /*     { */
-    /*         var list = _ctx.AgendamentosRetornos */
-    /*             .Where(e => e.DataHora >= minDate && e.DataHora <= maxDate) */
-    /*             .Skip(page) */
-    /*             .Take(limit) */
-    /*             .ToList(); */
-    /*         return Result.Ok(list); */
-    /*     } */
-    /*     catch (Exception error) */
-    /*     { */
-    /*         return Result.Fail(error.Message); */
-    /*     } */
-    /* } */
+/*     /1* public Result<List<RetornoAgendamento>> GetAgendamentosByDate( *1/ */
+/*     /1*     DateTime minDate, DateTime maxDate, int limit, int page = 0) *1/ */
+/*     /1* { *1/ */
+/*     /1*     try *1/ */
+/*     /1*     { *1/ */
+/*     /1*         var list = _ctx.AgendamentosRetornos *1/ */
+/*     /1*             .Where(e => e.DataHora >= minDate && e.DataHora <= maxDate) *1/ */
+/*     /1*             .Skip(page) *1/ */
+/*     /1*             .Take(limit) *1/ */
+/*     /1*             .ToList(); *1/ */
+/*     /1*         return Result.Ok(list); *1/ */
+/*     /1*     } *1/ */
+/*     /1*     catch (Exception error) *1/ */
+/*     /1*     { *1/ */
+/*     /1*         return Result.Fail(error.Message); *1/ */
+/*     /1*     } *1/ */
+/*     /1* } *1/ */
 
-    /* public async Task<Result<List<RetornoAgendamento>>> GetAgendamentosByMedico( */
-    /*     Guid medicoId, int limit, int page = 0) */
-    /* { */
-    /*     try */
-    /*     { */
-    /*         var list = await _ctx.AgendamentosRetornos */
-    /*             .Where(e => e.MedicoId == medicoId) */
-    /*             .Skip(page) */
-    /*             .Take(limit) */
-    /*             .ToListAsync(); */
-    /*         return Result.Ok(list); */
-    /*     } */
-    /*     catch (Exception error) */
-    /*     { */
-    /*         return Result.Fail(error.Message); */
-    /*     } */
-    /* } */
+/*     /1* public async Task<Result<List<RetornoAgendamento>>> GetAgendamentosByMedico( *1/ */
+/*     /1*     Guid medicoId, int limit, int page = 0) *1/ */
+/*     /1* { *1/ */
+/*     /1*     try *1/ */
+/*     /1*     { *1/ */
+/*     /1*         var list = await _ctx.AgendamentosRetornos *1/ */
+/*     /1*             .Where(e => e.MedicoId == medicoId) *1/ */
+/*     /1*             .Skip(page) *1/ */
+/*     /1*             .Take(limit) *1/ */
+/*     /1*             .ToListAsync(); *1/ */
+/*     /1*         return Result.Ok(list); *1/ */
+/*     /1*     } *1/ */
+/*     /1*     catch (Exception error) *1/ */
+/*     /1*     { *1/ */
+/*     /1*         return Result.Fail(error.Message); *1/ */
+/*     /1*     } *1/ */
+/*     /1* } *1/ */
 
-    /* public Result<List<RetornoAgendamento>> GetAgendamentosByPaciente( */
-    /*     Guid pacienteId, int limit, int page = 0) */
-    /* { */
-    /*     try */
-    /*     { */
-    /*         return _ctx.AgendamentosRetornos */
-    /*             .Where(e => e.PacienteId == pacienteId) */
-    /*             .Skip(page) */
-    /*             .Take(limit) */
-    /*             .ToList(); */
-    /*     } */
-    /*     catch (Exception error) */
-    /*     { */
-    /*         return Result.Fail(error.Message); */
-    /*     } */
-    /* } */
+/*     /1* public Result<List<RetornoAgendamento>> GetAgendamentosByPaciente( *1/ */
+/*     /1*     Guid pacienteId, int limit, int page = 0) *1/ */
+/*     /1* { *1/ */
+/*     /1*     try *1/ */
+/*     /1*     { *1/ */
+/*     /1*         return _ctx.AgendamentosRetornos *1/ */
+/*     /1*             .Where(e => e.PacienteId == pacienteId) *1/ */
+/*     /1*             .Skip(page) *1/ */
+/*     /1*             .Take(limit) *1/ */
+/*     /1*             .ToList(); *1/ */
+/*     /1*     } *1/ */
+/*     /1*     catch (Exception error) *1/ */
+/*     /1*     { *1/ */
+/*     /1*         return Result.Fail(error.Message); *1/ */
+/*     /1*     } *1/ */
+/*     /1* } *1/ */
 
-    /* public async Task<Result> UpdateAgentamento( */
-    /*     RetornoAgendamento NovoAgendamento) */
-    /* { */
-    /*     try */
-    /*     { */
-    /*         _ctx.AgendamentosRetornos.Update(NovoAgendamento); */
-    /*         await _ctx.SaveChangesAsync(); */
+/*     /1* public async Task<Result> UpdateAgentamento( *1/ */
+/*     /1*     RetornoAgendamento NovoAgendamento) *1/ */
+/*     /1* { *1/ */
+/*     /1*     try *1/ */
+/*     /1*     { *1/ */
+/*     /1*         _ctx.AgendamentosRetornos.Update(NovoAgendamento); *1/ */
+/*     /1*         await _ctx.SaveChangesAsync(); *1/ */
 
-    /*         return Result.Ok(); */
-    /*     } */
-    /*     catch (Exception error) */
-    /*     { */
-    /*         return Result.Fail(error.Message); */
-    /*     } */
-    /* } */
-}
+/*     /1*         return Result.Ok(); *1/ */
+/*     /1*     } *1/ */
+/*     /1*     catch (Exception error) *1/ */
+/*     /1*     { *1/ */
+/*     /1*         return Result.Fail(error.Message); *1/ */
+/*     /1*     } *1/ */
+/*     /1* } *1/ */
+/* } */

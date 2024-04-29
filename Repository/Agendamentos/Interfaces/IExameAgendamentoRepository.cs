@@ -6,5 +6,4 @@ namespace Hospital.Repository.Atendimentos.Interfaces;
 
 public interface IExameAgendamentoRepository
 : IAgendamentoRepository<Exame, ExameAgendamento>
-{
-}
+{ }

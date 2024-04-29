@@ -1,284 +1,284 @@
-using Hospital.Controllers.Generics;
-using Hospital.Dto.Agendamento.Get;
-using Hospital.Dto.Auth;
-using Hospital.Dto.Result;
-using Hospital.Enums;
-using Hospital.Extensions;
-using Hospital.Service.Agendamentos.Interfaces;
-using Hospital.Service.Interfaces;
+/* using Hospital.Controllers.Generics; */
+/* using Hospital.Dto.Agendamento.Get; */
+/* using Hospital.Dto.Auth; */
+/* using Hospital.Dto.Result; */
+/* using Hospital.Enums; */
+/* using Hospital.Extensions; */
+/* using Hospital.Service.Agendamentos.Interfaces; */
+/* using Hospital.Service.Interfaces; */
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+/* using Microsoft.AspNetCore.Authorization; */
+/* using Microsoft.AspNetCore.Mvc; */
 
-namespace Hospital.Controllers.Pacientes;
-[ApiController]
-[Route("api/[controller]")]
-public class PacienteController
-: GenericAuthenticationController<RegisterRequestPacienteDto>
-{
-    private readonly ILogger<PacienteController> _logger;
-    private readonly IPacienteService _pacienteService;
-    private readonly IConsultaAgendamentoService _consultaAgendamentoService;
-    private readonly IExameAgendamentoService _exameAgendamentoService;
-    private readonly IAuthenticationService _authenticationService;
-    public PacienteController(
-        ILogger<PacienteController> logger,
-        IConfiguration configuration,
-        IPacienteService pacienteService,
-        IConsultaAgendamentoService consultaAgendamentoService,
-        IExameAgendamentoService exameAgendamentoService,
-        IAuthenticationService authenticationService)
-    : base(authenticationService)
-    {
-        _pacienteService = pacienteService;
-        _authenticationService = authenticationService;
-        _consultaAgendamentoService = consultaAgendamentoService;
-        _exameAgendamentoService = exameAgendamentoService;
-        _logger = logger;
-        _logger.LogDebug(1, "NLog injected into PacienteController");
-    }
+/* namespace Hospital.Controllers.Pacientes; */
+/* [ApiController] */
+/* [Route("api/[controller]")] */
+/* public class PacienteController */
+/* : GenericAuthenticationController<RegisterRequestPacienteDto> */
+/* { */
+/*     private readonly ILogger<PacienteController> _logger; */
+/*     private readonly IPacienteService _pacienteService; */
+/*     private readonly IConsultaAgendamentoService _consultaAgendamentoService; */
+/*     private readonly IExameAgendamentoService _exameAgendamentoService; */
+/*     private readonly IAuthenticationService _authenticationService; */
+/*     public PacienteController( */
+/*         ILogger<PacienteController> logger, */
+/*         IConfiguration configuration, */
+/*         IPacienteService pacienteService, */
+/*         IConsultaAgendamentoService consultaAgendamentoService, */
+/*         IExameAgendamentoService exameAgendamentoService, */
+/*         IAuthenticationService authenticationService) */
+/*     : base(authenticationService) */
+/*     { */
+/*         _pacienteService = pacienteService; */
+/*         _authenticationService = authenticationService; */
+/*         _consultaAgendamentoService = consultaAgendamentoService; */
+/*         _exameAgendamentoService = exameAgendamentoService; */
+/*         _logger = logger; */
+/*         _logger.LogDebug(1, "NLog injected into PacienteController"); */
+/*     } */
 
-    [AllowAnonymous]
-    [HttpPost("Login")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
-    public async Task<IActionResult> Login(
-        [FromBody] LoginRequestPacienteDto request)
-    {
-        var response = await _authenticationService.Login(request);
-        var resultDto = response.ToResultDto();
+/*     [AllowAnonymous] */
+/*     [HttpPost("Login")] */
+/*     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))] */
+/*     [ProducesResponseType(StatusCodes.Status500InternalServerError)] */
+/*     [ProducesResponseType(StatusCodes.Status400BadRequest)] */
+/*     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))] */
+/*     public async Task<IActionResult> Login( */
+/*         [FromBody] LoginRequestPacienteDto request) */
+/*     { */
+/*         var response = await _authenticationService.Login(request); */
+/*         var resultDto = response.ToResultDto(); */
 
-        if (response.IsFailed)
-            return BadRequest(resultDto);
+/*         if (response.IsFailed) */
+/*             return BadRequest(resultDto); */
 
-        return Ok(resultDto);
-    }
+/*         return Ok(resultDto); */
+/*     } */
 
-    [Authorize(Policy = "ElevatedRights")]
-    [HttpPost("Cadastro")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
-    public async Task<IActionResult> Register(
-        [FromForm] RegisterRequestPacienteDto request)
-    {
-        var response = await _authenticationService.Register(request);
-        var resultDto = response.ToResultDto();
+/*     [Authorize(Policy = "ElevatedRights")] */
+/*     [HttpPost("Cadastro")] */
+/*     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))] */
+/*     [ProducesResponseType(StatusCodes.Status500InternalServerError)] */
+/*     [ProducesResponseType(StatusCodes.Status400BadRequest)] */
+/*     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))] */
+/*     public async Task<IActionResult> Register( */
+/*         [FromForm] RegisterRequestPacienteDto request) */
+/*     { */
+/*         var response = await _authenticationService.Register(request); */
+/*         var resultDto = response.ToResultDto(); */
 
-        if (response.IsFailed)
-            return BadRequest(resultDto);
+/*         if (response.IsFailed) */
+/*             return BadRequest(resultDto); */
 
-        // TODO: enviar created?
-        return Ok(resultDto);
-    }
+/*         // TODO: enviar created? */
+/*         return Ok(resultDto); */
+/*     } */
 
-    [Authorize(Roles = "PACIENTE")]
-    [HttpGet("Documentos/Identificacao")]
-    public IActionResult GetDocumento()
-    {
-        var id = User.Claims.FirstOrDefault(x => x.Type == "ID")?.Value;
-        if (id == null)
-        {
-            _logger.LogError("Id do token do paciente não encontrado");
-            return NotFound("Documento não encontrado");
-        }
+/*     [Authorize(Roles = "PACIENTE")] */
+/*     [HttpGet("Documentos/Identificacao")] */
+/*     public IActionResult GetDocumento() */
+/*     { */
+/*         var id = User.Claims.FirstOrDefault(x => x.Type == "ID")?.Value; */
+/*         if (id == null) */
+/*         { */
+/*             _logger.LogError("Id do token do paciente não encontrado"); */
+/*             return NotFound("Documento não encontrado"); */
+/*         } */
 
-        var result = _pacienteService.GetPacienteDocumento(
-            new Guid(id),
-            PacienteDocumentosEnum.Identificacao);
-        if (result.IsFailed)
-            return NotFound("Documento não encontrado");
+/*         var result = _pacienteService.GetPacienteDocumento( */
+/*             new Guid(id), */
+/*             PacienteDocumentosEnum.Identificacao); */
+/*         if (result.IsFailed) */
+/*             return NotFound("Documento não encontrado"); */
 
-        var path = result.Value;
+/*         var path = result.Value; */
 
-        // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft
-        return File(System.IO.File.ReadAllBytes(path), "image/png");
-    }
+/*         // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft */
+/*         return File(System.IO.File.ReadAllBytes(path), "image/png"); */
+/*     } */
 
-    [Authorize(Roles = "PACIENTE")]
-    [HttpGet("Documentos/Convenio")]
-    public IActionResult GetDocumentoConvenio()
-    {
-        var id = User.Claims.FirstOrDefault(x => x.Type == "ID")?.Value;
-        if (id == null)
-        {
-            _logger.LogError("Id do token do paciente não encontrado");
-            return NotFound("Documento não encontrado");
-        }
+/*     [Authorize(Roles = "PACIENTE")] */
+/*     [HttpGet("Documentos/Convenio")] */
+/*     public IActionResult GetDocumentoConvenio() */
+/*     { */
+/*         var id = User.Claims.FirstOrDefault(x => x.Type == "ID")?.Value; */
+/*         if (id == null) */
+/*         { */
+/*             _logger.LogError("Id do token do paciente não encontrado"); */
+/*             return NotFound("Documento não encontrado"); */
+/*         } */
 
-        var result = _pacienteService.GetPacienteDocumento(
-            new Guid(id),
-            PacienteDocumentosEnum.Convenio);
-        if (result.IsFailed)
-            return NotFound("Documento não encontrado");
+/*         var result = _pacienteService.GetPacienteDocumento( */
+/*             new Guid(id), */
+/*             PacienteDocumentosEnum.Convenio); */
+/*         if (result.IsFailed) */
+/*             return NotFound("Documento não encontrado"); */
 
-        var path = result.Value;
+/*         var path = result.Value; */
 
-        // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft
-        return File(System.IO.File.ReadAllBytes(path), "image/png");
-    }
+/*         // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft */
+/*         return File(System.IO.File.ReadAllBytes(path), "image/png"); */
+/*     } */
 
-    [Authorize(Policy = "ElevatedRights")]
-    [HttpGet("Documentos/Convenio/{guid}")]
-    public IActionResult GetDocumentoConvenioByGuid(
-        [FromRoute] Guid guid)
-    {
-        var result = _pacienteService.GetPacienteDocumentoByGuid(
-            guid,
-            PacienteDocumentosEnum.Convenio);
-        if (result.IsFailed)
-            return NotFound("Documento não encontrado");
+/*     [Authorize(Policy = "ElevatedRights")] */
+/*     [HttpGet("Documentos/Convenio/{guid}")] */
+/*     public IActionResult GetDocumentoConvenioByGuid( */
+/*         [FromRoute] Guid guid) */
+/*     { */
+/*         var result = _pacienteService.GetPacienteDocumentoByGuid( */
+/*             guid, */
+/*             PacienteDocumentosEnum.Convenio); */
+/*         if (result.IsFailed) */
+/*             return NotFound("Documento não encontrado"); */
 
-        var path = result.Value;
+/*         var path = result.Value; */
 
-        // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft
-        return File(System.IO.File.ReadAllBytes(path), "image/png");
-    }
+/*         // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft */
+/*         return File(System.IO.File.ReadAllBytes(path), "image/png"); */
+/*     } */
 
-    [Authorize(Policy = "ElevatedRights")]
-    [HttpGet("Documentos/Identificacao/{guid}")]
-    public IActionResult GetDocumentoByGuid(
-        [FromRoute] Guid guid)
-    {
-        var result = _pacienteService.GetPacienteDocumentoByGuid(
-            guid,
-            PacienteDocumentosEnum.Identificacao);
-        if (result.IsFailed)
-            return NotFound("Documento não encontrado");
+/*     [Authorize(Policy = "ElevatedRights")] */
+/*     [HttpGet("Documentos/Identificacao/{guid}")] */
+/*     public IActionResult GetDocumentoByGuid( */
+/*         [FromRoute] Guid guid) */
+/*     { */
+/*         var result = _pacienteService.GetPacienteDocumentoByGuid( */
+/*             guid, */
+/*             PacienteDocumentosEnum.Identificacao); */
+/*         if (result.IsFailed) */
+/*             return NotFound("Documento não encontrado"); */
 
-        var path = result.Value;
+/*         var path = result.Value; */
 
-        // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft
-        return File(System.IO.File.ReadAllBytes(path), "image/png");
-    }
+/*         // NOTE: não existe uma biblioteca de mimetypes, obrigrado microsoft */
+/*         return File(System.IO.File.ReadAllBytes(path), "image/png"); */
+/*     } */
 
-    [Authorize(Roles = "Paciente")]
-    [HttpGet("Consultas")]
-    public async Task<IActionResult> GetConsultas(
-        [FromQuery] int limit, int page, Guid? medicoId,
-        DateTime? MinDate, DateTime? MaxDate)
-    {
-        var paciente = User.Claims
-            .FirstOrDefault(x => x.Type == "ID")?.Value;
-        if (paciente == null)
-            return Unauthorized();
+/*     [Authorize(Roles = "Paciente")] */
+/*     [HttpGet("Consultas")] */
+/*     public async Task<IActionResult> GetConsultas( */
+/*         [FromQuery] int limit, int page, Guid? medicoId, */
+/*         DateTime? MinDate, DateTime? MaxDate) */
+/*     { */
+/*         var paciente = User.Claims */
+/*             .FirstOrDefault(x => x.Type == "ID")?.Value; */
+/*         if (paciente == null) */
+/*             return Unauthorized(); */
 
-        var response = await _consultaAgendamentoService
-            .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
-            {
-                PacienteId = new Guid(paciente),
-                MedicoId = medicoId,
-                MinDate = MinDate,
-                MaxDate = MaxDate,
-                Limit = limit,
-                Page = page
-            });
-        var result = response.ToResultDto();
-        if (response.IsFailed)
-            return NotFound();
+/*         var response = await _consultaAgendamentoService */
+/*             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto */
+/*             { */
+/*                 PacienteId = new Guid(paciente), */
+/*                 MedicoId = medicoId, */
+/*                 MinDate = MinDate, */
+/*                 MaxDate = MaxDate, */
+/*                 Limit = limit, */
+/*                 Page = page */
+/*             }); */
+/*         var result = response.ToResultDto(); */
+/*         if (response.IsFailed) */
+/*             return NotFound(); */
 
-        return Ok(result);
-    }
-    [Authorize(Roles = "Paciente")]
-    [HttpGet("Exames")]
-    public async Task<IActionResult> GetExames(
-        [FromQuery] int limit, int page, Guid? medicoId,
-        DateTime? MinDate, DateTime? MaxDate)
-    {
-        // TODO: limpar os dados desse negocio ai
-        var paciente = User.Claims
-            .FirstOrDefault(x => x.Type == "ID")?.Value;
-        if (paciente == null)
-            return Unauthorized();
+/*         return Ok(result); */
+/*     } */
+/*     [Authorize(Roles = "Paciente")] */
+/*     [HttpGet("Exames")] */
+/*     public async Task<IActionResult> GetExames( */
+/*         [FromQuery] int limit, int page, Guid? medicoId, */
+/*         DateTime? MinDate, DateTime? MaxDate) */
+/*     { */
+/*         // TODO: limpar os dados desse negocio ai */
+/*         var paciente = User.Claims */
+/*             .FirstOrDefault(x => x.Type == "ID")?.Value; */
+/*         if (paciente == null) */
+/*             return Unauthorized(); */
 
-        var response = await _exameAgendamentoService
-            .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
-            {
-                PacienteId = new Guid(paciente),
-                MedicoId = medicoId,
-                MinDate = MinDate,
-                MaxDate = MaxDate,
-                Limit = limit,
-                Page = page
-            });
-        var result = response.ToResultDto();
-        if (response.IsFailed)
-            return NotFound();
+/*         var response = await _exameAgendamentoService */
+/*             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto */
+/*             { */
+/*                 PacienteId = new Guid(paciente), */
+/*                 MedicoId = medicoId, */
+/*                 MinDate = MinDate, */
+/*                 MaxDate = MaxDate, */
+/*                 Limit = limit, */
+/*                 Page = page */
+/*             }); */
+/*         var result = response.ToResultDto(); */
+/*         if (response.IsFailed) */
+/*             return NotFound(); */
 
-        return Ok(result);
-    }
-    [Authorize(Policy = "ElevatedRights")]
-    [HttpGet("Consultas/{pacienteId}")]
-    public async Task<IActionResult> GetConsultaById(
-        [FromRoute] Guid pacienteId,
-        [FromQuery] int? limit, int? page, Guid? medicoId,
-        DateTime? MinDate, DateTime? MaxDate)
-    {
-        var response = await _consultaAgendamentoService
-            .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
-            {
-                PacienteId = pacienteId,
-                MedicoId = medicoId,
-                MinDate = MinDate,
-                MaxDate = MaxDate,
-                Limit = limit ?? 10,
-                Page = page ?? 0
-            });
-        var result = response.ToResultDto();
-        if (response.IsFailed)
-            return NotFound();
+/*         return Ok(result); */
+/*     } */
+/*     [Authorize(Policy = "ElevatedRights")] */
+/*     [HttpGet("Consultas/{pacienteId}")] */
+/*     public async Task<IActionResult> GetConsultaById( */
+/*         [FromRoute] Guid pacienteId, */
+/*         [FromQuery] int? limit, int? page, Guid? medicoId, */
+/*         DateTime? MinDate, DateTime? MaxDate) */
+/*     { */
+/*         var response = await _consultaAgendamentoService */
+/*             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto */
+/*             { */
+/*                 PacienteId = pacienteId, */
+/*                 MedicoId = medicoId, */
+/*                 MinDate = MinDate, */
+/*                 MaxDate = MaxDate, */
+/*                 Limit = limit ?? 10, */
+/*                 Page = page ?? 0 */
+/*             }); */
+/*         var result = response.ToResultDto(); */
+/*         if (response.IsFailed) */
+/*             return NotFound(); */
 
-        return Ok(result);
-    }
-    [Authorize(Policy = "ElevatedRights")]
-    [HttpGet("Exames/{pacienteId}")]
-    public async Task<IActionResult> GetExameById(
-        [FromRoute] Guid pacienteId,
-        [FromQuery] int? limit, int? page, Guid? medicoId,
-        DateTime? MinDate, DateTime? MaxDate)
-    {
-        var response = await _exameAgendamentoService
-            .GetAgendamentosByQuery(new AgendamentoGetByQueryDto
-            {
-                PacienteId = pacienteId,
-                MedicoId = medicoId,
-                MinDate = MinDate,
-                MaxDate = MaxDate,
-                Limit = limit ?? 10,
-                Page = page ?? 0
-            });
-        var result = response.ToResultDto();
-        if (response.IsFailed)
-            return NotFound();
+/*         return Ok(result); */
+/*     } */
+/*     [Authorize(Policy = "ElevatedRights")] */
+/*     [HttpGet("Exames/{pacienteId}")] */
+/*     public async Task<IActionResult> GetExameById( */
+/*         [FromRoute] Guid pacienteId, */
+/*         [FromQuery] int? limit, int? page, Guid? medicoId, */
+/*         DateTime? MinDate, DateTime? MaxDate) */
+/*     { */
+/*         var response = await _exameAgendamentoService */
+/*             .GetAgendamentosByQuery(new AgendamentoGetByQueryDto */
+/*             { */
+/*                 PacienteId = pacienteId, */
+/*                 MedicoId = medicoId, */
+/*                 MinDate = MinDate, */
+/*                 MaxDate = MaxDate, */
+/*                 Limit = limit ?? 10, */
+/*                 Page = page ?? 0 */
+/*             }); */
+/*         var result = response.ToResultDto(); */
+/*         if (response.IsFailed) */
+/*             return NotFound(); */
 
-        return Ok(result);
-    }
-    // TODO: fazer um dto para esses dois
-    [Authorize(Policy = "ElevatedRights")]
-    [HttpGet]
-    public IActionResult GetPacientes(
-        [FromQuery] int limit, int page)
-    {
-        var response = _pacienteService.GetPacientes(limit, page);
-        var result = response.ToResultDto();
-        if (response.IsFailed)
-            return NotFound();
+/*         return Ok(result); */
+/*     } */
+/*     // TODO: fazer um dto para esses dois */
+/*     [Authorize(Policy = "ElevatedRights")] */
+/*     [HttpGet] */
+/*     public IActionResult GetPacientes( */
+/*         [FromQuery] int limit, int page) */
+/*     { */
+/*         var response = _pacienteService.GetPacientes(limit, page); */
+/*         var result = response.ToResultDto(); */
+/*         if (response.IsFailed) */
+/*             return NotFound(); */
 
-        return Ok(result);
-    }
-    [Authorize(Policy = "ElevatedRights")]
-    [HttpGet("{pacienteId}")]
-    public IActionResult GetPacienteById(
-        [FromRoute] Guid pacienteId)
-    {
-        var response = _pacienteService.GetPacienteById(pacienteId);
-        var result = response.ToResultDto();
-        if (response.IsFailed)
-            return NotFound();
+/*         return Ok(result); */
+/*     } */
+/*     [Authorize(Policy = "ElevatedRights")] */
+/*     [HttpGet("{pacienteId}")] */
+/*     public IActionResult GetPacienteById( */
+/*         [FromRoute] Guid pacienteId) */
+/*     { */
+/*         var response = _pacienteService.GetPacienteById(pacienteId); */
+/*         var result = response.ToResultDto(); */
+/*         if (response.IsFailed) */
+/*             return NotFound(); */
 
-        return Ok(result);
-    }
-}
+/*         return Ok(result); */
+/*     } */
+/* } */

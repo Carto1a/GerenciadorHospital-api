@@ -1,5 +1,3 @@
-using FluentResults;
-
 using Hospital.Database;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
@@ -8,43 +6,58 @@ namespace Hospital.Repository.Cadastros;
 public class PacienteRepository
 : IPacienteRepository
 {
-    private readonly ILogger<PacienteRepository> _logger;
     private readonly AppDbContext _ctx;
+    private UnitOfWork _uow;
     public PacienteRepository(
         AppDbContext context,
-        ILogger<PacienteRepository> logger)
+        UnitOfWork uow)
     {
         _ctx = context;
-        _logger = logger;
-        _logger.LogDebug(1, $"NLog injected into PacienteRepository");
+        _uow = uow;
     }
-    public Result<Paciente?> GetPacienteById(Guid id)
+
+    public Paciente? GetPacienteById(Guid id)
     {
         try
         {
-            var paciente = _ctx.Pacientes
+            return _ctx.Pacientes
                 .FirstOrDefault(e => e.Id == id);
-            return Result.Ok(paciente);
         }
         catch (Exception error)
         {
-            return Result.Fail(error.Message);
+            _uow.Dispose();
+            throw new Exception(error.Message);
         }
     }
-    public Result<List<Paciente>> GetPacientes(
+
+    public Paciente? GetPacienteByCPF(string cpf)
+    {
+        try
+        {
+            return _ctx.Pacientes
+                .FirstOrDefault(e => e.CPF == cpf);
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public List<Paciente> GetPacientes(
         int limit, int page = 0)
     {
         try
         {
-            var list = _ctx.Pacientes
+            return _ctx.Pacientes
                 .Skip(page)
                 .Take(limit)
                 .ToList();
-            return Result.Ok(list);
         }
         catch (Exception error)
         {
-            return Result.Fail(error.Message);
+            _uow.Dispose();
+            throw new Exception(error.Message);
         }
     }
 }

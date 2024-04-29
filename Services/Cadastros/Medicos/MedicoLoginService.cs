@@ -45,28 +45,15 @@ public class MedicoLoginService
                 $"Senha de medico errada: {request.Email}",
                 "Email ou senha errada");
 
-        var authClaims = new List<Claim>
-        {
-            new("ID", user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName!),
-            new(ClaimTypes.Email, user.Email!),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        };
+        _logger.LogInformation(
+                $"Gerando token para: {request.Email}");
 
         var userRoles = await _manager.GetRolesAsync(user);
-        authClaims.AddRange(userRoles.Select(userRoles =>
-            new Claim(ClaimTypes.Role, userRoles)
-        ));
 
-        _logger.LogInformation(
-            $"Gerando token para: {authClaims.First(claim =>
-                claim.Type == ClaimTypes.Email).Value}");
-
-        var token = TokenHelper.GenereteToken(
-            _configuration, authClaims);
+        var token = TokenHelper.GenerateUserToken(
+            _configuration, user, userRoles);
 
         _logger.LogInformation($"Medico logado: {request.Email}");
-        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        return tokenString;
+        return token;
     }
 }

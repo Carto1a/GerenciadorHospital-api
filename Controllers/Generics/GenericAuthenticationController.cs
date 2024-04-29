@@ -1,59 +1,59 @@
-using Hospital.Service.Interfaces;
+/* using Hospital.Service.Interfaces; */
 
-using Microsoft.AspNetCore.Mvc;
+/* using Microsoft.AspNetCore.Mvc; */
 
-namespace Hospital.Controllers.Generics;
-public abstract class GenericAuthenticationController<T>
-: ControllerBase
-{
-    private readonly IAuthenticationService _authenticationService;
-    public GenericAuthenticationController(
-        IAuthenticationService authenticationService)
-    {
-        _authenticationService = authenticationService;
-    }
+/* namespace Hospital.Controllers.Generics; */
+/* public abstract class GenericAuthenticationController<T> */
+/* : ControllerBase */
+/* { */
+/*     private readonly IAuthenticationService _authenticationService; */
+/*     public GenericAuthenticationController( */
+/*         IAuthenticationService authenticationService) */
+/*     { */
+/*         _authenticationService = authenticationService; */
+/*     } */
 
-    /* [AllowAnonymous] */
-    /* [HttpPost("Login")] */
-    /* [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))] */
-    /* [ProducesResponseType(StatusCodes.Status500InternalServerError)] */
-    /* [ProducesResponseType(StatusCodes.Status400BadRequest)] */
-    /* [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))] */
-    /* public async Task<IActionResult> Login( */
-    /*     [FromBody] LoginRequestDto request) */
-    /* { */
-    /*     var response = await _authenticationService.Login(request); */
-    /*     var resultDto = response.ToResultDto(); */
+/*     /1* [AllowAnonymous] *1/ */
+/*     /1* [HttpPost("Login")] *1/ */
+/*     /1* [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))] *1/ */
+/*     /1* [ProducesResponseType(StatusCodes.Status500InternalServerError)] *1/ */
+/*     /1* [ProducesResponseType(StatusCodes.Status400BadRequest)] *1/ */
+/*     /1* [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))] *1/ */
+/*     /1* public async Task<IActionResult> Login( *1/ */
+/*     /1*     [FromBody] LoginRequestDto request) *1/ */
+/*     /1* { *1/ */
+/*     /1*     var response = await _authenticationService.Login(request); *1/ */
+/*     /1*     var resultDto = response.ToResultDto(); *1/ */
 
-    /*     if (response.IsFailed) */
-    /*         return BadRequest(resultDto); */
+/*     /1*     if (response.IsFailed) *1/ */
+/*     /1*         return BadRequest(resultDto); *1/ */
 
-    /*     return Ok(resultDto); */
-    /* } */
+/*     /1*     return Ok(resultDto); *1/ */
+/*     /1* } *1/ */
 
-    /* [Authorize(Policy = "ElevatedRights")] */
-    /* [HttpPost("Cadastro")] */
-    /* [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))] */
-    /* [ProducesResponseType(StatusCodes.Status500InternalServerError)] */
-    /* [ProducesResponseType(StatusCodes.Status400BadRequest)] */
-    /* [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))] */
-    /* public async Task<IActionResult> Register( */
-    /*     [FromForm] T request) */
-    /* { */
-    /*     var method = _authenticationService */
-    /*         .GetType() */
-    /*         .GetMethod("Register", new[] { request.GetType() }); */
+/*     /1* [Authorize(Policy = "ElevatedRights")] *1/ */
+/*     /1* [HttpPost("Cadastro")] *1/ */
+/*     /1* [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))] *1/ */
+/*     /1* [ProducesResponseType(StatusCodes.Status500InternalServerError)] *1/ */
+/*     /1* [ProducesResponseType(StatusCodes.Status400BadRequest)] *1/ */
+/*     /1* [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))] *1/ */
+/*     /1* public async Task<IActionResult> Register( *1/ */
+/*     /1*     [FromForm] T request) *1/ */
+/*     /1* { *1/ */
+/*     /1*     var method = _authenticationService *1/ */
+/*     /1*         .GetType() *1/ */
+/*     /1*         .GetMethod("Register", new[] { request.GetType() }); *1/ */
 
-    /*     if (method == null) */
-    /*         throw new NotImplementedException(); */
+/*     /1*     if (method == null) *1/ */
+/*     /1*         throw new NotImplementedException(); *1/ */
 
-    /*     /1* var response = await _authenticationService.Register((RegisterRequestMedicoDto)request); *1/ */
-    /*     var response = await (Task<Result<string>>)method? */
-    /*         .Invoke(_authenticationService, new object[] { request }); */
-    /*     var resultDto = response.ToResultDto(); */
-    /*     if (response.IsFailed) */
-    /*         return BadRequest(resultDto); */
+/*     /1*     /2* var response = await _authenticationService.Register((RegisterRequestMedicoDto)request); *2/ *1/ */
+/*     /1*     var response = await (Task<Result<string>>)method? *1/ */
+/*     /1*         .Invoke(_authenticationService, new object[] { request }); *1/ */
+/*     /1*     var resultDto = response.ToResultDto(); *1/ */
+/*     /1*     if (response.IsFailed) *1/ */
+/*     /1*         return BadRequest(resultDto); *1/ */
 
-    /*     return Ok(resultDto); */
-    /* } */
-}
+/*     /1*     return Ok(resultDto); *1/ */
+/*     /1* } *1/ */
+/* } */
