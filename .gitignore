@@ -487,3 +487,4 @@ $RECYCLE.BIN/
 /Database/app.sqlite
 /Database/app.sqlite-shm
 /Database/app.sqlite-wal
+/appsettings.Local.json

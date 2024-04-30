@@ -4,6 +4,7 @@ using Hospital;
 using Hospital.Consts;
 using Hospital.Database;
 using Hospital.Filter;
+using Hospital.Helpers;
 using Hospital.Models.Cadastro;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,17 +23,16 @@ var basedir = AppDomain.CurrentDomain.BaseDirectory;
 var logger = NLog.LogManager.Setup()
     .LoadConfigurationFromAppSettings()
     .GetCurrentClassLogger();
+
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+configuration.AddJsonFile("appsettings.Local.json");
+FolderFileHelper.CheckConfigurations(configuration);
+FolderFileHelper.CheckAndCreateFolders(configuration);
+
 logger.Debug("Starting application");
 
-var JWTSecret = configuration["JWT:Secret"] ??
-    throw new InvalidOperationException(
-        "JWT:Secret not found in appsettings.json");
-
-var DocPath = configuration["Paths:PacienteDocumentos"] ??
-    throw new InvalidOperationException(
-        "Paths:PacienteDocumentos not found in appsettings.json");
+var JWTSecret = configuration["JWT:Secret"];
 
 // Logger Initialization
 builder.Logging.ClearProviders();
@@ -102,7 +102,7 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = configuration["JWT:ValidAudience"],
         ValidIssuer = configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(JWTSecret)),
+            Encoding.UTF8.GetBytes(JWTSecret!)),
         ClockSkew = TimeSpan.Zero
     };
 });

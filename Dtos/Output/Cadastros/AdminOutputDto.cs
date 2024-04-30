@@ -2,7 +2,8 @@ using Hospital.Enums;
 using Hospital.Models.Cadastro;
 
 namespace Hospital.Dtos.Output.Cadastros;
-public class CadastroOutputDto
+
+public class AdminOutputDto
 {
     public Guid Id { get; set; }
     public string Email { get; set; }
@@ -15,17 +16,17 @@ public class CadastroOutputDto
     public string? NumeroCasa { get; set; }
     public bool Ativo { get; set; }
 
-    public CadastroOutputDto(
-        Cadastro cadastro)
+    public AdminOutputDto(Admin admin)
     {
-        Id = cadastro.Id;
-        Email = cadastro.Email!;
-        Nome = cadastro.Nome;
-        DataNascimento = cadastro.DataNascimento;
-        Genero = cadastro.Genero;
-        Telefone = cadastro.Telefone;
-        CPF = cadastro.CPF;
-        CEP = cadastro.CEP;
-        NumeroCasa = cadastro.NumeroCasa;
+        Id = admin.Id;
+        Email = admin.Email!;
+        Nome = admin.Nome;
+        DataNascimento = admin.DataNascimento;
+        Genero = admin.Genero;
+        Telefone = admin.Telefone;
+        CPF = admin.CPF;
+        CEP = admin.CEP;
+        NumeroCasa = admin.NumeroCasa;
+        Ativo = admin.Ativo;
     }
-};
+}

@@ -2,16 +2,19 @@ using Hospital.Database;
 using Hospital.Repository.Cadastros;
 using Hospital.Repository.Cadastros.Authentications.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Repository.Convenios;
+using Hospital.Repository.Convenios.Ineterfaces;
 
 namespace Hospital.Repository;
 public class UnitOfWork
 : IDisposable
 {
-    private IMedicoRepository? _medicoRepository;
-    private IPacienteRepository? _pacienteRepository;
     private IAuthAdminRepository? _authAdminRepository;
     private IAuthMedicoRepository? _authMedicoRepository;
     private IAuthPacienteRepository? _authPacienteRepository;
+    private IMedicoRepository? _medicoRepository;
+    private IPacienteRepository? _pacienteRepository;
+    private IConvenioRepository? _convenioRepository;
     private readonly AppDbContext _ctx;
     private bool disposed = false;
     public UnitOfWork(
@@ -43,6 +46,19 @@ public class UnitOfWork
                     new MedicoRepository(_ctx, this);
             }
             return _medicoRepository;
+        }
+    }
+
+    public IConvenioRepository ConvenioRepository
+    {
+        get
+        {
+            if (_convenioRepository == null)
+            {
+                _convenioRepository =
+                    new ConvenioRepository(_ctx, this);
+            }
+            return _convenioRepository;
         }
     }
 

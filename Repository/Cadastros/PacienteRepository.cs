@@ -1,4 +1,5 @@
 using Hospital.Database;
+using Hospital.Dtos.Output.Cadastros;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
 
@@ -22,6 +23,22 @@ public class PacienteRepository
         {
             return _ctx.Pacientes
                 .FirstOrDefault(e => e.Id == id);
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public PacienteOutputDto? GetPacienteByIdDto(Guid id)
+    {
+        try
+        {
+            return _ctx.Pacientes
+                .Where(e => e.Id == id)
+                .Select(e => new PacienteOutputDto(e))
+                .FirstOrDefault();
         }
         catch (Exception error)
         {
