@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 using Hospital.Dtos.Input.Convenios;
 using Hospital.Models.Agendamentos;
@@ -9,7 +10,7 @@ public class Convenio
 {
     [Key]
     public Guid Id { get; set; }
-    public string? CNPJ { get; set; }
+    public required string CNPJ { get; set; }
     public string? CEP { get; set; }
     public string? Numero { get; set; }
     public string? Nome { get; set; }
@@ -30,7 +31,9 @@ public class Convenio
 
     public void Deletar() => Deletado = true;
 
-    public void Create(ConvenioCreateDto request)
+    public Convenio() { }
+    [SetsRequiredMembers]
+    public Convenio(ConvenioCreateDto request)
     {
         CNPJ = request.CNPJ;
         CEP = request.CEP;
@@ -43,5 +46,22 @@ public class Convenio
         Site = request.Site;
         Criado = DateTime.Now;
         Deletado = false;
+
+        Validate();
+    }
+
+    private void Validate()
+    {
+        var validator = new Validators(
+            $"Não foi possível validar o convênio de nome: {Nome}");
+
+        /* validator.Cnpj(CNPJ, "CNPJ"); */
+        /* validator.MinLength(Nome, 3, "Nome"); */
+        /* validator.MinLength(Descrição, 3, "Descrição"); */
+        /* validator.MinLength(Telefone, 8, "Telefone"); */
+        /* validator.MinLength(Email, 8, "Email"); */
+        /* validator.MinLength(Site, 8, "Site"); */
+
+        validator.Check();
     }
 }

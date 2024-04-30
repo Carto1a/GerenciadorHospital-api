@@ -9,6 +9,7 @@ using Hospital.Services.Cadastros;
 using Hospital.Services.Cadastros.Admins;
 using Hospital.Services.Cadastros.Medicos;
 using Hospital.Services.Cadastros.Pacientes;
+using Hospital.Services.Convenios;
 using Hospital.Services.Pacientes;
 
 namespace Hospital;
@@ -34,5 +35,8 @@ public static class Injections
         // Paciente Service
         .AddScoped<PacienteLoginService>()
         .AddScoped<PacienteRegisterService>()
-        .AddScoped<PacienteGetByIdService>();
+        .AddScoped<PacienteGetByIdService>()
+        // Convenio Service
+        .AddScoped<ConvenioCreateService>()
+        .AddScoped<ConvenioGetByIdService>();
 }
