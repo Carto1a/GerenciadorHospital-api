@@ -1,4 +1,5 @@
 using Hospital.Database;
+using Hospital.Dtos.Input.Medicamentos;
 using Hospital.Dtos.Output.Medicamentos;
 using Hospital.Models.Medicamentos;
 using Hospital.Repository.MedicamentoLotes.Interfaces;
@@ -95,6 +96,78 @@ public class MedicamentoLoteRepository
                 .Where(x => x.Id == id)
                 .Select(x => new MedicamentoLoteOutputDto(x))
                 .FirstOrDefault();
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public List<MedicamentoLoteOutputDto> GetMedicamentoLotesByQueryDto(MedicamentoLoteGetByQueryDto query)
+    {
+        try
+        {
+            var queryCtx = _context.MedicamentoLotes.AsQueryable();
+            if (query.MedicamentoId != null)
+                queryCtx = queryCtx
+                    .Where(e => e.MedicamentoId == query.MedicamentoId);
+
+            if (query.MinDateFabricacao != null)
+                queryCtx = queryCtx
+                    .Where(e => e.DataFabricacao >= DateOnly
+                        .FromDateTime((DateTime)query.MinDateFabricacao));
+
+            if (query.MaxDateFabricacao != null)
+                queryCtx = queryCtx
+                    .Where(e => e.DataFabricacao <= DateOnly
+                        .FromDateTime((DateTime)query.MaxDateFabricacao));
+
+            if (query.MinDateVencimento != null)
+                queryCtx = queryCtx
+                    .Where(e => e.DataVencimento >= DateOnly
+                        .FromDateTime((DateTime)query.MinDateVencimento));
+
+            if (query.MaxDateVencimento != null)
+                queryCtx = queryCtx
+                    .Where(e => e.DataVencimento <= DateOnly
+                        .FromDateTime((DateTime)query.MaxDateVencimento));
+
+            if (query.MinDateCadastro != null)
+                queryCtx = queryCtx
+                    .Where(e => e.DataCadastro >= query.MinDateCadastro);
+
+            if (query.MaxDateCadastro != null)
+                queryCtx = queryCtx
+                    .Where(e => e.DataCadastro <= query.MaxDateCadastro);
+
+            if (query.Fabricante != null)
+                queryCtx = queryCtx
+                    .Where(e => e.Fabricante == query.Fabricante);
+
+            if (query.QuantidadeDisponivel != null)
+                queryCtx = queryCtx
+                    .Where(e => e.QuantidadeDisponivel == query.QuantidadeDisponivel);
+
+            if (query.Quantidade != null)
+                queryCtx = queryCtx
+                    .Where(e => e.Quantidade == query.Quantidade);
+
+            if (query.PrecoUnitario != null)
+                queryCtx = queryCtx
+                    .Where(e => e.PrecoUnitario == query.PrecoUnitario);
+
+            if (query.Status != null)
+                queryCtx = queryCtx
+                    .Where(e => e.Status == query.Status);
+
+            var result = queryCtx
+                .Skip((int)query.Page!)
+                .Take((int)query.Limit!)
+                .Select(e => new MedicamentoLoteOutputDto(e))
+                .ToList();
+
+            return result;
         }
         catch (Exception error)
         {

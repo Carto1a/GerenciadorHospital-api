@@ -1,4 +1,6 @@
 using Hospital.Database;
+using Hospital.Dtos.Input.Authentications;
+using Hospital.Dtos.Output.Cadastros;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
 
@@ -69,6 +71,63 @@ public class MedicoRepository
                 .Skip(page)
                 .Take(limit)
                 .ToList();
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public void UpdateMedico(Medico medico)
+    {
+        try
+        {
+            _ctx.Medicos.Update(medico);
+            _uow.Save();
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public List<MedicoOutputDto> GetMedicoByQueryDto(
+        MedicoGetByQueryDto query)
+    {
+        try
+        {
+            var queryCtx = _ctx.Medicos.AsQueryable();
+            if (query.Especialidade != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.Especialidade == query.Especialidade);
+
+            if (query.Ativo != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.Ativo == query.Ativo);
+
+            if (query.MinDate != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.DataNascimento >= DateOnly.FromDateTime(
+                        (DateTime)query.MinDate));
+
+            if (query.MaxDate != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.DataNascimento <= DateOnly.FromDateTime(
+                        (DateTime)query.MaxDate));
+
+            if (query.Genero != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.Genero == query.Genero);
+
+            var result = queryCtx
+                .Skip((int)query.Page!)
+                .Take((int)query.Limit!)
+                .Select(x => new MedicoOutputDto(x))
+                .ToList();
+
+            return result;
         }
         catch (Exception error)
         {

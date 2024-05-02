@@ -9,7 +9,7 @@ public interface IConvenioRepository
     Convenio? GetConvenioById(Guid id);
     ConvenioOutputDto? GetConvenioByIdDto(Guid id);
     Convenio? GetConvenioByCnpj(string cnpj);
-    List<Convenio> GetConvenios(ConvenioGetByQueryDto request);
+    List<ConvenioOutputDto> GetConveniosGetByQueryDto(ConvenioGetByQueryDto query);
     Convenio UpdateConvenio(Convenio convenio);
     void DesativarConvenio(Guid id);
 }

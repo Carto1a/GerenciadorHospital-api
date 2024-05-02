@@ -1,6 +1,7 @@
 using Hospital.Filter;
 using Hospital.Repository;
-using Hospital.Services.Pacientes;
+using Hospital.Services.Cadastros.Pacientes;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Pacientes;

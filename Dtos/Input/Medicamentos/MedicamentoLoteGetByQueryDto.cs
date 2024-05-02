@@ -3,12 +3,12 @@ using Hospital.Enums;
 namespace Hospital.Dtos.Input.Medicamentos;
 public record MedicamentoLoteGetByQueryDto(
     Guid? MedicamentoId,
-    DateOnly? MinDateFabricacao,
-    DateOnly? MaxDateFabricacao,
-    DateOnly? MinDateVencimento,
-    DateOnly? MaxDateVencimento,
-    DateOnly? MinDateCadastro,
-    DateOnly? MaxDateCadastro,
+    DateTime? MinDateFabricacao,
+    DateTime? MaxDateFabricacao,
+    DateTime? MinDateVencimento,
+    DateTime? MaxDateVencimento,
+    DateTime? MinDateCadastro,
+    DateTime? MaxDateCadastro,
     string? Fabricante,
     int? QuantidadeDisponivel,
     int? Quantidade,

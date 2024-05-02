@@ -18,6 +18,7 @@ public class UnitOfWork
     private IAuthPacienteRepository? _authPacienteRepository;
     private IMedicoRepository? _medicoRepository;
     private IPacienteRepository? _pacienteRepository;
+    private IAdminRepository? _adminRepository;
     private IConvenioRepository? _convenioRepository;
     private IMedicamentoRepository? _medicamentoRepository;
     private IMedicamentoLoteRepository? _medicamentoLoteRepository;
@@ -52,6 +53,19 @@ public class UnitOfWork
                     new MedicoRepository(_ctx, this);
             }
             return _medicoRepository;
+        }
+    }
+
+    public IAdminRepository AdminRepository
+    {
+        get
+        {
+            if (_adminRepository == null)
+            {
+                _adminRepository =
+                    new AdminRepository(_ctx, this);
+            }
+            return _adminRepository;
         }
     }
 

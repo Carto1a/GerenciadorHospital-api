@@ -9,9 +9,9 @@ public class ConvenioMap
 {
     public void Configure(EntityTypeBuilder<Convenio> builder)
     {
-        builder.HasIndex(x => x.CNPJ).IsUnique();
         builder.HasIndex(x => x.Email).IsUnique();
-        builder.HasIndex(x => x.Deletado).IsUnique();
+        builder.HasIndex(x => x.Deletado);
+        builder.HasIndex(x => x.CNPJ);
 
         builder.HasMany(x => x.Pacientes)
             .WithOne(p => p.Convenio)

@@ -88,51 +88,29 @@ public class ConvenioRepository
         }
     }
 
-    public List<Convenio> GetConvenios(
-        ConvenioGetByQueryDto request)
+    public List<ConvenioOutputDto> GetConveniosGetByQueryDto(
+        ConvenioGetByQueryDto query)
     {
         try
         {
-            var query = _ctx.Convenios.AsQueryable();
-            /* query = (IQueryable<Convenio>)query */
-            /*     .GroupJoin(_ctx.Pacientes, c => c.Id, b => b.ConvenioId, (c, patientsGroup) => new { c, patientsGroup }) */
-            /*     .SelectMany(x => x.patientsGroup.DefaultIfEmpty(), (x, b) => new */
-            /*     { */
-            /*         x.c.Id, */
-            /*         x.c.CEP, */
-            /*         x.c.CNPJ, */
-            /*         x.c.Criado, */
-            /*         x.c.Deletado, */
-            /*         x.c.Desconto, */
-            /*         x.c.Descrição, */
-            /*         x.c.Email, */
-            /*         x.c.Nome, */
-            /*         x.c.Numero, */
-            /*         x.c.Site, */
-            /*         x.c.Telefone, */
-            /*         /1* PacientesCount = x.patientsGroup.Count() *1/ */
-            /*     }); */
-            // TODO: ir atras de full text search no ef core
-            /* if (request.Nome != null) */
-            /* { */
-            /*     query = query.Where(e => e.Nome.Contains(request.Nome)); */
-            /* } */
+            var queryCtx = _ctx.Convenios.AsQueryable();
+            if (query.CNPJ != null)
+                queryCtx = queryCtx.Where(x => x.CNPJ == query.CNPJ);
 
-            if (request.CNPJ != null)
-                query = query.Where(e => e.CNPJ! == request.CNPJ);
+            if (query.Nome != null)
+                queryCtx = queryCtx.Where(x => x.Nome == query.Nome);
 
-            /* if (request.PessoasCadastradas == true) */
-            /*     query = query */
-            /*         .Include(e => e.Pacientes).Count(e => e.Pacientes.Count > 0); */
+            // TODO: mudar no futuro para ativo
+            if (query.Ativo != null)
+                queryCtx = queryCtx.Where(x => x.Deletado == !query.Ativo);
 
-            /* if (request.ListaPessoasCadastradas == true) */
-            /*     query = query.Where(e => e.Pacientes.ToList); */
-
-            var queryRequest = query
-                .Skip((int)request.Page!)
-                .Take((int)request.Limit!);
-            var queryString = queryRequest.ToQueryString();
-            return queryRequest.ToList();
+            var queryString = queryCtx.ToQueryString();
+            var result = queryCtx
+                .Skip((int)query.Page!)
+                .Take((int)query.Limit!)
+                .Select(e => new ConvenioOutputDto(e))
+                .ToList();
+            return result;
         }
         catch (Exception error)
         {

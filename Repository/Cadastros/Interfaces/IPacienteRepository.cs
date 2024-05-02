@@ -1,3 +1,4 @@
+using Hospital.Dtos.Input.Authentications;
 using Hospital.Dtos.Output.Cadastros;
 using Hospital.Models.Cadastro;
 
@@ -7,4 +8,5 @@ public interface IPacienteRepository
     Paciente? GetPacienteById(Guid id);
     PacienteOutputDto? GetPacienteByIdDto(Guid id);
     List<Paciente> GetPacientes(int limit, int page = 0);
+    List<PacienteOutputDto> GetPacienteByQueryDto(PacienteGetByQueryDto query);
 }

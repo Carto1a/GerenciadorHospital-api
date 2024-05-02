@@ -1,7 +1,10 @@
 using Hospital.Database;
+using Hospital.Dtos.Input.Authentications;
 using Hospital.Dtos.Output.Cadastros;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Repository.Cadastros;
 public class PacienteRepository
@@ -70,6 +73,50 @@ public class PacienteRepository
                 .Skip(page)
                 .Take(limit)
                 .ToList();
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public List<PacienteOutputDto> GetPacienteByQueryDto(
+        PacienteGetByQueryDto query)
+    {
+        try
+        {
+            var queryCtx = _ctx.Pacientes.AsQueryable();
+            if (query.ConvenioId != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.ConvenioId == query.ConvenioId);
+
+            if (query.Ativo != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.Ativo == query.Ativo);
+
+            if (query.MinDateNasc != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.DataNascimento >= DateOnly.FromDateTime(
+                        (DateTime)query.MinDateNasc!));
+
+            if (query.MaxDateNasc != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.DataNascimento <= DateOnly.FromDateTime(
+                        (DateTime)query.MaxDateNasc!));
+
+            if (query.Genero != null)
+                queryCtx = queryCtx.Where(x =>
+                    x.Genero == query.Genero);
+
+            /* var queryString = queryCtx.ToQueryString(); */
+            var result = queryCtx
+                .Skip((int)query.Page!)
+                .Take((int)query.Limit!)
+                .Select(e => new PacienteOutputDto(e))
+                .ToList();
+
+            return result;
         }
         catch (Exception error)
         {

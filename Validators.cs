@@ -111,6 +111,12 @@ public class Validators
             _errors.Add($"{fildName} is invalid");
     }
 
+    public void Query(int limit, int page)
+    {
+        if (limit < 1 || page < 0)
+            _errors.Add("Invalid query parameters");
+    }
+
     public void Check()
     {
         if (_errors.Count > 0)

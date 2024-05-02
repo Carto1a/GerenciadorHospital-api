@@ -1,11 +1,11 @@
 using Hospital.Enums;
 
 namespace Hospital.Dtos.Input.Authentications;
-public record PacienteGetByQueryDto(
-    Guid? ConvenioId,
+public record MedicoGetByQueryDto(
+    string? Especialidade,
     bool? Ativo,
-    DateTime? MinDateNasc,
-    DateTime? MaxDateNasc,
+    DateTime? MinDate,
+    DateTime? MaxDate,
     GeneroEnum? Genero)
 {
     public int? Page { get; set; } = 0;

@@ -2,7 +2,7 @@ using Hospital.Enums;
 
 namespace Hospital.Dtos.Input.Medicamentos;
 public record MedicamentoGetByQueryDto(
-    Guid? PacienteId,
+    /* Guid? PacienteId, */
     DateTime? MinDate,
     DateTime? MaxDate,
     int? Quantidade,

@@ -1,3 +1,4 @@
+using Hospital.Dtos.Input.Authentications;
 using Hospital.Repository;
 using Hospital.Repository.Cadastros;
 using Hospital.Repository.Cadastros.Authentications;
@@ -13,7 +14,6 @@ using Hospital.Services.Cadastros.Medicos;
 using Hospital.Services.Cadastros.Pacientes;
 using Hospital.Services.Convenios;
 using Hospital.Services.Medicamentos;
-using Hospital.Services.Pacientes;
 
 namespace Hospital;
 public static class Injections
@@ -34,21 +34,26 @@ public static class Injections
         // Admin Service
         .AddScoped<AuthAdminRegisterService>()
         .AddScoped<AuthAdminLoginService>()
+        .AddScoped<AdminGetByQueryService>()
         // Medico Service
         .AddScoped<MedicoLoginService>()
         .AddScoped<MedicoRegisterService>()
+        .AddScoped<MedicoGetByQueryService>()
         // Paciente Service
         .AddScoped<PacienteLoginService>()
         .AddScoped<PacienteRegisterService>()
         .AddScoped<PacienteGetByIdService>()
+        .AddScoped<PacienteGetByQueryService>()
         // Convenio Service
         .AddScoped<ConvenioCreateService>()
         .AddScoped<ConvenioGetByIdService>()
+        .AddScoped<ConvenioGetByQueryService>()
         // Medicamento Service
         .AddScoped<MedicamentoCreateService>()
         .AddScoped<MedicamentoLoteCreateService>()
         .AddScoped<MedicamentoGetByIdService>()
         .AddScoped<MedicamentoLoteGetByIdService>()
-        .AddScoped<MedicamentoWithdrawService>();
-
+        .AddScoped<MedicamentoWithdrawService>()
+        .AddScoped<MedicamentoGetByQueryService>()
+        .AddScoped<MedicamentoLoteGetByQueryService>();
 }

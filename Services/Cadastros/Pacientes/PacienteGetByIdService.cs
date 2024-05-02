@@ -1,7 +1,7 @@
 using Hospital.Dtos.Output.Cadastros;
 using Hospital.Repository;
 
-namespace Hospital.Services.Pacientes;
+namespace Hospital.Services.Cadastros.Pacientes;
 public class PacienteGetByIdService
 {
     private readonly UnitOfWork _unitOfWork;

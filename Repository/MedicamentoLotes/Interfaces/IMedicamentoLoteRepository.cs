@@ -1,3 +1,4 @@
+using Hospital.Dtos.Input.Medicamentos;
 using Hospital.Dtos.Output.Medicamentos;
 using Hospital.Models.Medicamentos;
 
@@ -10,5 +11,6 @@ public interface IMedicamentoLoteRepository
     MedicamentoLote? GetMedicamentoLoteByCodigoByMedicamentoId(string codigo, Guid medicamentoId);
     MedicamentoLoteOutputDto? GetMedicamentoLoteByIdDto(Guid id);
     MedicamentoLoteOutputDto? GetMedicamentoLoteByCodigoDto(string codigo);
+    List<MedicamentoLoteOutputDto> GetMedicamentoLotesByQueryDto(MedicamentoLoteGetByQueryDto query);
     void UpdateMedicamentoLote(MedicamentoLote medicamentoLote);
 }

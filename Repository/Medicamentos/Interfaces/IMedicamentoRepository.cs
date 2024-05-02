@@ -8,7 +8,7 @@ public interface IMedicamentoRepository
     Task<Guid> CreateMedicamentoAsync(Medicamento medicamento);
     Medicamento? GetMedicamentoById(Guid id);
     MedicamentoOutputDto? GetMedicamentoByIdDto(Guid id);
-    List<Medicamento> GetMedicamentos(MedicamentoGetByQueryDto request);
+    List<MedicamentoOutputDto> GetMedicamentosByQueryDto(MedicamentoGetByQueryDto query);
     void UpdateMedicamento(Medicamento medicamento);
     void DesativarMedicamento(Guid id);
 }

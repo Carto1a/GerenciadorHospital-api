@@ -69,10 +69,49 @@ public class MedicamentoRepository
         }
     }
 
-    public List<Medicamento> GetMedicamentos(
-        MedicamentoGetByQueryDto request)
+    public List<MedicamentoOutputDto> GetMedicamentosByQueryDto(
+        MedicamentoGetByQueryDto query)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var queryCtx = _ctx.Medicamentos.AsQueryable();
+            if (query.MinDate != null)
+                queryCtx = queryCtx
+                    .Where(e => e.Criado >= query.MinDate);
+
+            if (query.MaxDate != null)
+                queryCtx = queryCtx
+                    .Where(e => e.Criado <= query.MaxDate);
+
+            if (query.Quantidade != null)
+                queryCtx = queryCtx
+                    .Where(e => e.Quantidade == query.Quantidade);
+
+            if (query.QuantidadeMin != null)
+                queryCtx = queryCtx
+                    .Where(e => e.Quantidade >= query.QuantidadeMin);
+
+            if (query.PrincipioAtivo != null)
+                queryCtx = queryCtx
+                    .Where(e => e.PrincipioAtivo == query.PrincipioAtivo);
+
+            if (query.Status != null)
+                queryCtx = queryCtx
+                    .Where(e => e.Status == query.Status);
+
+            var result = queryCtx
+                .Skip((int)query.Page!)
+                .Take((int)query.Limit!)
+                .Select(e => new MedicamentoOutputDto(e))
+                .ToList();
+
+            return result;
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
     }
 
     public void UpdateMedicamento(
