@@ -2,10 +2,10 @@ namespace Hospital.Dtos.Input.Medicamentos;
 public record MedicamentoLoteCreateDto(
     Guid MedicamentoId,
     string Codigo,
-    DateOnly DataFabricacao,
-    DateOnly DataVencimento,
-    DateOnly DataCadastro,
+    DateTime DataFabricacao,
+    DateTime DataVencimento,
     string Fabricante,
     int Quantidade,
+    int QuantidadeDisponivel,
     decimal PrecoUnitario
 );

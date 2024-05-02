@@ -1,4 +1,5 @@
 using Hospital.Enums;
+using Hospital.Models.Medicamentos;
 
 namespace Hospital.Dtos.Output.Medicamentos;
 public record MedicamentoLoteOutputDto(
@@ -7,10 +8,26 @@ public record MedicamentoLoteOutputDto(
     string Codigo,
     DateOnly DataFabricacao,
     DateOnly DataVencimento,
-    DateOnly DataCadastro,
+    DateTime DataCadastro,
     string Fabricante,
     int Quantidade,
     int QuantidadeDisponivel,
     decimal PrecoUnitario,
     MedicamentoLoteStatus Status
-);
+)
+{
+    public MedicamentoLoteOutputDto(MedicamentoLote original)
+    : this(
+        original.Id,
+        original.MedicamentoId,
+        original.Codigo,
+        original.DataFabricacao,
+        original.DataVencimento,
+        original.DataCadastro,
+        original.Fabricante,
+        original.Quantidade,
+        original.QuantidadeDisponivel,
+        original.PrecoUnitario,
+        original.Status
+    ) { }
+}

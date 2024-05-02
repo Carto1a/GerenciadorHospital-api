@@ -1,6 +1,8 @@
 using Hospital.Repository;
+using Hospital.Repository.Cadastros;
 using Hospital.Repository.Cadastros.Authentications;
 using Hospital.Repository.Cadastros.Authentications.Interfaces;
+using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Repository.Convenios;
 using Hospital.Repository.Convenios.Ineterfaces;
 using Hospital.Repository.Images;
@@ -10,6 +12,7 @@ using Hospital.Services.Cadastros.Admins;
 using Hospital.Services.Cadastros.Medicos;
 using Hospital.Services.Cadastros.Pacientes;
 using Hospital.Services.Convenios;
+using Hospital.Services.Medicamentos;
 using Hospital.Services.Pacientes;
 
 namespace Hospital;
@@ -21,6 +24,8 @@ public static class Injections
         .AddScoped<UnitOfWork>()
         // Image Repository
         .AddScoped<IImageRepository, ImageRepository>()
+        // Medico Repository
+        .AddScoped<IMedicoRepository, MedicoRepository>()
         // Auth Repository
         .AddScoped<IAuthAdminRepository, AuthAdminRepository>()
         .AddScoped<IAuthMedicoRepository, AuthMedicoRepository>()
@@ -38,5 +43,12 @@ public static class Injections
         .AddScoped<PacienteGetByIdService>()
         // Convenio Service
         .AddScoped<ConvenioCreateService>()
-        .AddScoped<ConvenioGetByIdService>();
+        .AddScoped<ConvenioGetByIdService>()
+        // Medicamento Service
+        .AddScoped<MedicamentoCreateService>()
+        .AddScoped<MedicamentoLoteCreateService>()
+        .AddScoped<MedicamentoGetByIdService>()
+        .AddScoped<MedicamentoLoteGetByIdService>()
+        .AddScoped<MedicamentoWithdrawService>();
+
 }

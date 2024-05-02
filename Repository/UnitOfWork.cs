@@ -4,6 +4,10 @@ using Hospital.Repository.Cadastros.Authentications.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Repository.Convenios;
 using Hospital.Repository.Convenios.Ineterfaces;
+using Hospital.Repository.MedicamentoLotes;
+using Hospital.Repository.MedicamentoLotes.Interfaces;
+using Hospital.Repository.Medicamentos;
+using Hospital.Repository.Medicamentos.Interfaces;
 
 namespace Hospital.Repository;
 public class UnitOfWork
@@ -15,6 +19,8 @@ public class UnitOfWork
     private IMedicoRepository? _medicoRepository;
     private IPacienteRepository? _pacienteRepository;
     private IConvenioRepository? _convenioRepository;
+    private IMedicamentoRepository? _medicamentoRepository;
+    private IMedicamentoLoteRepository? _medicamentoLoteRepository;
     private readonly AppDbContext _ctx;
     private bool disposed = false;
     public UnitOfWork(
@@ -59,6 +65,32 @@ public class UnitOfWork
                     new ConvenioRepository(_ctx, this);
             }
             return _convenioRepository;
+        }
+    }
+
+    public IMedicamentoRepository MedicamentoRepository
+    {
+        get
+        {
+            if (_medicamentoRepository == null)
+            {
+                _medicamentoRepository =
+                    new MedicamentoRepository(_ctx, this);
+            }
+            return _medicamentoRepository;
+        }
+    }
+
+    public IMedicamentoLoteRepository MedicamentoLoteRepository
+    {
+        get
+        {
+            if (_medicamentoLoteRepository == null)
+            {
+                _medicamentoLoteRepository =
+                    new MedicamentoLoteRepository(_ctx, this);
+            }
+            return _medicamentoLoteRepository;
         }
     }
 
