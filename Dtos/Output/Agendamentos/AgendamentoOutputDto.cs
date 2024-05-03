@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Hospital.Enums;
+using Hospital.Models.Agendamentos;
 
 namespace Hospital.Dtos.Output.Agendamentos;
 public record AgendamentoOutputDto
@@ -18,27 +19,17 @@ public record AgendamentoOutputDto
     public DateTime Criado { get; init; }
     public bool Deletado { get; init; }
 
-    public AgendamentoOutputDto(
-        Guid id,
-        Guid medicoId,
-        Guid pacienteId,
-        Guid? convenioId,
-        AgendamentoStatus status,
-        decimal custo,
-        decimal custoFinal,
-        DateTime dataHora,
-        DateTime criado,
-        bool deletado)
+    public AgendamentoOutputDto(Agendamento original)
     {
-        Id = id;
-        MedicoId = medicoId;
-        PacienteId = pacienteId;
-        ConvenioId = convenioId;
-        Status = status;
-        Custo = custo;
-        CustoFinal = custoFinal;
-        DataHora = dataHora;
-        Criado = criado;
-        Deletado = deletado;
+        Id = original.Id;
+        MedicoId = original.MedicoId;
+        PacienteId = (Guid)original.PacienteId!;
+        ConvenioId = original.ConvenioId;
+        Status = original.Status;
+        Custo = original.Custo;
+        CustoFinal = original.CustoFinal;
+        DataHora = original.DataHora;
+        Criado = original.Criado;
+        Deletado = original.Deletado;
     }
 }

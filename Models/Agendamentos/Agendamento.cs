@@ -40,4 +40,33 @@ public abstract class Agendamento
         DataHora = request.DataHora;
         Custo = request.Custo;
     }
+
+    public Agendamento() { }
+    public Agendamento Create(AgendamentoCreateDto request)
+    {
+        MedicoId = request.MedicoId;
+        PacienteId = request.PacienteId;
+        ConvenioId = request.ConvenioId;
+        DataHora = request.DataHora;
+        Custo = request.Custo;
+        Criado = DateTime.Now;
+        Deletado = false;
+        Status = AgendamentoStatus.Agendado;
+
+        // NOTE: If this object is invalid,
+        // it will throw an exception
+        Validate();
+        return this;
+    }
+
+    public void Validate()
+    {
+        var validate = new Validators(
+            $"Não foi possível criar o agendamento: {DataHora}");
+
+        validate.MinDate(DataHora, DateTime.Now.AddMinutes(10), "DataHora");
+        validate.MinValue(Custo, 0, "Custo");
+
+        validate.Check();
+    }
 }

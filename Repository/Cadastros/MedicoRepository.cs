@@ -34,6 +34,21 @@ public class MedicoRepository
         }
     }
 
+    public Medico? GetMedicoByIdAtivo(Guid id)
+    {
+        try
+        {
+            var medico = _ctx.Medicos
+                .FirstOrDefault(e => e.Id == id && e.Ativo == true);
+            return medico;
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
     public Medico? GetMedicoByCRM(int crm)
     {
         try

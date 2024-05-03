@@ -18,6 +18,8 @@ using NLog.Web;
 
 // TODO: fazer o sistema louco? de log e id
 // TODO: colocar o email que fez uma req importante no log
+// TODO: fazer a segregação com interfaces nas services
+// e no unit of work
 
 var basedir = AppDomain.CurrentDomain.BaseDirectory;
 var logger = NLog.LogManager.Setup()

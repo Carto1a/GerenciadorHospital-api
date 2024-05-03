@@ -1,165 +1,152 @@
-/* using FluentResults; */
+using Hospital.Database;
+using Hospital.Dtos.Input.Agendamentos;
+using Hospital.Dtos.Output.Agendamentos;
+using Hospital.Models.Agendamentos;
+using Hospital.Models.Atendimento;
+using Hospital.Repository.Agendamentos.Interfaces;
 
-/* using Hospital.Database; */
-/* using Hospital.Dto.Agendamento.Get; */
-/* using Hospital.Models.Agendamentos; */
-/* using Hospital.Models.Atendimento; */
-/* using Hospital.Repository.Agendamentos.Interfaces; */
+using Microsoft.EntityFrameworkCore;
 
-/* using Microsoft.EntityFrameworkCore; */
-/* using Microsoft.EntityFrameworkCore.ChangeTracking; */
+namespace Hospital.Repository.Agendamentos;
+public class AgendamentoRepository<T, TAgendamento>
+: IAgendamentoRepository<T, TAgendamento>
+    where T : Atendimento, new()
+    where TAgendamento : Agendamento
+{
+    private readonly AppDbContext _ctx;
+    private readonly UnitOfWork _uow;
+    public AgendamentoRepository(
+        AppDbContext context,
+        UnitOfWork uow)
+    {
+        _ctx = context;
+        _uow = uow;
+    }
 
-/* namespace Hospital.Repository.Agendamentos; */
-/* public class AgendamentoRepository<T, TAgendamento> */
-/* : IAgendamentoRepository<T, TAgendamento> */
-/*     where T : Atendimento, new() */
-/*     where TAgendamento : Agendamento<T> */
-/* { */
-/*     private readonly ILogger<AgendamentoRepository<T, TAgendamento>> _logger; */
-/*     private readonly AppDbContext _ctx; */
-/*     public AgendamentoRepository( */
-/*         AppDbContext context, */
-/*         ILogger<AgendamentoRepository<T, TAgendamento>> logger) */
-/*     { */
-/*         _ctx = context; */
-/*         _logger = logger; */
-/*         _logger.LogDebug(1, $"NLog injected into AgendamentoRepository {nameof(T)}"); */
-/*     } */
+    public async Task<Guid> CreateAsync(
+        TAgendamento agentamento)
+    {
+        try
+        {
+            var result = await _ctx.Set<TAgendamento>().AddAsync(agentamento);
+            await _ctx.SaveChangesAsync();
+            return result.Entity.Id;
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
 
-/*     public async Task<Result<EntityEntry<TAgendamento>>> CreateAgentamento( */
-/*         TAgendamento agentamento) */
-/*     { */
-/*         try */
-/*         { */
-/*             var result = await _ctx.Set<TAgendamento>().AddAsync(agentamento); */
-/*             await _ctx.SaveChangesAsync(); */
-/*             return Result.Ok(result); */
-/*         } */
-/*         catch (Exception error) */
-/*         { */
-/*             // jeito preguisa das ideias */
-/*             return Result.Fail(error.Message); */
-/*         } */
-/*     } */
+    public Task<List<TAgendamento>> GetByDataHoraMedicoAsync(
+        DateTime dataHora, Guid medicoId)
+    {
+        try
+        {
+            var list = _ctx.Set<TAgendamento>()
+                .Where(e => e.MedicoId == medicoId)
+                .Where(e =>
+                    e.DataHora > dataHora.AddMinutes(-30) &&
+                    e.DataHora < dataHora.AddMinutes(30))
+                .ToListAsync();
 
-/*     public async Task<Result<TAgendamento?>> GetAgendamentoById( */
-/*         Guid id) */
-/*     { */
-/*         try */
-/*         { */
-/*             var list = await _ctx.Set<TAgendamento>() */
-/*                 .AsNoTracking() */
-/*                 .FirstOrDefaultAsync(e => e.Id == id); */
-/*             return Result.Ok(list); */
-/*         } */
-/*         catch (Exception error) */
-/*         { */
-/*             return Result.Fail(error.Message); */
-/*         } */
-/*     } */
+            return list;
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
 
-/*     public async Task<Result<List<TAgendamento>>> GetAgendamentoByQuery( */
-/*         AgendamentoGetByQueryDto query) */
-/*     { */
-/*         try */
-/*         { */
-/*             // TODO: adiciona pesquisa pela data de criação */
-/*             var queryList = _ctx.Set<TAgendamento>().AsQueryable(); */
-/*             if (query.MedicoId != null) */
-/*                 queryList = queryList.Where(e => */
-/*                     e.MedicoId == query.MedicoId); */
+    public async Task<TAgendamento?> GetByIdAsync(
+        Guid id)
+    {
+        try
+        {
+            var list = await _ctx.Set<TAgendamento>()
+                .FirstOrDefaultAsync(e => e.Id == id);
 
-/*             if (query.PacienteId != null) */
-/*                 queryList = queryList.Where(e => */
-/*                     e.PacienteId == query.PacienteId); */
+            return list;
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
 
-/*             if (query.MinDate != null) */
-/*                 queryList = queryList.Where( */
-/*                     e => e.DataHora >= query.MinDate */
-/*                     && e.DataHora <= query.MaxDate); */
+    public AgendamentoOutputDto? GetByIdDto(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 
-/*             if (query.Limit == null || query.Page == null) */
-/*                 return Result.Fail("page e limit não deveriam ser nulls"); */
+    public async Task<List<AgendamentoOutputDto>> GetByQueryDtoAsync(
+        AgendamentoGetByQueryDto query)
+    {
+        try
+        {
+            var queryCtx = _ctx.Set<TAgendamento>().AsQueryable();
+            if (query.MedicoId != null)
+                queryCtx = queryCtx.Where(e =>
+                    e.MedicoId == query.MedicoId);
 
-/*             var result = await queryList */
-/*                 .Skip((int)query.Page) */
-/*                 .Take((int)query.Limit) */
-/*                 .ToListAsync(); */
+            if (query.PacienteId != null)
+                queryCtx = queryCtx.Where(e =>
+                    e.PacienteId == query.PacienteId);
 
-/*             return Result.Ok(result); */
-/*         } */
-/*         catch (Exception error) */
-/*         { */
-/*             return Result.Fail(error.Message); */
-/*         } */
-/*     } */
+            if (query.MinDateCriado != null)
+                queryCtx = queryCtx.Where(e =>
+                    e.Criado >= query.MinDateCriado);
 
-/*     public Result<List<TAgendamento>> GetAgendamentosByDate( */
-/*         DateTime minDate, DateTime maxDate, int limit, int page = 0) */
-/*     { */
-/*         try */
-/*         { */
-/*             var list = _ctx.Set<TAgendamento>() */
-/*                 .Where(e => e.DataHora >= minDate && e.DataHora <= maxDate) */
-/*                 .Skip(page) */
-/*                 .Take(limit) */
-/*                 .ToList(); */
-/*             return Result.Ok(list); */
-/*         } */
-/*         catch (Exception error) */
-/*         { */
-/*             return Result.Fail(error.Message); */
-/*         } */
-/*     } */
+            if (query.MaxDateCriado != null)
+                queryCtx = queryCtx.Where(e =>
+                    e.Criado <= query.MaxDateCriado);
 
-/*     public async Task<Result<List<TAgendamento>>> GetAgendamentosByMedico( */
-/*         Guid medicoId, int limit, int page = 0) */
-/*     { */
-/*         try */
-/*         { */
-/*             var list = await _ctx.Set<TAgendamento>() */
-/*                 .Where(e => e.MedicoId == medicoId) */
-/*                 .Skip(page) */
-/*                 .Take(limit) */
-/*                 .ToListAsync(); */
-/*             return Result.Ok(list); */
-/*         } */
-/*         catch (Exception error) */
-/*         { */
-/*             return Result.Fail(error.Message); */
-/*         } */
-/*     } */
+            if (query.ConvencioId != null)
+                queryCtx = queryCtx.Where(e =>
+                    e.ConvenioId == query.ConvencioId);
 
-/*     public Result<List<TAgendamento>> GetAgendamentosByPaciente( */
-/*         Guid pacienteId, int limit, int page = 0) */
-/*     { */
-/*         try */
-/*         { */
-/*             return _ctx.Set<TAgendamento>() */
-/*                 .Where(e => e.PacienteId == pacienteId) */
-/*                 .Skip(page) */
-/*                 .Take(limit) */
-/*                 .ToList(); */
-/*         } */
-/*         catch (Exception error) */
-/*         { */
-/*             return Result.Fail(error.Message); */
-/*         } */
-/*     } */
+            if (query.MinDataHora != null)
+                queryCtx = queryCtx.Where(e =>
+                    e.DataHora >= query.MinDataHora);
 
-/*     public async Task<Result> UpdateAgentamento( */
-/*         TAgendamento NovoAgendamento) */
-/*     { */
-/*         try */
-/*         { */
-/*             _ctx.Set<TAgendamento>().Update(NovoAgendamento); */
-/*             await _ctx.SaveChangesAsync(); */
+            if (query.MaxDataHora != null)
+                queryCtx = queryCtx.Where(e =>
+                    e.DataHora <= query.MaxDataHora);
 
-/*             return Result.Ok(); */
-/*         } */
-/*         catch (Exception error) */
-/*         { */
-/*             return Result.Fail(error.Message); */
-/*         } */
-/*     } */
-/* } */
+            if (query.Status != null)
+                queryCtx = queryCtx.Where(e =>
+                    e.Status == query.Status);
+
+            var result = await queryCtx
+                .Skip((int)query.Page!)
+                .Take((int)query.Limit!)
+                .Select(e => new AgendamentoOutputDto(e))
+                .ToListAsync();
+
+            return result;
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
+    public async Task UpdateAsync(
+        TAgendamento NovoAgendamento)
+    {
+        try
+        {
+            _ctx.Set<TAgendamento>().Update(NovoAgendamento);
+            await _ctx.SaveChangesAsync();
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+}

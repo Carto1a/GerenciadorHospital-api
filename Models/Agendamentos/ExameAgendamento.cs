@@ -5,4 +5,6 @@ public class ExameAgendamento
 : Agendamento
 {
     public virtual Exame? Exame { get; set; }
+
+    public ExameAgendamento() { }
 }

@@ -34,6 +34,20 @@ public class PacienteRepository
         }
     }
 
+    public Paciente? GetPacienteByIdAtivo(Guid id)
+    {
+        try
+        {
+            return _ctx.Pacientes
+                .FirstOrDefault(e => e.Id == id && e.Ativo == true);
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
     public PacienteOutputDto? GetPacienteByIdDto(Guid id)
     {
         try

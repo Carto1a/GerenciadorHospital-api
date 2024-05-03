@@ -1,4 +1,10 @@
 using Hospital.Database;
+using Hospital.Exceptions;
+using Hospital.Models.Agendamentos;
+using Hospital.Models.Atendimento;
+using Hospital.Repository.Agendamentos;
+using Hospital.Repository.Agendamentos.Interfaces;
+using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros;
 using Hospital.Repository.Cadastros.Authentications.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
@@ -22,12 +28,76 @@ public class UnitOfWork
     private IConvenioRepository? _convenioRepository;
     private IMedicamentoRepository? _medicamentoRepository;
     private IMedicamentoLoteRepository? _medicamentoLoteRepository;
+    private IConsultaAgendamentoRepository? _consultaAgendamentoRepository;
+    private IExameAgendamentoRepository? _exameAgendamentoRepository;
+    private IRetornoAgendamentoRepository? _retornoAgendamentoRepository;
+
+    private IDictionary<
+        string, object?
+    > _agendamentoRepositories;
+
     private readonly AppDbContext _ctx;
     private bool disposed = false;
     public UnitOfWork(
         AppDbContext context)
     {
         _ctx = context;
+        _agendamentoRepositories = new Dictionary<
+            string, object?>
+        {
+            { nameof(ExameAgendamento), null },
+            { nameof(ConsultaAgendamento), null },
+            { nameof(RetornoAgendamento), null }
+        };
+    }
+
+    // NOTE: não questione os meus metodos, mas sim a minha sanidade
+    public IAgendamentoRepository<T, TAgendamento>?
+    SetAgendamento<T, TAgendamento>()
+    where T : Atendimento
+    where TAgendamento : Agendamento
+    {
+        var key = typeof(TAgendamento).Name;
+        var repository = _agendamentoRepositories.ContainsKey(key) ?
+            _agendamentoRepositories[key] : null;
+        var teste = nameof(ExameAgendamento);
+        if (repository != null)
+        {
+            return repository as
+            IAgendamentoRepository<T, TAgendamento>;
+        }
+
+        if (key == nameof(ExameAgendamento))
+        {
+            var repo =
+                new ExameAgendamentoRepository(_ctx, this) as
+                IAgendamentoRepository<T, TAgendamento>;
+            _agendamentoRepositories[key] = repo;
+            return repo;
+        }
+
+        if (key == nameof(ConsultaAgendamento))
+        {
+            var repo =
+                new ConsultaAgendamentoRepository(_ctx, this) as
+                IAgendamentoRepository<T, TAgendamento>;
+            _agendamentoRepositories[key] = repo;
+            return repo;
+        }
+
+        if (key == nameof(RetornoAgendamento))
+        {
+            var repo =
+                new RetornoAgendamentoRepository(_ctx, this) as
+                IAgendamentoRepository<T, TAgendamento>;
+            _agendamentoRepositories[key] = repo;
+            return repo;
+        }
+
+        throw new RequestError(
+            $"AgendamentoRepository<{key}> not found",
+            "Erro interno, contate o suporte",
+            StatusCodes.Status500InternalServerError);
     }
 
     public IPacienteRepository PacienteRepository
@@ -105,6 +175,45 @@ public class UnitOfWork
                     new MedicamentoLoteRepository(_ctx, this);
             }
             return _medicamentoLoteRepository;
+        }
+    }
+
+    public IConsultaAgendamentoRepository ConsultaAgendamentoRepository
+    {
+        get
+        {
+            if (_consultaAgendamentoRepository == null)
+            {
+                _consultaAgendamentoRepository =
+                    new ConsultaAgendamentoRepository(_ctx, this);
+            }
+            return _consultaAgendamentoRepository;
+        }
+    }
+
+    public IExameAgendamentoRepository ExameAgendamentoRepository
+    {
+        get
+        {
+            if (_exameAgendamentoRepository == null)
+            {
+                _exameAgendamentoRepository =
+                    new ExameAgendamentoRepository(_ctx, this);
+            }
+            return _exameAgendamentoRepository;
+        }
+    }
+
+    public IRetornoAgendamentoRepository RetornoAgendamentoRepository
+    {
+        get
+        {
+            if (_retornoAgendamentoRepository == null)
+            {
+                _retornoAgendamentoRepository =
+                    new RetornoAgendamentoRepository(_ctx, this);
+            }
+            return _retornoAgendamentoRepository;
         }
     }
 

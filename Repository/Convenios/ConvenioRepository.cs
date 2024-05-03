@@ -71,6 +71,21 @@ public class ConvenioRepository
         }
     }
 
+    public Convenio? GetConvenioByIdAtivo(Guid id)
+    {
+        try
+        {
+            var convenio = _ctx.Convenios
+                .FirstOrDefault(e => e.Id == id && e.Deletado == false);
+            return convenio;
+        }
+        catch (Exception error)
+        {
+            _uow.Dispose();
+            throw new Exception(error.Message);
+        }
+    }
+
     public ConvenioOutputDto? GetConvenioByIdDto(Guid id)
     {
         try

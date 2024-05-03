@@ -7,6 +7,7 @@ public interface IConvenioRepository
 {
     Task<Guid> CreateConvenioAsync(Convenio convenio);
     Convenio? GetConvenioById(Guid id);
+    Convenio? GetConvenioByIdAtivo(Guid id);
     ConvenioOutputDto? GetConvenioByIdDto(Guid id);
     Convenio? GetConvenioByCnpj(string cnpj);
     List<ConvenioOutputDto> GetConveniosGetByQueryDto(ConvenioGetByQueryDto query);

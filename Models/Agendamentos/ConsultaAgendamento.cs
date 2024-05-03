@@ -5,4 +5,6 @@ public class ConsultaAgendamento
 : Agendamento
 {
     public virtual Consulta? Consulta { get; set; }
+
+    public ConsultaAgendamento() { }
 }

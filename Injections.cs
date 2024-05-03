@@ -8,6 +8,7 @@ using Hospital.Repository.Convenios;
 using Hospital.Repository.Convenios.Ineterfaces;
 using Hospital.Repository.Images;
 using Hospital.Repository.Images.Interfaces;
+using Hospital.Services.Agendamentos;
 using Hospital.Services.Cadastros;
 using Hospital.Services.Cadastros.Admins;
 using Hospital.Services.Cadastros.Medicos;
@@ -55,5 +56,7 @@ public static class Injections
         .AddScoped<MedicamentoLoteGetByIdService>()
         .AddScoped<MedicamentoWithdrawService>()
         .AddScoped<MedicamentoGetByQueryService>()
-        .AddScoped<MedicamentoLoteGetByQueryService>();
+        .AddScoped<MedicamentoLoteGetByQueryService>()
+        // Agendamento Service
+        .AddScoped(typeof(AgendamentoCreateService<,,>));
 }
