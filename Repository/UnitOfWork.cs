@@ -1,4 +1,5 @@
 using Hospital.Database;
+using Hospital.Dtos.Output.Agendamentos;
 using Hospital.Exceptions;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
@@ -52,10 +53,11 @@ public class UnitOfWork
     }
 
     // NOTE: não questione os meus metodos, mas sim a minha sanidade
-    public IAgendamentoRepository<T, TAgendamento>?
-    SetAgendamento<T, TAgendamento>()
+    public IAgendamentoRepository<T, TAgendamento, OutputDto>?
+    SetAgendamento<T, TAgendamento, OutputDto>()
     where T : Atendimento
     where TAgendamento : Agendamento
+    where OutputDto : AgendamentoOutputDto
     {
         var key = typeof(TAgendamento).Name;
         var repository = _agendamentoRepositories.ContainsKey(key) ?
@@ -64,14 +66,14 @@ public class UnitOfWork
         if (repository != null)
         {
             return repository as
-            IAgendamentoRepository<T, TAgendamento>;
+            IAgendamentoRepository<T, TAgendamento, OutputDto>;
         }
 
         if (key == nameof(ExameAgendamento))
         {
             var repo =
                 new ExameAgendamentoRepository(_ctx, this) as
-                IAgendamentoRepository<T, TAgendamento>;
+                IAgendamentoRepository<T, TAgendamento, OutputDto>;
             _agendamentoRepositories[key] = repo;
             return repo;
         }
@@ -80,7 +82,7 @@ public class UnitOfWork
         {
             var repo =
                 new ConsultaAgendamentoRepository(_ctx, this) as
-                IAgendamentoRepository<T, TAgendamento>;
+                IAgendamentoRepository<T, TAgendamento, OutputDto>;
             _agendamentoRepositories[key] = repo;
             return repo;
         }
@@ -89,7 +91,7 @@ public class UnitOfWork
         {
             var repo =
                 new RetornoAgendamentoRepository(_ctx, this) as
-                IAgendamentoRepository<T, TAgendamento>;
+                IAgendamentoRepository<T, TAgendamento, OutputDto>;
             _agendamentoRepositories[key] = repo;
             return repo;
         }

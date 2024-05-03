@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+using Hospital.Dtos.Input.Atendimentos;
 using Hospital.Models.Cadastro;
 
 namespace Hospital.Models.Atendimento;
@@ -24,4 +25,35 @@ public abstract class Atendimento
     public DateTime Criado { get; set; }
 
     public TimeSpan Duracao => Fim - Inicio;
+
+    public Atendimento() { }
+    public Atendimento(AtendimentoCreateDto request)
+    {
+        MedicoId = request.MedicoId;
+        /* PacienteId = request.PacienteId; */
+        AgendamentoId = request.AgendamentoId;
+        /* ConvenioId = request.ConvenioId; */
+        Inicio = request.Inicio;
+        Fim = request.Fim;
+        /* Custo = request.Custo; */
+        /* CustoFinal = request.CustoFinal; */
+        Criado = DateTime.Now;
+
+        Validate();
+    }
+
+    public void Validate()
+    {
+        var validate = new Validators(
+            $"Não foi possível validar o atendimento: {Id}");
+
+        validate.MinValue(MedicoId, Guid.Empty, "Médico");
+        validate.MinValue(PacienteId, Guid.Empty, "Paciente");
+        validate.MinValue(AgendamentoId, Guid.Empty, "Agendamento");
+        validate.MinValue(Custo, 0, "Custo");
+        validate.MinValue(CustoFinal, 0, "Custo Final");
+        validate.MinValue(Duracao.TotalMinutes, 0, "Duração");
+
+        validate.Check();
+    }
 }

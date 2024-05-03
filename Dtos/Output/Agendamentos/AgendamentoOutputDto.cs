@@ -32,4 +32,9 @@ public record AgendamentoOutputDto
         Criado = original.Criado;
         Deletado = original.Deletado;
     }
+
+    public AgendamentoOutputDto Create(Agendamento original)
+    {
+        return new AgendamentoOutputDto(original);
+    }
 }

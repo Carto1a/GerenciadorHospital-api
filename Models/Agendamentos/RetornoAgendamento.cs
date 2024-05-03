@@ -11,6 +11,12 @@ public class RetornoAgendamento
     public virtual Retorno? Retorno { get; set; }
 
     public RetornoAgendamento() { }
+    public RetornoAgendamento(RetornoAgendamentoCreateDto request)
+    : base(request)
+    {
+        ConsultaId = request.ConsultaId;
+    }
+
     public RetornoAgendamento Create(
         RetornoAgendamentoCreateDto request)
     {

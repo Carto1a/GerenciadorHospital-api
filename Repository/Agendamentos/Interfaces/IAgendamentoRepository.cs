@@ -4,14 +4,15 @@ using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
 
 namespace Hospital.Repository.Agendamentos.Interfaces;
-public interface IAgendamentoRepository<T, TAgendamento>
+public interface IAgendamentoRepository<T, TAgendamento, OutputDto>
     where T : Atendimento
     where TAgendamento : Agendamento
+    where OutputDto : AgendamentoOutputDto
 {
     Task<Guid> CreateAsync(TAgendamento agentamento);
     Task UpdateAsync(TAgendamento NovoAgendamento);
     Task<TAgendamento?> GetByIdAsync(Guid id);
-    AgendamentoOutputDto? GetByIdDto(Guid id);
+    OutputDto? GetByIdDto(Guid id);
     Task<List<TAgendamento>> GetByDataHoraMedicoAsync(DateTime dataHora, Guid medicoId);
     Task<List<AgendamentoOutputDto>> GetByQueryDtoAsync(AgendamentoGetByQueryDto query);
 }

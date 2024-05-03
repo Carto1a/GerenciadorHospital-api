@@ -42,6 +42,19 @@ public abstract class Agendamento
     }
 
     public Agendamento() { }
+    public Agendamento(AgendamentoCreateDto request)
+    {
+        MedicoId = request.MedicoId;
+        PacienteId = request.PacienteId;
+        ConvenioId = request.ConvenioId;
+        DataHora = request.DataHora;
+        Custo = request.Custo;
+        Criado = DateTime.Now;
+        Deletado = false;
+        Status = AgendamentoStatus.Agendado;
+
+        Validate();
+    }
     public Agendamento Create(AgendamentoCreateDto request)
     {
         MedicoId = request.MedicoId;

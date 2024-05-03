@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Repository.Agendamentos;
 public class AgendamentoRepository<T, TAgendamento>
-: IAgendamentoRepository<T, TAgendamento>
+: IAgendamentoRepository<T, TAgendamento, AgendamentoOutputDto>
     where T : Atendimento, new()
     where TAgendamento : Agendamento
 {
