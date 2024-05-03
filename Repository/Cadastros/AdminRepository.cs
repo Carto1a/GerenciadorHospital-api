@@ -34,6 +34,9 @@ public class AdminRepository
                 queryCtx = queryCtx.Where(e => e.DataNascimento <= DateOnly
                     .FromDateTime((DateTime)query.MaxDate));
 
+            if (query.Genero != null)
+                queryCtx = queryCtx.Where(e => e.Genero == query.Genero);
+
             var result = queryCtx
                 .Skip((int)query.Page!)
                 .Take((int)query.Limit!)

@@ -58,7 +58,10 @@ public class Medicamento
         validate.MinValue(Preco, 0, "Preço");
         validate.MinValue(QuantidadeMinima, 0, "Quantidade Mínima");
         validate.MinValue(Quantidade, 0, "Quantidade");
-        validate.isInEnum(Status, "Status");
+        validate.isInEnum(
+            Status,
+            typeof(MedicamentoStatus),
+            "Status");
 
         validate.Check();
     }

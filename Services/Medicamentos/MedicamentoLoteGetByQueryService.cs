@@ -1,5 +1,6 @@
 using Hospital.Dtos.Input.Medicamentos;
 using Hospital.Dtos.Output.Medicamentos;
+using Hospital.Enums;
 using Hospital.Repository;
 
 namespace Hospital.Services.Medicamentos;
@@ -19,7 +20,10 @@ public class MedicamentoLoteGetByQueryService
         validator.Query((int)query.Limit!, (int)query.Page!);
 
         if (query.Status != null)
-            validator.isInEnum(query.Status.Value, "Status inválido");
+            validator.isInEnum(
+                query.Status.Value,
+                typeof(MedicamentoLoteStatus),
+                "Status inválido");
 
         // NOTE: break code execution if validation fails
         validator.Check();

@@ -58,5 +58,6 @@ public static class Injections
         .AddScoped<MedicamentoGetByQueryService>()
         .AddScoped<MedicamentoLoteGetByQueryService>()
         // Agendamento Service
-        .AddScoped(typeof(AgendamentoCreateService<,,>));
+        .AddScoped(typeof(AgendamentoCreateService<,,>))
+        .AddScoped(typeof(AgendamentoGetByQueryService<,,>));
 }

@@ -105,9 +105,10 @@ public class Validators
             _errors.Add($"{fildName} is invalid");
     }
 
-    public void isInEnum<T>(T target, string fildName)
+
+    public void isInEnum<T>(T target, Type type, string fildName)
     {
-        if (!Enum.IsDefined(typeof(T), target!))
+        if (!Enum.IsDefined(type, target!))
             _errors.Add($"{fildName} is invalid");
     }
 

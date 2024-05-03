@@ -63,7 +63,10 @@ public class Cadastro
         if (Telefone != null)
             validator.Telefone((long)Telefone, "Telefone");
         validator.NumeroCasa(NumeroCasa, "NumeroCasa");
-        validator.isInEnum(Genero, "Genero");
+        validator.isInEnum(
+            Genero,
+            typeof(GeneroEnum),
+            "Genero");
 
         validator.Check();
     }
