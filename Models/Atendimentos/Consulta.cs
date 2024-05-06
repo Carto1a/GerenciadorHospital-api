@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+using Hospital.Dtos.Input.Atendimentos;
 using Hospital.Enums;
 using Hospital.Models.Agendamentos;
 
@@ -20,4 +21,11 @@ public class Consulta
     public void Processar() => Status = ConsultaStatus.Processando;
     public void Terminar() => Status = ConsultaStatus.Terminado;
     public void Ausente() => Status = ConsultaStatus.Ausencia;
+
+    public Consulta() { }
+    public Consulta(ConsultaCreateDto original)
+    : base(original)
+    {
+        Status = original.Status;
+    }
 }

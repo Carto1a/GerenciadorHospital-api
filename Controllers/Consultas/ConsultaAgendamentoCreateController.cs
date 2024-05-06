@@ -1,8 +1,6 @@
-using Hospital.Controllers.Generics.Agendamentos;
 using Hospital.Dtos.Input.Agendamentos;
-using Hospital.Models.Agendamentos;
-using Hospital.Models.Atendimento;
-using Hospital.Services.Agendamentos;
+using Hospital.Services.Agendamentos.Consultas;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Consultas;
@@ -10,15 +8,20 @@ namespace Hospital.Controllers.Consultas;
 [Route("api/Agendamentos/Consultas")]
 [Tags("Agendamentos/Consultas")]
 public class ConsultaAgendamentoCreateController
-: GenericAgendamentoCreateController<
-    Consulta,
-    ConsultaAgendamento,
-    AgendamentoCreateDto>
+: ControllerBase
 {
+    private readonly ConsultaAgendamentoCreateService _service;
     public ConsultaAgendamentoCreateController(
-        AgendamentoCreateService<
-            Consulta,
-            ConsultaAgendamento,
-            AgendamentoCreateDto> service)
-    : base(service) { }
+        ConsultaAgendamentoCreateService service)
+    {
+        _service = service;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Execute(
+        [FromBody] AgendamentoCreateDto dto)
+    {
+        var result = await _service.Handler(dto);
+        return Ok(result);
+    }
 }

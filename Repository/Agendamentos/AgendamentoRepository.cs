@@ -135,13 +135,12 @@ public class AgendamentoRepository<T, TAgendamento>
         }
     }
 
-    public async Task UpdateAsync(
+    public void Update(
         TAgendamento NovoAgendamento)
     {
         try
         {
             _ctx.Set<TAgendamento>().Update(NovoAgendamento);
-            await _ctx.SaveChangesAsync();
         }
         catch (Exception error)
         {

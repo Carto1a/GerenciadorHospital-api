@@ -10,7 +10,7 @@ namespace Hospital.Repository.Atendimentos;
 public class AtendimentoRepository<T, TOut, TQuery>
 : IAtendimentoRepository<T, TOut, TQuery>
     where T : Atendimento, new()
-    where TOut : AtendimentoOutputDto, new()
+    where TOut : AtendimentoOutputDto
     where TQuery : AtendimentoGetByQueryDto
 {
     private readonly AppDbContext _ctx;
@@ -28,7 +28,6 @@ public class AtendimentoRepository<T, TOut, TQuery>
         try
         {
             var result = await _ctx.Set<T>().AddAsync(etity);
-            await _ctx.SaveChangesAsync();
             return result.Entity.Id;
         }
         catch (Exception error)
@@ -53,21 +52,22 @@ public class AtendimentoRepository<T, TOut, TQuery>
         }
     }
 
-    public async Task<TOut?> GetByIdDtoAsync(Guid id)
+    public Task<TOut?> GetByIdDtoAsync(Guid id)
     {
-        try
-        {
-            var result = await _ctx.Set<T>()
-                .Select(e => new TOut().Create(e))
-                .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
-            return (TOut?)result;
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
+        throw new NotImplementedException();
+        /* try */
+        /* { */
+        /*     var result = await _ctx.Set<T>() */
+        /*         .Select(e => TOut.Create(e)) */
+        /*         .Where(e => e.Id == id) */
+        /*         .FirstOrDefaultAsync(); */
+        /*     return (TOut?)result; */
+        /* } */
+        /* catch (Exception error) */
+        /* { */
+        /*     _uow.Dispose(); */
+        /*     throw new Exception(error.Message); */
+        /* } */
     }
 
     public async Task UpdateAsync(T entity)

@@ -10,7 +10,7 @@ public interface IAgendamentoRepository<T, TAgendamento, OutputDto>
     where OutputDto : AgendamentoOutputDto
 {
     Task<Guid> CreateAsync(TAgendamento agentamento);
-    Task UpdateAsync(TAgendamento NovoAgendamento);
+    void Update(TAgendamento NovoAgendamento);
     Task<TAgendamento?> GetByIdAsync(Guid id);
     OutputDto? GetByIdDto(Guid id);
     Task<List<TAgendamento>> GetByDataHoraMedicoAsync(DateTime dataHora, Guid medicoId);

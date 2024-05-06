@@ -1,10 +1,7 @@
 using Hospital.Database;
-using Hospital.Dtos.Output.Agendamentos;
-using Hospital.Exceptions;
 using Hospital.Models.Agendamentos;
-using Hospital.Models.Atendimento;
 using Hospital.Repository.Agendamentos;
-using Hospital.Repository.Agendamentos.Interfaces;
+using Hospital.Repository.Atendimentos;
 using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros;
 using Hospital.Repository.Cadastros.Authentications.Interfaces;
@@ -20,6 +17,7 @@ namespace Hospital.Repository;
 public class UnitOfWork
 : IDisposable
 {
+    // TODO: usar o DI para injetar esses repositorios
     private IAuthAdminRepository? _authAdminRepository;
     private IAuthMedicoRepository? _authMedicoRepository;
     private IAuthPacienteRepository? _authPacienteRepository;
@@ -32,10 +30,9 @@ public class UnitOfWork
     private IConsultaAgendamentoRepository? _consultaAgendamentoRepository;
     private IExameAgendamentoRepository? _exameAgendamentoRepository;
     private IRetornoAgendamentoRepository? _retornoAgendamentoRepository;
+    private IConsultaRepository? _consultaRepository;
 
-    private IDictionary<
-        string, object?
-    > _agendamentoRepositories;
+    private IDictionary<string, object?> _agendamentoRepositories;
 
     private readonly AppDbContext _ctx;
     private bool disposed = false;
@@ -52,55 +49,55 @@ public class UnitOfWork
         };
     }
 
-    // NOTE: não questione os meus metodos, mas sim a minha sanidade
-    public IAgendamentoRepository<T, TAgendamento, OutputDto>?
-    SetAgendamento<T, TAgendamento, OutputDto>()
-    where T : Atendimento
-    where TAgendamento : Agendamento
-    where OutputDto : AgendamentoOutputDto
-    {
-        var key = typeof(TAgendamento).Name;
-        var repository = _agendamentoRepositories.ContainsKey(key) ?
-            _agendamentoRepositories[key] : null;
-        var teste = nameof(ExameAgendamento);
-        if (repository != null)
-        {
-            return repository as
-            IAgendamentoRepository<T, TAgendamento, OutputDto>;
-        }
+    /* // NOTE: não questione os meus metodos, mas sim a minha sanidade */
+    /* public IAgendamentoRepository<T, TAgendamento, OutputDto>? */
+    /* SetAgendamento<T, TAgendamento, OutputDto>() */
+    /* where T : Atendimento */
+    /* where TAgendamento : Agendamento */
+    /* where OutputDto : AgendamentoOutputDto */
+    /* { */
+    /*     var key = typeof(TAgendamento).Name; */
+    /*     var repository = _agendamentoRepositories.ContainsKey(key) ? */
+    /*         _agendamentoRepositories[key] : null; */
+    /*     var teste = nameof(ExameAgendamento); */
+    /*     if (repository != null) */
+    /*     { */
+    /*         return repository as */
+    /*         IAgendamentoRepository<T, TAgendamento, OutputDto>; */
+    /*     } */
 
-        if (key == nameof(ExameAgendamento))
-        {
-            var repo =
-                new ExameAgendamentoRepository(_ctx, this) as
-                IAgendamentoRepository<T, TAgendamento, OutputDto>;
-            _agendamentoRepositories[key] = repo;
-            return repo;
-        }
+    /*     if (key == nameof(ExameAgendamento)) */
+    /*     { */
+    /*         var repo = */
+    /*             new ExameAgendamentoRepository(_ctx, this) as */
+    /*             IAgendamentoRepository<T, TAgendamento, OutputDto>; */
+    /*         _agendamentoRepositories[key] = repo; */
+    /*         return repo; */
+    /*     } */
 
-        if (key == nameof(ConsultaAgendamento))
-        {
-            var repo =
-                new ConsultaAgendamentoRepository(_ctx, this) as
-                IAgendamentoRepository<T, TAgendamento, OutputDto>;
-            _agendamentoRepositories[key] = repo;
-            return repo;
-        }
+    /*     if (key == nameof(ConsultaAgendamento)) */
+    /*     { */
+    /*         var repo = */
+    /*             new ConsultaAgendamentoRepository(_ctx, this) as */
+    /*             IAgendamentoRepository<T, TAgendamento, OutputDto>; */
+    /*         _agendamentoRepositories[key] = repo; */
+    /*         return repo; */
+    /*     } */
 
-        if (key == nameof(RetornoAgendamento))
-        {
-            var repo =
-                new RetornoAgendamentoRepository(_ctx, this) as
-                IAgendamentoRepository<T, TAgendamento, OutputDto>;
-            _agendamentoRepositories[key] = repo;
-            return repo;
-        }
+    /*     if (key == nameof(RetornoAgendamento)) */
+    /*     { */
+    /*         var repo = */
+    /*             new RetornoAgendamentoRepository(_ctx, this) as */
+    /*             IAgendamentoRepository<T, TAgendamento, OutputDto>; */
+    /*         _agendamentoRepositories[key] = repo; */
+    /*         return repo; */
+    /*     } */
 
-        throw new RequestError(
-            $"AgendamentoRepository<{key}> not found",
-            "Erro interno, contate o suporte",
-            StatusCodes.Status500InternalServerError);
-    }
+    /*     throw new RequestError( */
+    /*         $"AgendamentoRepository<{key}> not found", */
+    /*         "Erro interno, contate o suporte", */
+    /*         StatusCodes.Status500InternalServerError); */
+    /* } */
 
     public IPacienteRepository PacienteRepository
     {
@@ -219,9 +216,22 @@ public class UnitOfWork
         }
     }
 
-    public void Save()
+    public IConsultaRepository ConsultaRepository
     {
-        _ctx.SaveChanges();
+        get
+        {
+            if (_consultaRepository == null)
+            {
+                _consultaRepository =
+                    new ConsultaRepository(_ctx, this);
+            }
+            return _consultaRepository;
+        }
+    }
+
+    public Task Save()
+    {
+        return _ctx.SaveChangesAsync();
     }
 
     protected virtual void Dispose(bool disposing)

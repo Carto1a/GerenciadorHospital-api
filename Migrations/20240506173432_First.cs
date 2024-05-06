@@ -65,7 +65,7 @@ namespace Hospital.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CNPJ = table.Column<string>(type: "TEXT", nullable: true),
+                    CNPJ = table.Column<string>(type: "TEXT", nullable: false),
                     CEP = table.Column<string>(type: "TEXT", nullable: true),
                     Numero = table.Column<string>(type: "TEXT", nullable: true),
                     Nome = table.Column<string>(type: "TEXT", nullable: true),
@@ -96,7 +96,7 @@ namespace Hospital.Migrations
                     QuantidadeMinima = table.Column<int>(type: "INTEGER", nullable: false),
                     Quantidade = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Criado = table.Column<DateOnly>(type: "TEXT", nullable: false)
+                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -281,7 +281,7 @@ namespace Hospital.Migrations
                     Codigo = table.Column<string>(type: "TEXT", nullable: false),
                     DataFabricacao = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     DataVencimento = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    DataCadastro = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Fabricante = table.Column<string>(type: "TEXT", nullable: false),
                     Quantidade = table.Column<int>(type: "INTEGER", nullable: false),
                     QuantidadeDisponivel = table.Column<int>(type: "INTEGER", nullable: false),
@@ -330,42 +330,6 @@ namespace Hospital.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AgendamentosConsultas_Pacientes_PacienteId",
-                        column: x => x.PacienteId,
-                        principalTable: "Pacientes",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AgendamentosExames",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AgendamentosExames", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AgendamentosExames_Convenios_ConvenioId",
-                        column: x => x.ConvenioId,
-                        principalTable: "Convenios",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_AgendamentosExames_Medicos_MedicoId",
-                        column: x => x.MedicoId,
-                        principalTable: "Medicos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AgendamentosExames_Pacientes_PacienteId",
                         column: x => x.PacienteId,
                         principalTable: "Pacientes",
                         principalColumn: "Id");
@@ -437,6 +401,49 @@ namespace Hospital.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AgendamentosExames",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AgendamentosExames", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AgendamentosExames_Consultas_ConsultaId",
+                        column: x => x.ConsultaId,
+                        principalTable: "Consultas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AgendamentosExames_Convenios_ConvenioId",
+                        column: x => x.ConvenioId,
+                        principalTable: "Convenios",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AgendamentosExames_Medicos_MedicoId",
+                        column: x => x.MedicoId,
+                        principalTable: "Medicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AgendamentosExames_Pacientes_PacienteId",
+                        column: x => x.PacienteId,
+                        principalTable: "Pacientes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AgendamentosRetornos",
                 columns: table => new
                 {
@@ -484,9 +491,8 @@ namespace Hospital.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LaudoId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Resultado = table.Column<string>(type: "TEXT", nullable: false),
+                    Resultado = table.Column<string>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     MedicoId = table.Column<Guid>(type: "TEXT", nullable: true),
                     PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
@@ -668,6 +674,11 @@ namespace Hospital.Migrations
                 column: "Status");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AgendamentosExames_ConsultaId",
+                table: "AgendamentosExames",
+                column: "ConsultaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AgendamentosExames_ConvenioId",
                 table: "AgendamentosExames",
                 column: "ConvenioId");
@@ -800,14 +811,12 @@ namespace Hospital.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Convenios_CNPJ",
                 table: "Convenios",
-                column: "CNPJ",
-                unique: true);
+                column: "CNPJ");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Convenios_Deletado",
                 table: "Convenios",
-                column: "Deletado",
-                unique: true);
+                column: "Deletado");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Convenios_Email",

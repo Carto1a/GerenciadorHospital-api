@@ -20,22 +20,23 @@ where TQuery : AgendamentoGetByQueryDto
     public async Task<List<AgendamentoOutputDto>> Handler(
         TQuery query)
     {
-        var validator = new Validators(
-            "Não foi possível buscar agendamentos");
-        validator.Query((int)query.Limit!, (int)query.Page!);
+        throw new NotImplementedException();
+        /* var validator = new Validators( */
+        /*     "Não foi possível buscar agendamentos"); */
+        /* validator.Query((int)query.Limit!, (int)query.Page!); */
 
-        if (query.Status != null)
-            validator.isInEnum(
-                query.Status,
-                typeof(AgendamentoStatus),
-                "Status inválido");
+        /* if (query.Status != null) */
+        /*     validator.isInEnum( */
+        /*         query.Status, */
+        /*         typeof(AgendamentoStatus), */
+        /*         "Status inválido"); */
 
-        // NOTE: break code execution if validation fails
-        validator.Check();
+        /* // NOTE: break code execution if validation fails */
+        /* validator.Check(); */
 
-        var agendamentos = await _uow.SetAgendamento<T, TAgendamento>()!
-            .GetByQueryDtoAsync(query);
+        /* var agendamentos = await _uow.SetAgendamento<T, TAgendamento>()! */
+        /*     .GetByQueryDtoAsync(query); */
 
-        return agendamentos;
+        /* return agendamentos; */
     }
 }

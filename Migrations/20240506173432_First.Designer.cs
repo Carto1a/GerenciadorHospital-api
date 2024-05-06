@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240429171717_First")]
+    [Migration("20240506173432_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -72,6 +72,9 @@ namespace Hospital.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ConsultaId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid?>("ConvenioId")
                         .HasColumnType("TEXT");
 
@@ -100,6 +103,8 @@ namespace Hospital.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ConsultaId");
 
                     b.HasIndex("ConvenioId");
 
@@ -245,9 +250,6 @@ namespace Hospital.Migrations
                     b.Property<DateTime>("Inicio")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("LaudoId")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid?>("MedicoId")
                         .HasColumnType("TEXT");
 
@@ -255,7 +257,6 @@ namespace Hospital.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Resultado")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -466,6 +467,7 @@ namespace Hospital.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CNPJ")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Criado")
@@ -497,11 +499,9 @@ namespace Hospital.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CNPJ")
-                        .IsUnique();
+                    b.HasIndex("CNPJ");
 
-                    b.HasIndex("Deletado")
-                        .IsUnique();
+                    b.HasIndex("Deletado");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -567,7 +567,7 @@ namespace Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("Criado")
+                    b.Property<DateTime>("Criado")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Descricao")
@@ -614,7 +614,7 @@ namespace Hospital.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("DataCadastro")
+                    b.Property<DateTime>("DataCadastro")
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("DataFabricacao")
@@ -894,6 +894,12 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Models.Agendamentos.ExameAgendamento", b =>
                 {
+                    b.HasOne("Hospital.Models.Atendimento.Consulta", "Consulta")
+                        .WithMany()
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Hospital.Models.Cadastro.Convenio", "Convenio")
                         .WithMany("AgendamentosExames")
                         .HasForeignKey("ConvenioId");
@@ -907,6 +913,8 @@ namespace Hospital.Migrations
                     b.HasOne("Hospital.Models.Cadastro.Paciente", "Paciente")
                         .WithMany("AgendamentosExames")
                         .HasForeignKey("PacienteId");
+
+                    b.Navigation("Consulta");
 
                     b.Navigation("Convenio");
 

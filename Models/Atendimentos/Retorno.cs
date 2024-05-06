@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+using Hospital.Dtos.Input.Atendimentos;
 using Hospital.Enums;
 using Hospital.Models.Agendamentos;
 
@@ -20,4 +21,13 @@ public class Retorno
     public void Realizar() => Status = RetornoStatus.Realizado;
     public void AgendarNovaConsulta() => Status = RetornoStatus.NovaConsulta;
     public void Cancelar() => Status = RetornoStatus.Cancelado;
+
+    public Retorno() { }
+    public Retorno(RetornoCreateDto original)
+    : base(original)
+    {
+        Status = original.Status;
+        ConsultaId = original.ConsultaId;
+        NovaConsultaId = original.NovaConsultaId;
+    }
 }

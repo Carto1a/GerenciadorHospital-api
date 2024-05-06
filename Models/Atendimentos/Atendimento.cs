@@ -42,17 +42,16 @@ public abstract class Atendimento
         Validate();
     }
 
+    // NOTE: para de usar o copilot para quase tudo
     public void Validate()
     {
         var validate = new Validators(
             $"Não foi possível validar o atendimento: {Id}");
 
-        validate.MinValue(MedicoId, Guid.Empty, "Médico");
-        validate.MinValue(PacienteId, Guid.Empty, "Paciente");
-        validate.MinValue(AgendamentoId, Guid.Empty, "Agendamento");
         validate.MinValue(Custo, 0, "Custo");
         validate.MinValue(CustoFinal, 0, "Custo Final");
-        validate.MinValue(Duracao.TotalMinutes, 0, "Duração");
+        /* validate.MaxDate(Inicio, DateTime.Now, "Inicio"); */
+        /* validate.MinDate(Fim, Inicio, "Fim"); */
 
         validate.Check();
     }
