@@ -1,24 +1,37 @@
+using Hospital.Database;
+using Hospital.Dtos.Input.Agendamentos;
+using Hospital.Dtos.Input.Atendimentos;
+using Hospital.Dtos.Output.Agendamentos;
+using Hospital.Dtos.Output.Atendimentos;
+using Hospital.Models.Atendimento;
+using Hospital.Repository.Atendimentos.Interfaces;
 
-/* using Hospital.Database; */
-/* using Hospital.Models.Atendimento; */
-/* using Hospital.Repository.Atendimentos.Interfaces; */
+namespace Hospital.Repository.Atendimentos;
+public class ExameRepository
+: AtendimentoRepository<
+    Exame,
+    AtendimentoOutputDto,
+    AtendimentoGetByQueryDto>,
+IExameRepository
+{
+    private readonly AppDbContext _ctx;
+    private readonly UnitOfWork _uow;
+    public ExameRepository(
+        AppDbContext context,
+        UnitOfWork uow)
+    : base(context, uow)
+    {
+        _ctx = context;
+        _uow = uow;
+    }
 
+    public List<AgendamentoOutputDto> GetByQueryDto(AgendamentoGetByQueryDto query)
+    {
+        throw new NotImplementedException();
+    }
 
-/* namespace Hospital.Repository.Atendimentos; */
-/* public class ExameRepository */
-/* : AtendimentoRepository<Exame>, */
-/* IExameRepository */
-/* { */
-/*     private readonly ILogger<ExameRepository> _logger; */
-/*     private readonly AppDbContext _ctx; */
-/*     public ExameRepository( */
-/*         AppDbContext context, */
-/*         ILogger<ExameRepository> logger) */
-/*     : base(context, logger) */
-/*     { */
-/*         _ctx = context; */
-/*         _logger = logger; */
-/*         _logger.LogDebug(1, $"NLog injected into ExameRepository"); */
-/*     } */
-
-/* } */
+    public new Task<AgendamentoOutputDto?> GetByIdDtoAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+}

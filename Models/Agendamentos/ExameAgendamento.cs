@@ -5,7 +5,7 @@ namespace Hospital.Models.Agendamentos;
 public class ExameAgendamento
 : Agendamento
 {
-    public Guid ConsultaId { get; set; }
+    public Guid? ConsultaId { get; set; }
 
     public virtual Consulta? Consulta { get; set; }
     public virtual Exame? Exame { get; set; }
@@ -13,5 +13,7 @@ public class ExameAgendamento
     public ExameAgendamento() { }
     public ExameAgendamento(ExameAgendamentoCreateDto request)
     : base(request)
-    { }
+    {
+        ConsultaId = request.ConsultaId;
+    }
 }

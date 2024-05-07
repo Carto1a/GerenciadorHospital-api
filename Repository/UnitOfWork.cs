@@ -31,6 +31,8 @@ public class UnitOfWork
     private IExameAgendamentoRepository? _exameAgendamentoRepository;
     private IRetornoAgendamentoRepository? _retornoAgendamentoRepository;
     private IConsultaRepository? _consultaRepository;
+    private IExameRepository? _exameRepository;
+    private IRetornoRepository? _retornoRepository;
 
     private IDictionary<string, object?> _agendamentoRepositories;
 
@@ -228,6 +230,32 @@ public class UnitOfWork
             return _consultaRepository;
         }
     }
+
+    public IExameRepository ExameRepository
+    {
+        get
+        {
+            if (_exameRepository == null)
+            {
+                _exameRepository =
+                    new ExameRepository(_ctx, this);
+            }
+            return _exameRepository;
+        }
+    }
+
+    /* public IRetornoRepository RetornoRepository */
+    /* { */
+    /*     get */
+    /*     { */
+    /*         if (_retornoRepository == null) */
+    /*         { */
+    /*             _retornoRepository = */
+    /*                 new RetornoRepository(_ctx, this); */
+    /*         } */
+    /*         return _retornoRepository; */
+    /*     } */
+    /* } */
 
     public Task Save()
     {

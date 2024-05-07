@@ -82,7 +82,7 @@ public class AgendamentoRepository<T, TAgendamento>
         throw new NotImplementedException();
     }
 
-    public async Task<List<AgendamentoOutputDto>> GetByQueryDtoAsync(
+    public virtual async Task<List<AgendamentoOutputDto>> GetByQueryDtoAsync(
         AgendamentoGetByQueryDto query)
     {
         try

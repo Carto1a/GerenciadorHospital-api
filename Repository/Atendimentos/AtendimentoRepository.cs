@@ -85,8 +85,7 @@ public class AtendimentoRepository<T, TOut, TQuery>
         }
     }
 
-    public List<TOut> GetByQueryDto(
-        TQuery query)
+    public virtual List<TOut> GetByQueryDto(TQuery query)
     {
         throw new NotImplementedException();
     }

@@ -17,7 +17,7 @@ public class ExameAgendamentoCreateService
         _uow = uow;
     }
 
-    public async Task<string> Handler(
+    public async Task<Guid> Handler(
         ExameAgendamentoCreateDto request)
     {
         _logger.LogInformation($"Criando agendamento de consulta: {request.DataHora}");
@@ -25,6 +25,13 @@ public class ExameAgendamentoCreateService
         var agendamento = new ExameAgendamento(request);
 
         var repo = _uow.ExameAgendamentoRepository;
+        var findConsulta = await _uow.ConsultaRepository
+            .GetByIdAsync(request.ConsultaId);
+        if (findConsulta == null)
+            throw new RequestError(
+                $"Consulta não encontrada: {request.ConsultaId}",
+                "Consulta não encontrada");
+
         var findMedico = _uow.MedicoRepository
             .GetMedicoByIdAtivo(request.MedicoId);
         if (findMedico == null)
@@ -33,18 +40,11 @@ public class ExameAgendamentoCreateService
                 "Médico não encontrado");
 
         var findPaciente = _uow.PacienteRepository
-            .GetPacienteByIdAtivo(request.PacienteId);
+            .GetPacienteByIdAtivo((Guid)findConsulta.PacienteId!);
         if (findPaciente == null)
             throw new RequestError(
                 $"Paciente não encontrado: {request.PacienteId}",
                 "Paciente não encontrado");
-
-        var findConsulta = await _uow.ConsultaAgendamentoRepository
-            .GetByIdAsync(request.ConsultaId);
-        if (findConsulta == null)
-            throw new RequestError(
-                $"Consulta não encontrada: {request.ConsultaId}",
-                "Consulta não encontrada");
 
         var findAgendamentos = await repo
             .GetByDataHoraMedicoAsync(request.DataHora, request.MedicoId);
@@ -68,10 +68,11 @@ public class ExameAgendamentoCreateService
 
         }
         agendamento.CustoFinal = CustoFinal;
+        agendamento.PacienteId = findPaciente.Id;
 
         var entity = await repo.CreateAsync(agendamento);
 
         _logger.LogInformation($"Agendamento criado: {request.DataHora}");
-        return $"/api/agendamentos/Consultas/{entity}";
+        return entity;
     }
 }

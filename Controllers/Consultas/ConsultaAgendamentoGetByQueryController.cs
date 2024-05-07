@@ -1,7 +1,6 @@
 using Hospital.Dtos.Input.Agendamentos;
-using Hospital.Models.Agendamentos;
-using Hospital.Models.Atendimento;
-using Hospital.Services.Agendamentos;
+using Hospital.Services.Agendamentos.Consultas;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Generics.Agendamentos;
@@ -9,16 +8,20 @@ namespace Hospital.Controllers.Generics.Agendamentos;
 [Route("api/Agendamentos/Consultas")]
 [Tags("Agendamentos/Consultas")]
 public class ConsultaAgendamentoGetByQueryController
-: GenericAgendamentoGetByQueryController<
-    Consulta,
-    ConsultaAgendamento,
-    AgendamentoGetByQueryDto>
+: ControllerBase
 {
+    private readonly ConsultaAgendamentoGetByQueryService _service;
     public ConsultaAgendamentoGetByQueryController(
-        AgendamentoGetByQueryService<
-            Consulta,
-            ConsultaAgendamento,
-            AgendamentoGetByQueryDto> service)
-    : base(service)
-    { }
+        ConsultaAgendamentoGetByQueryService service)
+    {
+        _service = service;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Execute(
+        [FromQuery] AgendamentoGetByQueryDto query)
+    {
+        var result = await _service.Handler(query);
+        return Ok(result);
+    }
 }

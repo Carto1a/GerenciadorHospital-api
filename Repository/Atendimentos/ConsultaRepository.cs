@@ -1,7 +1,5 @@
 using Hospital.Database;
-using Hospital.Dtos.Input.Agendamentos;
 using Hospital.Dtos.Input.Atendimentos;
-using Hospital.Dtos.Output.Agendamentos;
 using Hospital.Dtos.Output.Atendimentos;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
@@ -26,13 +24,36 @@ IConsultaRepository
         _uow = uow;
     }
 
-    public List<AgendamentoOutputDto> GetByQueryDto(AgendamentoGetByQueryDto query)
+    public new List<AtendimentoOutputDto> GetByQueryDto(
+        AtendimentoGetByQueryDto query)
     {
-        throw new NotImplementedException();
-    }
+        var queryable = _ctx.Consultas.AsQueryable();
+        if (query.MinDateCriado != null)
+            queryable = queryable
+                .Where(e => e.Criado >= query.MinDateCriado);
 
-    Task<AgendamentoOutputDto?> IAtendimentoRepository<Consulta, AgendamentoOutputDto, AgendamentoGetByQueryDto>.GetByIdDtoAsync(Guid id)
-    {
-        throw new NotImplementedException();
+        if (query.MaxDateCriado != null)
+            queryable = queryable
+                .Where(e => e.Criado <= query.MaxDateCriado);
+
+        if (query.MedicoId != null)
+            queryable = queryable
+                .Where(e => e.MedicoId == query.MedicoId);
+
+        if (query.PacienteId != null)
+            queryable = queryable
+                .Where(e => e.PacienteId == query.PacienteId);
+
+        if (query.ConvenioId != null)
+            queryable = queryable
+                .Where(e => e.ConvenioId == query.ConvenioId);
+
+        var result = queryable
+            .Skip((int)query.Page!)
+            .Take((int)query.Limit!)
+            .Select(e => new AtendimentoOutputDto(e))
+            .ToList();
+
+        return result;
     }
 }

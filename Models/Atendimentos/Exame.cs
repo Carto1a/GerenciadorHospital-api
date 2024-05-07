@@ -10,7 +10,6 @@ public class Exame
 {
     // TODO: colocar o tipo de exame
     // TODO: deixar o laudo vinculado somente a uma consulta
-    /* public Guid LaudoId { get; set; } // NOTE: pode ser que de erro */
     public Guid ConsultaId { get; set; }
 
     public virtual ExameAgendamento? Agendamento { get; set; }

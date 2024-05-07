@@ -1,11 +1,11 @@
-using Hospital.Dtos.Input.Agendamentos;
-using Hospital.Dtos.Output.Agendamentos;
+using Hospital.Dtos.Input.Atendimentos;
+using Hospital.Dtos.Output.Atendimentos;
 using Hospital.Models.Atendimento;
 
 namespace Hospital.Repository.Atendimentos.Interfaces;
 public interface IConsultaRepository
 : IAtendimentoRepository<
     Consulta,
-    AgendamentoOutputDto,
-    AgendamentoGetByQueryDto>
+    AtendimentoOutputDto,
+    AtendimentoGetByQueryDto>
 { }

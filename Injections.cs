@@ -10,6 +10,7 @@ using Hospital.Repository.Images;
 using Hospital.Repository.Images.Interfaces;
 using Hospital.Services.Agendamentos;
 using Hospital.Services.Agendamentos.Consultas;
+using Hospital.Services.Agendamentos.Exames;
 using Hospital.Services.Atendimentos.Consultas;
 using Hospital.Services.Cadastros;
 using Hospital.Services.Cadastros.Admins;
@@ -64,7 +65,11 @@ public static class Injections
         .AddScoped(typeof(AgendamentoGetByQueryService<,,>))
         // Consulta Service
         .AddScoped<ConsultaAgendamentoCreateService>()
-        .AddScoped<ConsultaCreateService>();
+        .AddScoped<ConsultaAgendamentoGetByQueryService>()
+        .AddScoped<ConsultaCreateService>()
+        .AddScoped<ConsultaGetByQueryService>()
         // Exame Service
+        .AddScoped<ExameAgendamentoCreateService>()
+        .AddScoped<ExameAgendamentoGetByQueryService>();
         // Retorno Service
 }

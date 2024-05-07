@@ -15,10 +15,10 @@ namespace Hospital.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,31 +29,31 @@ namespace Hospital.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    Sobrenome = table.Column<string>(type: "TEXT", nullable: false),
-                    DataNascimento = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    Genero = table.Column<int>(type: "INTEGER", nullable: false),
-                    Telefone = table.Column<long>(type: "INTEGER", nullable: true),
-                    CPF = table.Column<string>(type: "TEXT", maxLength: 11, nullable: false),
-                    CEP = table.Column<string>(type: "TEXT", nullable: false),
-                    NumeroCasa = table.Column<string>(type: "TEXT", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Ativo = table.Column<bool>(type: "INTEGER", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Sobrenome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DataNascimento = table.Column<DateOnly>(type: "date", nullable: false),
+                    Genero = table.Column<int>(type: "int", nullable: false),
+                    Telefone = table.Column<long>(type: "bigint", nullable: true),
+                    CPF = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NumeroCasa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,18 +64,18 @@ namespace Hospital.Migrations
                 name: "Convenios",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CNPJ = table.Column<string>(type: "TEXT", nullable: false),
-                    CEP = table.Column<string>(type: "TEXT", nullable: true),
-                    Numero = table.Column<string>(type: "TEXT", nullable: true),
-                    Nome = table.Column<string>(type: "TEXT", nullable: true),
-                    Descrição = table.Column<string>(type: "TEXT", nullable: true),
-                    Desconto = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Telefone = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    Site = table.Column<string>(type: "TEXT", nullable: true),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CNPJ = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Numero = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Descrição = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Desconto = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Site = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deletado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,17 +86,17 @@ namespace Hospital.Migrations
                 name: "Medicamentos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CodigoDeBarras = table.Column<int>(type: "INTEGER", nullable: false),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: false),
-                    Composicao = table.Column<string>(type: "TEXT", nullable: false),
-                    PrincipioAtivo = table.Column<string>(type: "TEXT", nullable: false),
-                    Preco = table.Column<decimal>(type: "TEXT", nullable: false),
-                    QuantidadeMinima = table.Column<int>(type: "INTEGER", nullable: false),
-                    Quantidade = table.Column<int>(type: "INTEGER", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CodigoDeBarras = table.Column<int>(type: "int", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Composicao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PrincipioAtivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    QuantidadeMinima = table.Column<int>(type: "int", nullable: false),
+                    Quantidade = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,11 +107,11 @@ namespace Hospital.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,7 +128,7 @@ namespace Hospital.Migrations
                 name: "Admins",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,11 +145,11 @@ namespace Hospital.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -166,10 +166,10 @@ namespace Hospital.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -186,8 +186,8 @@ namespace Hospital.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -210,10 +210,10 @@ namespace Hospital.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -230,11 +230,11 @@ namespace Hospital.Migrations
                 name: "Medicos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CRM = table.Column<int>(type: "INTEGER", nullable: false),
-                    CRMUF = table.Column<string>(type: "TEXT", maxLength: 2, nullable: false),
-                    DocCRMPath = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Especialidade = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CRM = table.Column<int>(type: "int", nullable: false),
+                    CRMUF = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    DocCRMPath = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Especialidade = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,10 +251,10 @@ namespace Hospital.Migrations
                 name: "Pacientes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DocConvenioPath = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DocIDPath = table.Column<Guid>(type: "TEXT", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConvenioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DocConvenioPath = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DocIDPath = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -276,17 +276,17 @@ namespace Hospital.Migrations
                 name: "MedicamentoLotes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicamentoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Codigo = table.Column<string>(type: "TEXT", nullable: false),
-                    DataFabricacao = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    DataVencimento = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Fabricante = table.Column<string>(type: "TEXT", nullable: false),
-                    Quantidade = table.Column<int>(type: "INTEGER", nullable: false),
-                    QuantidadeDisponivel = table.Column<int>(type: "INTEGER", nullable: false),
-                    PrecoUnitario = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicamentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Codigo = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DataFabricacao = table.Column<DateOnly>(type: "date", nullable: false),
+                    DataVencimento = table.Column<DateOnly>(type: "date", nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fabricante = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Quantidade = table.Column<int>(type: "int", nullable: false),
+                    QuantidadeDisponivel = table.Column<int>(type: "int", nullable: false),
+                    PrecoUnitario = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -303,16 +303,16 @@ namespace Hospital.Migrations
                 name: "AgendamentosConsultas",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ConvenioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Custo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deletado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -339,8 +339,8 @@ namespace Hospital.Migrations
                 name: "MedicamentoPaciente",
                 columns: table => new
                 {
-                    MedicamentosId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacientesId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    MedicamentosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacientesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -363,17 +363,17 @@ namespace Hospital.Migrations
                 name: "Consultas",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    AgendamentoId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Fim = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AgendamentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ConvenioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Inicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fim = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Custo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -404,17 +404,17 @@ namespace Hospital.Migrations
                 name: "AgendamentosExames",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ConvenioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Custo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deletado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -423,8 +423,7 @@ namespace Hospital.Migrations
                         name: "FK_AgendamentosExames_Consultas_ConsultaId",
                         column: x => x.ConsultaId,
                         principalTable: "Consultas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AgendamentosExames_Convenios_ConvenioId",
                         column: x => x.ConvenioId,
@@ -447,17 +446,17 @@ namespace Hospital.Migrations
                 name: "AgendamentosRetornos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Deletado = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ConvenioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Custo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deletado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -490,19 +489,19 @@ namespace Hospital.Migrations
                 name: "Exames",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Resultado = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    AgendamentoId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Fim = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Resultado = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AgendamentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ConvenioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Inicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fim = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Custo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -539,19 +538,19 @@ namespace Hospital.Migrations
                 name: "Retornos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    NovaConsultaId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    AgendamentoId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ConvenioId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Inicio = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Fim = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Custo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CustoFinal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NovaConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AgendamentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ConvenioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Inicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fim = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Custo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustoFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -593,14 +592,14 @@ namespace Hospital.Migrations
                 name: "Laudos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PacienteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ExameId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ConsultaId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: false),
-                    DocPath = table.Column<Guid>(type: "TEXT", nullable: true),
-                    Criado = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ExameId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DocPath = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Criado = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -633,8 +632,8 @@ namespace Hospital.Migrations
                 name: "LaudoMedicamento",
                 columns: table => new
                 {
-                    LaudosId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicamentosId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    LaudosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicamentosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -732,7 +731,8 @@ namespace Hospital.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -769,7 +769,8 @@ namespace Hospital.Migrations
                 name: "IX_AspNetUsers_Email",
                 table: "AspNetUsers",
                 column: "Email",
-                unique: true);
+                unique: true,
+                filter: "[Email] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_Genero",
@@ -780,13 +781,15 @@ namespace Hospital.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Consultas_AgendamentoId",
                 table: "Consultas",
                 column: "AgendamentoId",
-                unique: true);
+                unique: true,
+                filter: "[AgendamentoId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Consultas_ConvenioId",
@@ -822,13 +825,15 @@ namespace Hospital.Migrations
                 name: "IX_Convenios_Email",
                 table: "Convenios",
                 column: "Email",
-                unique: true);
+                unique: true,
+                filter: "[Email] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Exames_AgendamentoId",
                 table: "Exames",
                 column: "AgendamentoId",
-                unique: true);
+                unique: true,
+                filter: "[AgendamentoId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Exames_ConsultaId",
@@ -869,13 +874,15 @@ namespace Hospital.Migrations
                 name: "IX_Laudos_DocPath",
                 table: "Laudos",
                 column: "DocPath",
-                unique: true);
+                unique: true,
+                filter: "[DocPath] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Laudos_ExameId",
                 table: "Laudos",
                 column: "ExameId",
-                unique: true);
+                unique: true,
+                filter: "[ExameId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Laudos_MedicoId",
@@ -923,13 +930,15 @@ namespace Hospital.Migrations
                 name: "IX_Medicos_CRM",
                 table: "Medicos",
                 column: "CRM",
-                unique: true);
+                unique: true,
+                filter: "[CRM] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Medicos_DocCRMPath",
                 table: "Medicos",
                 column: "DocCRMPath",
-                unique: true);
+                unique: true,
+                filter: "[DocCRMPath] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pacientes_ConvenioId",
@@ -940,19 +949,22 @@ namespace Hospital.Migrations
                 name: "IX_Pacientes_DocConvenioPath",
                 table: "Pacientes",
                 column: "DocConvenioPath",
-                unique: true);
+                unique: true,
+                filter: "[DocConvenioPath] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pacientes_DocIDPath",
                 table: "Pacientes",
                 column: "DocIDPath",
-                unique: true);
+                unique: true,
+                filter: "[DocIDPath] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Retornos_AgendamentoId",
                 table: "Retornos",
                 column: "AgendamentoId",
-                unique: true);
+                unique: true,
+                filter: "[AgendamentoId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Retornos_ConsultaId",
@@ -974,7 +986,8 @@ namespace Hospital.Migrations
                 name: "IX_Retornos_NovaConsultaId",
                 table: "Retornos",
                 column: "NovaConsultaId",
-                unique: true);
+                unique: true,
+                filter: "[NovaConsultaId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Retornos_PacienteId",
