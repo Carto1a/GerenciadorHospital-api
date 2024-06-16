@@ -19,11 +19,14 @@ public static class FolderFileHelper
         IConfiguration configuration)
     {
         CheckAndCreateFolder(configuration["Paths:BaseImagens"]!);
-        CheckAndCreateFolder(configuration["Paths:PacienteBase"]!);
-        CheckAndCreateFolder(configuration["Paths:PacienteDocumentos"]!);
-        CheckAndCreateFolder(configuration["Paths:PacienteConvenio"]!);
-        CheckAndCreateFolder(configuration["Paths:MedicoDocumentos"]!);
-        CheckAndCreateFolder(configuration["Paths:Laudos"]!);
+
+        var baseDir = configuration["Paths:BaseImagens"]!;
+
+        CheckAndCreateFolder(baseDir + configuration["Paths:PacienteBase"]!);
+        CheckAndCreateFolder(baseDir + configuration["Paths:PacienteDocumentos"]!);
+        CheckAndCreateFolder(baseDir + configuration["Paths:PacienteConvenio"]!);
+        CheckAndCreateFolder(baseDir + configuration["Paths:MedicoDocumentos"]!);
+        CheckAndCreateFolder(baseDir + configuration["Paths:Laudos"]!);
     }
 
     public static void CheckConfigurations(
