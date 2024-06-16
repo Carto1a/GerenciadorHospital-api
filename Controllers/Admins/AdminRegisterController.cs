@@ -22,10 +22,6 @@ public class AdminRegisterController
 
     [HttpPost("Cadastro")]
     [Authorize(Policy = PoliciesConsts.Elevated)]
-/*  [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))] */
-/*  [ProducesResponseType(StatusCodes.Status500InternalServerError)] */
-/*  [ProducesResponseType(StatusCodes.Status400BadRequest)] */
-/*  [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))] */
     public async Task<IActionResult> Execute(
         [FromBody] RegisterRequestAdminDto request)
     {

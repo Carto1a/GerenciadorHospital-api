@@ -1,5 +1,8 @@
+using Hospital.Consts;
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Services.Cadastros.Admins;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Admins;
@@ -17,6 +20,7 @@ public class AdminGetByQueryController
     }
 
     [HttpGet]
+    [Authorize(Policy = PoliciesConsts.Elevated)]
     public IActionResult Execute(
         [FromQuery] AdminGetByQueryDto query)
     {

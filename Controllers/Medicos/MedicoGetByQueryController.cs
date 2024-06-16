@@ -1,5 +1,8 @@
+using Hospital.Consts;
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Services.Cadastros.Medicos;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Medicos;
@@ -17,6 +20,7 @@ public class MedicoGetByQueryController
     }
 
     [HttpGet]
+    [Authorize(Policy = PoliciesConsts.Elevated)]
     public IActionResult Execute(
         [FromQuery] MedicoGetByQueryDto query)
     {

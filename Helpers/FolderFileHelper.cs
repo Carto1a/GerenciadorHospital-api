@@ -36,6 +36,10 @@ public static class FolderFileHelper
             throw new InvalidOperationException(
                 "JWT:Secret not found in appsettings.Local.json");
 
+        if (configuration["JWT:Secret"]!.Length < 32)
+            throw new InvalidOperationException(
+                "JWT:Secret must be at least 16 characters long");
+
         if (configuration["JWT:ValidAudience"] == null)
             throw new InvalidOperationException(
                 "JWT:ValidAudience not found in appsettings.Local.json");

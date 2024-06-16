@@ -1,3 +1,4 @@
+using Hospital.Consts;
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Filter;
 using Hospital.Services.Cadastros.Medicos;
@@ -19,11 +20,7 @@ public class MedicoRegisterController
     }
 
     [HttpPost("Cadastro")]
-    [AllowAnonymous]
-    /*  [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))] */
-    /*  [ProducesResponseType(StatusCodes.Status500InternalServerError)] */
-    /*  [ProducesResponseType(StatusCodes.Status400BadRequest)] */
-    /*  [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))] */
+    [Authorize(Policy = PoliciesConsts.Elevated)]
     public async Task<IActionResult> Execute(
         [FromForm] RegisterRequestMedicoDto request)
     {
