@@ -25,11 +25,14 @@ public static class SeedManager
         var context = services.GetRequiredService<AppDbContext>();
         var userManager = services.GetRequiredService<UserManager<Admin>>();
         var medicoManager = services.GetRequiredService<UserManager<Medico>>();
+        var pacienteManager = services.GetRequiredService<UserManager<Paciente>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
         var adminUser = await userManager.FindByEmailAsync("admin@admin.admin");
 
         var medicoUser = await medicoManager.FindByEmailAsync("medico@medico.medico");
+
+        var pacienteUser = await pacienteManager.FindByEmailAsync("paciente@p.p");
 
         if (adminUser == null)
         {
@@ -39,7 +42,7 @@ public static class SeedManager
                 Email = "admin@admin.admin",
                 Nome = "ANA",
                 Sobrenome = "DOS SANTOS",
-                DataNascimento = DateOnly.FromDateTime(DateTime.Now),
+                DataNascimento = DateOnly.FromDateTime(DateTime.Now.AddYears(-20)),
                 Genero = GeneroEnum.Outro,
                 CPF = "09787717027",
                 CEP = "69200970",
@@ -60,7 +63,7 @@ public static class SeedManager
                 Email = "medico@medico.medico",
                 Nome = "CARLOS EDUARDO",
                 Sobrenome = "DA SILVA",
-                DataNascimento = DateOnly.FromDateTime(DateTime.Now),
+                DataNascimento = DateOnly.FromDateTime(DateTime.Now.AddYears(-30)),
                 Genero = GeneroEnum.Outro,
                 CPF = "01905130040",
                 CEP = "64034538",
@@ -76,6 +79,35 @@ public static class SeedManager
             {
                 await medicoManager.CreateAsync(medico, "123Carlos@");
                 await medicoManager.AddToRoleAsync(medico, Roles.Medico);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        if (pacienteUser == null)
+        {
+            var paciente = new Paciente
+            {
+                UserName = "paciente@p.p",
+                Email = "paciente@p.p",
+                Nome = "JOAO",
+                Sobrenome = "DA SILVA",
+                DataNascimento = DateOnly.FromDateTime(DateTime.Now.AddYears(-20)),
+                Genero = GeneroEnum.Outro,
+                CPF = "19787717027",
+                CEP = "69200970",
+                NumeroCasa = "2",
+                Telefone = 1140654894,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                Ativo = true
+            };
+
+            try
+            {
+                await pacienteManager.CreateAsync(paciente, "123Carlos@");
+                await pacienteManager.AddToRoleAsync(paciente, Roles.Paciente);
             }
             catch (Exception e)
             {

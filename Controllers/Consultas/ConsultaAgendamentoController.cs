@@ -1,27 +1,71 @@
-/* using Hospital.Controllers.Generics; */
-/* using Hospital.Dto.Atendimento.Create; */
-/* using Hospital.Dto.Atendimento.Update; */
-/* using Hospital.Models.Agendamentos; */
-/* using Hospital.Models.Atendimento; */
-/* using Hospital.Service.Agendamentos.Interfaces; */
+using Hospital.Consts;
+using Hospital.Dtos.Input.Agendamentos;
+using Hospital.Services.Agendamentos;
 
-/* using Microsoft.AspNetCore.Mvc; */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/* namespace Hospital.Controllers.Consultas; */
+namespace Hospital.Controllers.Consultas;
 
-/* [ApiController] */
-/* [Route("api/Agendamento/Consulta")] */
-/* public class ConsultaAgendamentoController */
-/* : GenericAgendamentoController< */
-/*     Consulta, */
-/*     ConsultaAgendamento, */
-/*     ConsultaCreationDto, */
-/*     ConsultaUpdateDto> */
-/* { */
-/*     public ConsultaAgendamentoController( */
-/*         IConsultaAgendamentoService service, */
-/*         ILogger<GenericAgendamentoController<Consulta, ConsultaAgendamento, ConsultaCreationDto, ConsultaUpdateDto>> logger) */
-/*         : base(service, logger) */
-/*     { */
-/*     } */
-/* } */
+[ApiController]
+[Route("api/Agendamento/Consulta")]
+public class ConsultaAgendamentoController : ControllerBase
+{
+    [HttpPost]
+    [Authorize(Policy = PoliciesConsts.Operational)]
+    public async Task<IActionResult> PostAgendamento(
+        [FromServices] AgendamentoConsultaCreateService _service,
+        [FromBody] AgendamentoCreateDto request)
+    {
+        var response = await _service.Handler(request);
+        return Ok(response);
+    }
+
+    [HttpPost("EmEspera/{id}")]
+    [Authorize(Policy = PoliciesConsts.Operational)]
+    public async Task<IActionResult> EmEspera(
+        [FromServices] AgendamentoConsultaEmEsperaService _service,
+        [FromRoute] Guid id)
+    {
+        await _service.Handler(id);
+        return Ok();
+    }
+
+    /* [HttpGet("{id}")] */
+    /* [Authorize(Policy = PoliciesConsts.Operational)] */
+    /* public async Task<IActionResult> GetById( */
+    /*     [FromRoute] Guid id) */
+    /* { */
+    /*     var response = await _service.Handler(id); */
+    /*     return Ok(response); */
+    /* } */
+
+    /* [HttpGet] */
+    /* [Authorize(Policy = PoliciesConsts.Operational)] */
+    /* public async Task<IActionResult> GetByQuery( */
+    /*     [FromServices] AgendamentoGetByQueryDto _service, */
+    /*     [FromQuery] AgendamentoGetByQueryDto request) */
+    /* { */
+    /*     var response = await _service.Handler(request); */
+    /*     return Ok(result); */
+    /* } */
+
+    /* [HttpPut("{id}")] */
+    /* [Authorize(Policy = PoliciesConsts.Operational)] */
+    /* public async Task<IActionResult> Update( */
+    /*     [FromRoute] Guid id, */
+    /*     [FromForm] AgendamentoUpdateDto request) */
+    /* { */
+    /*     var response = await _service.Handler(request, id); */
+    /*     return Ok(response); */
+    /* } */
+
+    /* [HttpDelete("{id}")] */
+    /* [Authorize(Policy = PoliciesConsts.Operational)] */
+    /* public async Task<IActionResult> CancelAgendamento( */
+    /*     [FromRoute] Guid id) */
+    /* { */
+    /*     var response = await _service.Handler(id); */
+    /*     return Ok(result); */
+    /* } */
+}

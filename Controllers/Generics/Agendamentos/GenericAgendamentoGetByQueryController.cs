@@ -14,12 +14,12 @@ where T : Atendimento, new()
 where TAgendamento : Agendamento, new()
 where TQuery : AgendamentoGetByQueryDto
 {
-    private readonly AgendamentoGetByQueryService<
+    private readonly AgendamentoConsultaGetByQueryService<
         T,
         TAgendamento,
         TQuery> _service;
     public GenericAgendamentoGetByQueryController(
-        AgendamentoGetByQueryService<
+        AgendamentoConsultaGetByQueryService<
             T,
             TAgendamento,
             TQuery> service)

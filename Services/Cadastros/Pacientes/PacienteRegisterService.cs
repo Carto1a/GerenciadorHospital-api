@@ -3,6 +3,7 @@ using Hospital.Exceptions;
 using Hospital.Models.Cadastro;
 using Hospital.Repository;
 using Hospital.Repository.Cadastros.Authentications.Interfaces;
+using Hospital.Repository.Convenios.Ineterfaces;
 using Hospital.Repository.Images.Interfaces;
 
 namespace Hospital.Services.Cadastros.Pacientes;
@@ -12,17 +13,20 @@ public class PacienteRegisterService
     private readonly IAuthPacienteRepository _manager;
     private readonly IImageRepository _imageRepository;
     private readonly UnitOfWork _uow;
+    private readonly IConvenioRepository _convenioRepository;
 
     public PacienteRegisterService(
         ILogger<PacienteLoginService> logger,
         IAuthPacienteRepository manager,
         IImageRepository imageRepository,
-        UnitOfWork uow)
+        UnitOfWork uow,
+        IConvenioRepository convenioRepository)
     {
         _manager = manager;
         _logger = logger;
         _imageRepository = imageRepository;
         _uow = uow;
+        _convenioRepository = convenioRepository;
         _logger.LogDebug(1, $"NLog injected into PacienteLoginService");
     }
 
@@ -40,7 +44,7 @@ public class PacienteRegisterService
 
         if (request.ConvenioId != null)
         {
-            var convenio = _uow.ConvenioRepository
+            var convenio = _convenioRepository
                 .GetConvenioById((Guid)request.ConvenioId);
             if (convenio == null)
                 throw new RequestError(
@@ -52,6 +56,15 @@ public class PacienteRegisterService
         if (request.DocIDImg != null)
             paciente.DocIDPath = _imageRepository
                 .SaveDocID(request.DocIDImg);
+        else
+            throw new RequestError(
+                "Documento de Identificação é obrigatório",
+                "Documento de Identificação é obrigatório");
+
+        if (request.ConvenioId != null && request.DocConvenioImg == null)
+            throw new RequestError(
+                "Documento do Convênio não informado",
+                "Documento do Convênio não informado");
 
         if (request.ConvenioId != null && request.DocConvenioImg != null)
             paciente.DocConvenioPath = _imageRepository

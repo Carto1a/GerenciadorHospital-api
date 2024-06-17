@@ -4,6 +4,8 @@ using Hospital.Enums;
 using Hospital.Exceptions;
 using Hospital.Models.Medicamentos;
 using Hospital.Repository;
+using Hospital.Repository.MedicamentoLotes.Interfaces;
+using Hospital.Repository.Medicamentos.Interfaces;
 
 namespace Hospital.Services.Medicamentos;
 public class MedicamentoLoteCreateService
@@ -11,21 +13,27 @@ public class MedicamentoLoteCreateService
     private readonly ILogger<MedicamentoLoteCreateService> _logger;
     private readonly AppDbContext _context;
     private readonly UnitOfWork _uow;
+    private readonly IMedicamentoRepository _medicamentoRepository;
+    private readonly IMedicamentoLoteRepository _medicamentoLoteRepository;
     public MedicamentoLoteCreateService(
         ILogger<MedicamentoLoteCreateService> logger,
         AppDbContext context,
-        UnitOfWork uow)
+        UnitOfWork uow,
+        IMedicamentoRepository medicamentoRepository,
+        IMedicamentoLoteRepository medicamentoLoteRepository)
     {
         _logger = logger;
         _context = context;
         _uow = uow;
+        _medicamentoRepository = medicamentoRepository;
+        _medicamentoLoteRepository = medicamentoLoteRepository;
     }
 
-    public string Handler(
+    public async Task<string> Handler(
         MedicamentoLoteCreateDto request)
     {
         _logger.LogInformation($"Criando lote de medicamento: {request.Codigo}");
-        var medicamento = _uow.MedicamentoRepository
+        var medicamento = _medicamentoRepository
             .GetMedicamentoById(request.MedicamentoId);
         if (medicamento == null)
             throw new RequestError(
@@ -33,15 +41,15 @@ public class MedicamentoLoteCreateService
                 "Medicamento não encontrado.");
 
         var medicamentoLote = new MedicamentoLote(request);
-        var entity = _uow.MedicamentoLoteRepository
+        var entity = _medicamentoLoteRepository
             .CreateMedicamentoLote(medicamentoLote);
 
         if (medicamentoLote.Status != MedicamentoLoteStatus.Vencido)
             medicamento.Quantidade += medicamentoLote.Quantidade;
 
         medicamento.UpdateStatus();
-        _uow.MedicamentoRepository.UpdateMedicamento(medicamento);
-        _uow.Save();
+        _medicamentoRepository.UpdateMedicamento(medicamento);
+        await _uow.SaveAsync();
 
         _logger.LogInformation($"Lote de medicamento criado: {request.Codigo}");
         return $"/api/medicamentos/lotes/{entity}";

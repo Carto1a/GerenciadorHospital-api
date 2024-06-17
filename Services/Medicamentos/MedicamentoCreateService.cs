@@ -1,18 +1,22 @@
 using Hospital.Dtos.Input.Medicamentos;
 using Hospital.Models.Medicamentos;
 using Hospital.Repository;
+using Hospital.Repository.Medicamentos.Interfaces;
 
 namespace Hospital.Services.Medicamentos;
 public class MedicamentoCreateService
 {
     private readonly ILogger<MedicamentoCreateService> _logger;
     private readonly UnitOfWork _uow;
+    private readonly IMedicamentoRepository _medicamentoRepository;
     public MedicamentoCreateService(
         ILogger<MedicamentoCreateService> logger,
-        UnitOfWork uow)
+        UnitOfWork uow,
+        IMedicamentoRepository medicamentoRepository)
     {
         _logger = logger;
         _uow = uow;
+        _medicamentoRepository = medicamentoRepository;
     }
 
     public async Task<string> Handler(
@@ -22,7 +26,7 @@ public class MedicamentoCreateService
         var medicamento = new Medicamento(request);
         medicamento.UpdateStatus();
 
-        var entity = await _uow.MedicamentoRepository
+        var entity = await _medicamentoRepository
             .CreateMedicamentoAsync(medicamento);
 
         _logger.LogInformation($"Medicamento criado: {request.Nome}");

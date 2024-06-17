@@ -2,15 +2,19 @@ using Hospital.Dtos.Input.Authentications;
 using Hospital.Dtos.Output.Cadastros;
 using Hospital.Enums;
 using Hospital.Repository;
+using Hospital.Repository.Cadastros.Interfaces;
 
 namespace Hospital.Services.Cadastros.Pacientes;
 public class PacienteGetByQueryService
 {
     private readonly UnitOfWork _unitOfWork;
+    private readonly IPacienteRepository _pacienteRepository;
     public PacienteGetByQueryService(
-        UnitOfWork unitOfWork)
+        UnitOfWork unitOfWork,
+        IPacienteRepository pacienteRepository)
     {
         _unitOfWork = unitOfWork;
+        _pacienteRepository = pacienteRepository;
     }
 
     public List<PacienteOutputDto> Handler(
@@ -28,7 +32,7 @@ public class PacienteGetByQueryService
         // NOTE: break code execution if validation fails
         validator.Check();
 
-        var pacientes = _unitOfWork.PacienteRepository
+        var pacientes = _pacienteRepository
             .GetPacienteByQueryDto(query);
 
         return pacientes;

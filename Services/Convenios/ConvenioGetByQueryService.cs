@@ -1,11 +1,13 @@
 using Hospital.Dtos.Input.Convenios;
 using Hospital.Dtos.Output.Convenios;
 using Hospital.Repository;
+using Hospital.Repository.Convenios.Ineterfaces;
 
 namespace Hospital.Services.Convenios;
 public class ConvenioGetByQueryService
 {
     private readonly UnitOfWork _unitOfWork;
+    private readonly IConvenioRepository _convenioRepository;
     public ConvenioGetByQueryService(
         UnitOfWork unitOfWork)
     {
@@ -30,7 +32,7 @@ public class ConvenioGetByQueryService
         // NOTE: break code execution if validation fails
         validator.Check();
 
-        var convenios = _unitOfWork.ConvenioRepository
+        var convenios = _convenioRepository
             .GetConveniosGetByQueryDto(query);
         return convenios;
     }

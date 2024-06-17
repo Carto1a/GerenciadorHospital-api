@@ -12,7 +12,7 @@ public class RetornoAgendamento
 
     public RetornoAgendamento() { }
     public RetornoAgendamento Create(
-        RetornoAgendamentoCreateDto request)
+        AgendamentoRetornoCreateDto request)
     {
         base.Create(request);
         ConsultaId = request.ConsultaId;

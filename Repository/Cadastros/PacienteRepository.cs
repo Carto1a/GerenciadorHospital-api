@@ -4,7 +4,6 @@ using Hospital.Dtos.Output.Cadastros;
 using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Interfaces;
 
-using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Repository.Cadastros;
 public class PacienteRepository

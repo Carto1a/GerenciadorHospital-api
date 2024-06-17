@@ -1,7 +1,9 @@
+using Hospital.Consts;
 using Hospital.Filter;
 using Hospital.Repository;
 using Hospital.Services.Cadastros.Pacientes;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Pacientes;
@@ -22,6 +24,7 @@ public class PacienteGetByIdController
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = PoliciesConsts.Operational)]
     public IActionResult Execute(
         [FromRoute] Guid id)
     {

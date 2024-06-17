@@ -1,16 +1,10 @@
-/* using FluentResults; */
+using Hospital.Dtos.Input.Atendimentos;
 
-/* using Hospital.Dto.Atendimento.Get; */
-
-
-/* namespace Hospital.Repository.Atendimentos.Interfaces; */
-/* public interface IAtendimentoRepository<T> */
-/* { */
-/*     Task<Result<T>> Create(T exame); */
-/*     Task<Result<T?>> GetById(Guid id); */
-/*     Result<List<T>> GetByDate(DateTime minDate, DateTime maxDate, int limit, int page = 0); */
-/*     Result<List<T>> GetByMedico(Guid medicoId, int limit, int page = 0); */
-/*     Result<List<T>> GetByPaciente(Guid pacienteId, int limit, int page = 0); */
-/*     Task<Result> Update(T entity); */
-/*     Result<List<T>> GetByQuery(AtendimentoGetByQueryDto query); */
-/* } */
+namespace Hospital.Repository.Atendimentos.Interfaces;
+public interface IAtendimentoRepository<T>
+{
+    Task<Guid> Create(T exame);
+    Task<T?> GetByIdAsync(Guid id);
+    Task Update(T entity);
+    List<T> GetByQueryDtoAsync(AtendimentoGetByQueryDto query);
+}

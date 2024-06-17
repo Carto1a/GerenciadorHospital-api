@@ -85,4 +85,18 @@ public class ImageRepository
             throw new Exception(error.Message);
         }
     }
+
+    public Guid SaveLaudoImage(
+        IFormFile file)
+    {
+        try
+        {
+            var path = _configuration["Paths:Laudos"]!;
+            return Guid.Parse(SaveImage(file, path));
+        }
+        catch (Exception error)
+        {
+            throw new Exception(error.Message);
+        }
+    }
 }

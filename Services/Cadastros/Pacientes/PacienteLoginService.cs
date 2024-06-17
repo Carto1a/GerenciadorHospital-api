@@ -8,11 +8,11 @@ public class PacienteLoginService
 {
     private readonly ILogger<PacienteLoginService> _logger;
     private readonly IConfiguration _configuration;
-    private readonly IAuthMedicoRepository _manager;
+    private readonly IAuthPacienteRepository _manager;
     public PacienteLoginService(
         ILogger<PacienteLoginService> logger,
         IConfiguration configuration,
-        IAuthMedicoRepository manager)
+        IAuthPacienteRepository manager)
     {
         _logger = logger;
         _configuration = configuration;

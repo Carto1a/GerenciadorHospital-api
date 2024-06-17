@@ -1,25 +1,22 @@
-/* using Hospital.Controllers.Generics; */
-/* using Hospital.Dto.Atendimento.Create; */
-/* using Hospital.Dto.Atendimento.Update; */
-/* using Hospital.Models.Agendamentos; */
-/* using Hospital.Models.Atendimento; */
-/* using Hospital.Service.Atendimentos.Interfaces; */
+using Hospital.Consts;
+using Hospital.Dtos.Input.Atendimentos;
+using Hospital.Services.Atendimentos;
 
-/* using Microsoft.AspNetCore.Mvc; */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/* namespace Hospital.Controllers.Consultas; */
-/* [ApiController] */
-/* [Route("api/[controller]")] */
-/* public class ConsultaController */
-/* : GenericAtendimentoController< */
-/*     Consulta, */
-/*     ConsultaAgendamento, */
-/*     ConsultaCreationDto, */
-/*     ConsultaUpdateDto> */
-/* { */
-/*     public ConsultaController( */
-/*         IConsultaService service, */
-/*         ILogger<GenericAtendimentoController<Consulta, ConsultaAgendamento, ConsultaCreationDto, ConsultaUpdateDto>> logger) */
-/*         : base(service, logger) */
-/*     { } */
-/* } */
+namespace Hospital.Controllers.Consultas;
+[ApiController]
+[Route("api/Atendimentos/Consulta")]
+public class ConsultaController : ControllerBase
+{
+    [HttpGet]
+    [Authorize(Policy = PoliciesConsts.Operational)]
+    public IActionResult Create(
+        [FromServices] ConsultaCreateService service,
+        [FromQuery] ConsultaCreateDto request)
+    {
+        var result = service.Handler(request);
+        return Ok(result);
+    }
+}

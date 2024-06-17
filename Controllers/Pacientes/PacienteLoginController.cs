@@ -1,6 +1,8 @@
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Filter;
 using Hospital.Services.Cadastros.Pacientes;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Pacientes;
@@ -18,6 +20,7 @@ public class PacienteLoginController
     }
 
     [HttpPost("Login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Execute(
         [FromBody] LoginRequestPacienteDto request)
     {

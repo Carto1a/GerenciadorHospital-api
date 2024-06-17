@@ -1,4 +1,3 @@
-using Hospital.Models;
 using Hospital.Models.Atendimento;
 
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +29,6 @@ public class ExameMap
         builder.HasOne(x => x.Consulta)
             .WithMany(c => c.Exames)
             .HasForeignKey(x => x.ConsultaId);
-
-        builder.HasOne(x => x.Laudo)
-            .WithOne(l => l.Exame)
-            .HasForeignKey<Laudo>(l => l.ExameId);
 
         builder.HasIndex(x => x.Status);
     }

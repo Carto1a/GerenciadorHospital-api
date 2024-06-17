@@ -27,12 +27,8 @@ public class RetornoMap
             .HasForeignKey(x => x.ConvenioId);
 
         builder.HasOne(x => x.Consulta)
-            .WithOne(c => c.Retorno)
-            .HasForeignKey<Retorno>(x => x.ConsultaId);
-
-        builder.HasOne(x => x.NovaConsulta)
-            .WithOne(c => c.VeioDeRetorno)
-            .HasForeignKey<Retorno>(x => x.NovaConsultaId);
+            .WithMany(c => c.Retornos)
+            .HasForeignKey(x => x.ConsultaId);
 
         builder.HasIndex(x => x.Status);
     }

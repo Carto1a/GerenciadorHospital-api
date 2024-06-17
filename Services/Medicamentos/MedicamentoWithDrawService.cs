@@ -2,26 +2,34 @@ using Hospital.Dtos.Input.Medicamentos;
 using Hospital.Enums;
 using Hospital.Exceptions;
 using Hospital.Repository;
+using Hospital.Repository.MedicamentoLotes.Interfaces;
+using Hospital.Repository.Medicamentos.Interfaces;
 
 namespace Hospital.Services.Medicamentos;
 public class MedicamentoWithdrawService
 {
     private readonly ILogger<MedicamentoWithdrawService> _logger;
     private readonly UnitOfWork _uow;
+    private readonly IMedicamentoRepository _medicamentoRepository;
+    private readonly IMedicamentoLoteRepository _medicamentoLoteRepository;
     public MedicamentoWithdrawService(
         ILogger<MedicamentoWithdrawService> logger,
-        UnitOfWork uow)
+        UnitOfWork uow,
+        IMedicamentoRepository medicamentoRepository,
+        IMedicamentoLoteRepository medicamentoLoteRepository)
     {
         _logger = logger;
         _uow = uow;
+        _medicamentoRepository = medicamentoRepository;
+        _medicamentoLoteRepository = medicamentoLoteRepository;
     }
 
-    public void Handler(
+    public async Task Handler(
         Guid id,
         MedicamentoWithdrawDto request)
     {
         _logger.LogInformation($"Retirando medicamento: {id} do lote: {request.CodigoLote}");
-        var medicamentoLote = _uow.MedicamentoLoteRepository
+        var medicamentoLote = _medicamentoLoteRepository
             .GetMedicamentoLoteByCodigoByMedicamentoId(
                 request.CodigoLote, id);
         if (medicamentoLote == null)
@@ -34,7 +42,7 @@ public class MedicamentoWithdrawService
                 $"Lote de medicamento Vencido, Não foi possivel retirar medicamento: {id}.",
                 "Lote de medicamento Vencido.");
 
-        var medicamento = _uow.MedicamentoRepository
+        var medicamento = _medicamentoRepository
             .GetMedicamentoById(medicamentoLote.MedicamentoId);
         if (medicamento == null)
             throw new RequestError(
@@ -56,9 +64,9 @@ public class MedicamentoWithdrawService
         medicamento.UpdateStatus();
         medicamentoLote.UpdateStatus();
 
-        _uow.MedicamentoRepository.UpdateMedicamento(medicamento);
-        _uow.MedicamentoLoteRepository.UpdateMedicamentoLote(medicamentoLote);
-        _uow.Save();
+        _medicamentoRepository.UpdateMedicamento(medicamento);
+        _medicamentoLoteRepository.UpdateMedicamentoLote(medicamentoLote);
+        await _uow.SaveAsync();
 
         _logger.LogInformation($"Medicamento retirado: {id}");
     }

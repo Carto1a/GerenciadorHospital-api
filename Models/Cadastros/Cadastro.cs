@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 
-using FluentResults;
 
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Enums;

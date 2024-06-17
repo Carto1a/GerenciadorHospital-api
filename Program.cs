@@ -123,6 +123,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 // 4. Dependency Injection
+builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
 
 // Add services to the container.

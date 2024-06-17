@@ -99,7 +99,7 @@ public class MedicoRepository
         try
         {
             _ctx.Medicos.Update(medico);
-            _uow.Save();
+            _uow.SaveAsync();
         }
         catch (Exception error)
         {

@@ -21,6 +21,10 @@ public class ExameAgendamentoMap
             .WithMany(c => c.AgendamentosExames)
             .HasForeignKey(x => x.ConvenioId);
 
+        builder.HasOne(x => x.Consulta)
+            .WithMany(c => c.AgendamentosExames)
+            .HasForeignKey(x => x.ConsultaId);
+
         builder.HasIndex(x => x.Status);
     }
 }

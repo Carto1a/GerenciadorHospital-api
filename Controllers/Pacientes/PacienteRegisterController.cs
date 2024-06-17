@@ -1,7 +1,9 @@
+using Hospital.Consts;
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Filter;
 using Hospital.Services.Cadastros.Pacientes;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Controllers.Pacientes;
@@ -19,6 +21,7 @@ public class PacienteRegisterController
     }
 
     [HttpPost("Cadastro")]
+    [Authorize(Policy = PoliciesConsts.Elevated)]
     public async Task<IActionResult> Execute(
         [FromForm] RegisterRequestPacienteDto request)
     {

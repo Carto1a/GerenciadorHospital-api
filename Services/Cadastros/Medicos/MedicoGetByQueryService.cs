@@ -2,15 +2,18 @@ using Hospital.Dtos.Input.Authentications;
 using Hospital.Dtos.Output.Cadastros;
 using Hospital.Enums;
 using Hospital.Repository;
+using Hospital.Repository.Cadastros.Interfaces;
 
 namespace Hospital.Services.Cadastros.Medicos;
 public class MedicoGetByQueryService
 {
     private readonly ILogger<MedicoGetByQueryService> _logger;
     private readonly UnitOfWork _uow;
+    private readonly IMedicoRepository _medicoRepository;
     public MedicoGetByQueryService(
         ILogger<MedicoGetByQueryService> logger,
-        UnitOfWork uow)
+        UnitOfWork uow,
+        IMedicoRepository medicoRepository)
     {
         _logger = logger;
         _uow = uow;
@@ -33,7 +36,7 @@ public class MedicoGetByQueryService
         // NOTE: break code execution if validation fails
         validator.Check();
 
-        var medicos = _uow.MedicoRepository
+        var medicos = _medicoRepository
             .GetMedicoByQueryDto(query);
 
         _logger.LogInformation($"Medicos encontrados: {medicos.Count}");

@@ -34,6 +34,10 @@ public class ConsultaMap
             .WithOne(l => l.Consulta)
             .HasForeignKey(l => l.ConsultaId);
 
+        builder.HasMany(x => x.Retornos)
+            .WithOne(r => r.Consulta)
+            .HasForeignKey(r => r.ConsultaId);
+
         builder.HasIndex(x => x.Status);
     }
 }

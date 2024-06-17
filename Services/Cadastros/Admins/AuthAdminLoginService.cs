@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Exceptions;
