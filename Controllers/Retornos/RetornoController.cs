@@ -10,13 +10,13 @@ namespace Hospital.Controllers.Consultas;
 [Route("api/Atendimentos/Retorno")]
 public class RetornoController : ControllerBase
 {
-    [HttpGet]
+    [HttpPost]
     [Authorize(Policy = PoliciesConsts.Operational)]
-    public IActionResult Create(
+    public async Task<IActionResult> Create(
         [FromServices] RetornoCreateService service,
         [FromQuery] RetornoCreateDto request)
     {
-        var result = service.Handler(request);
+        var result = await service.Handler(request);
         return Ok(result);
     }
 }

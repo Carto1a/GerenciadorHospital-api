@@ -13,7 +13,7 @@ public class Exame
 
     public virtual ExameAgendamento? Agendamento { get; set; }
     public virtual Consulta? Consulta { get; set; }
-    public virtual ICollection<Laudo>? Laudos { get; set; }
+    public virtual ICollection<Laudo?>? Laudos { get; set; }
 
     // TODO: criar uma entidade para exame resultado
     public string? Resultado { get; set; }

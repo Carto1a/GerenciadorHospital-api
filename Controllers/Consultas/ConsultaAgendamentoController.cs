@@ -31,6 +31,16 @@ public class ConsultaAgendamentoController : ControllerBase
         return Ok();
     }
 
+    [HttpGet]
+    [Authorize(Policy = PoliciesConsts.Elevated)]
+    public async Task<IActionResult> GetByQuery(
+        [FromServices] AgendamentoConsultaGetByQueryService _service,
+        [FromQuery] AgendamentoGetByQueryDto request)
+    {
+        var response = await _service.Handler(request);
+        return Ok(response);
+    }
+
     /* [HttpGet("{id}")] */
     /* [Authorize(Policy = PoliciesConsts.Operational)] */
     /* public async Task<IActionResult> GetById( */
@@ -38,16 +48,6 @@ public class ConsultaAgendamentoController : ControllerBase
     /* { */
     /*     var response = await _service.Handler(id); */
     /*     return Ok(response); */
-    /* } */
-
-    /* [HttpGet] */
-    /* [Authorize(Policy = PoliciesConsts.Operational)] */
-    /* public async Task<IActionResult> GetByQuery( */
-    /*     [FromServices] AgendamentoGetByQueryDto _service, */
-    /*     [FromQuery] AgendamentoGetByQueryDto request) */
-    /* { */
-    /*     var response = await _service.Handler(request); */
-    /*     return Ok(result); */
     /* } */
 
     /* [HttpPut("{id}")] */

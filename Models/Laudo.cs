@@ -14,7 +14,7 @@ public class Laudo
     public virtual Medico? Medico { get; set; }
     public virtual Paciente? Paciente { get; set; }
     public virtual Consulta? Consulta { get; set; }
-    public virtual ICollection<Exame>? Exames { get; set; }
+    public virtual ICollection<Exame?>? Exames { get; set; }
     public virtual ICollection<Medicamento>? Medicamentos { get; set; }
 
     public string Descricao { get; set; }

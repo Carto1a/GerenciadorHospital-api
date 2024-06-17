@@ -10,13 +10,13 @@ namespace Hospital.Controllers.Consultas;
 [Route("api/Atendimentos/Consulta")]
 public class ConsultaController : ControllerBase
 {
-    [HttpGet]
+    [HttpPost]
     [Authorize(Policy = PoliciesConsts.Operational)]
-    public IActionResult Create(
+    public async Task<IActionResult> Create(
         [FromServices] ConsultaCreateService service,
         [FromQuery] ConsultaCreateDto request)
     {
-        var result = service.Handler(request);
+        var result = await service.Handler(request);
         return Ok(result);
     }
 }

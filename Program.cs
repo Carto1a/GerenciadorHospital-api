@@ -58,8 +58,8 @@ builder.Services.AddMvc(options =>
 
 // 1. DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(configuration.GetConnectionString("DbSqlite"))
-    /* options.UseSqlite(configuration.GetConnectionString("DbSqlServer")) */
+    /* options.UseSqlite(configuration.GetConnectionString("DbSqlite")) */
+    options.UseSqlServer(configuration.GetConnectionString("DbSqlServer"))
 );
 
 // 2. Identity

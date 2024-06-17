@@ -17,6 +17,7 @@ public class MedicoGetByQueryService
     {
         _logger = logger;
         _uow = uow;
+        _medicoRepository = medicoRepository;
     }
 
     public List<MedicoOutputDto> Handler(

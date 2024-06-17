@@ -20,15 +20,25 @@ public static class Injections
         this IServiceCollection services) => services
         .AddScoped<AgendamentoConsultaCreateService>()
         .AddScoped<AgendamentoConsultaEmEsperaService>()
+        .AddScoped<AgendamentoConsultaGetByQueryService>()
+
         .AddScoped<AgendamentoExameCreateService>()
         .AddScoped<AgendamentoExameEmEsperaService>()
+        .AddScoped<AgendamentoExameGetByQueryService>()
+
         .AddScoped<AgendamentoRetornoCreateService>()
         .AddScoped<AgendamentoRetornoEmEsperaService>()
+        .AddScoped<AgendamentoRetornoGetByQueryService>()
 
         .AddScoped<RetornoCreateService>()
+        .AddScoped<RetornoGetByQueryService>()
+
         .AddScoped<ConsultaCreateService>()
+        .AddScoped<ConsultaGetByQueryService>()
+
         .AddScoped<ExameCreateService>()
         .AddScoped<ExameCompletarService>()
+        .AddScoped<ExameGetByQueryService>()
 
         .AddScoped<AdminGetByQueryService>()
         .AddScoped<AuthAdminLoginService>()

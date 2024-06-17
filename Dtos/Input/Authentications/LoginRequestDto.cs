@@ -10,7 +10,5 @@ public class LoginRequestDto
         ValidationsConsts.EmailValidationError)]
     public string Email { get; set; }
     [Required]
-    [RegularExpression(ValidationsConsts.PasswordRegex, ErrorMessage =
-        ValidationsConsts.PasswordValidationError)]
     public string Password { get; set; }
 }

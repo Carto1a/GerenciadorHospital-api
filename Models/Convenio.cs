@@ -55,12 +55,12 @@ public class Convenio
         var validator = new Validators(
             $"Não foi possível validar o convênio de nome: {Nome}");
 
-        /* validator.Cnpj(CNPJ, "CNPJ"); */
-        /* validator.MinLength(Nome, 3, "Nome"); */
-        /* validator.MinLength(Descrição, 3, "Descrição"); */
-        /* validator.MinLength(Telefone, 8, "Telefone"); */
-        /* validator.MinLength(Email, 8, "Email"); */
-        /* validator.MinLength(Site, 8, "Site"); */
+        validator.Cnpj(CNPJ, "CNPJ");
+        validator.MinLength(Nome, 3, "Nome");
+        validator.MinLength(Descrição, 3, "Descrição");
+        validator.MinLength(Telefone, 8, "Telefone");
+        validator.MinLength(Email, 8, "Email");
+        validator.MinLength(Site, 8, "Site");
 
         validator.Check();
     }

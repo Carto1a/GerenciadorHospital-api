@@ -99,4 +99,17 @@ public class ImageRepository
             throw new Exception(error.Message);
         }
     }
+
+    public Guid SaveMedicoDocCRM(IFormFile file)
+    {
+        try
+        {
+            var path = _configuration["Paths:MedicoDocumentos"]!;
+            return Guid.Parse(SaveImage(file, path));
+        }
+        catch (Exception error)
+        {
+            throw new Exception(error.Message);
+        }
+    }
 }
