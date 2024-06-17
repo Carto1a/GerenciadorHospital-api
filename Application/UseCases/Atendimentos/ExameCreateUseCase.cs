@@ -5,8 +5,8 @@ using Hospital.Models.Atendimento;
 using Hospital.Repository;
 using Hospital.Repository.Atendimentos.Interfaces;
 
-namespace Hospital.Services.Atendimentos;
-public class ExameCreateService
+namespace Hospital.Application.UseCases.Atendimentos;
+public class ExameCreateUseCase
 {
     private readonly UnitOfWork _unitOfWork;
     private readonly IExameRepository _exameRepository;
@@ -14,7 +14,7 @@ public class ExameCreateService
     private readonly IConsultaAgendamentoRepository _consultaAgendamentoRepository;
     private readonly IConsultaRepository _consultaRepository;
 
-    public ExameCreateService(
+    public ExameCreateUseCase(
         UnitOfWork unitOfWork,
         IExameRepository exameRepository,
         IExameAgendamentoRepository exameAgendamentoRepository,

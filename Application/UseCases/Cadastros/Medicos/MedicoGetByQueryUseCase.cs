@@ -3,14 +3,15 @@ using Hospital.Dtos.Output.Cadastros;
 using Hospital.Enums;
 using Hospital.Repository;
 using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Services.Cadastros.Medicos;
 
-namespace Hospital.Services.Cadastros.Medicos;
-public class MedicoGetByQueryService
+namespace Hospital.Application.UseCases.Cadastros.Medicos;
+public class MedicoGetByQueryUseCase
 {
     private readonly ILogger<MedicoGetByQueryService> _logger;
     private readonly UnitOfWork _uow;
     private readonly IMedicoRepository _medicoRepository;
-    public MedicoGetByQueryService(
+    public MedicoGetByQueryUseCase(
         ILogger<MedicoGetByQueryService> logger,
         UnitOfWork uow,
         IMedicoRepository medicoRepository)

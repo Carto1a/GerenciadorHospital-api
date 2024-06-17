@@ -7,7 +7,7 @@ using Hospital.Domain.Repositories.Agendamentos;
 using Hospital.Domain.Repositories.Atendimentos;
 using Hospital.Domain.Repositories.Cadastros;
 
-namespace Hospital.Services.Atendimentos;
+namespace Hospital.Application.UseCases.Atendimentos;
 public class ConsultaCreateUseCase
 {
     private readonly IUnitOfWork _unitOfWork;

@@ -3,14 +3,14 @@ using Hospital.Models.Medicamentos;
 using Hospital.Repository;
 using Hospital.Repository.Medicamentos.Interfaces;
 
-namespace Hospital.Services.Medicamentos;
-public class MedicamentoCreateService
+namespace Hospital.Application.UseCases.Medicamentos;
+public class MedicamentoCreateUseCase
 {
-    private readonly ILogger<MedicamentoCreateService> _logger;
+    private readonly ILogger<MedicamentoCreateUseCase> _logger;
     private readonly UnitOfWork _uow;
     private readonly IMedicamentoRepository _medicamentoRepository;
-    public MedicamentoCreateService(
-        ILogger<MedicamentoCreateService> logger,
+    public MedicamentoCreateUseCase(
+        ILogger<MedicamentoCreateUseCase> logger,
         UnitOfWork uow,
         IMedicamentoRepository medicamentoRepository)
     {

@@ -2,13 +2,13 @@ using Hospital.Exceptions;
 using Hospital.Repository;
 using Hospital.Repository.Atendimentos.Interfaces;
 
-namespace Hospital.Services.Atendimentos;
-public class ExameCompletarService
+namespace Hospital.Application.UseCases.Atendimentos;
+public class ExameCompletarUseCase
 {
     private readonly IExameRepository _exameRepository;
     private readonly UnitOfWork _uow;
 
-    public ExameCompletarService(
+    public ExameCompletarUseCase(
         IExameRepository exameRepository,
         UnitOfWork uow)
     {

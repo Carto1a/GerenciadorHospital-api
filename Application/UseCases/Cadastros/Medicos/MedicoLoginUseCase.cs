@@ -3,13 +3,13 @@ using Hospital.Exceptions;
 using Hospital.Helpers;
 using Hospital.Repository.Cadastros.Authentications.Interfaces;
 
-namespace Hospital.Services.Cadastros.Medicos;
-public class MedicoLoginService
+namespace Hospital.Application.UseCases.Cadastros.Medicos;
+public class MedicoLoginUseCase
 {
     private readonly ILogger<MedicoLoginService> _logger;
     private readonly IConfiguration _configuration;
     private readonly IAuthMedicoRepository _manager;
-    public MedicoLoginService(
+    public MedicoLoginUseCase(
         ILogger<MedicoLoginService> logger,
         IConfiguration configuration,
         IAuthMedicoRepository manager)

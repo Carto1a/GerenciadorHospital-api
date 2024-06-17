@@ -3,13 +3,13 @@ using Hospital.Exceptions;
 using Hospital.Repository;
 using Hospital.Repository.Atendimentos.Interfaces;
 
-namespace Hospital.Services.Agendamentos;
-public class AgendamentoRetornoEmEsperaService
+namespace Hospital.Application.UseCases.Agendamentos;
+public class AgendamentoRetornoEmEsperaUseCase
 {
     private readonly UnitOfWork _unitOfWork;
     private readonly IRetornoAgendamentoRepository _retornoAgendamentoRepository;
 
-    public AgendamentoRetornoEmEsperaService(
+    public AgendamentoRetornoEmEsperaUseCase(
         UnitOfWork unitOfWork,
         IRetornoAgendamentoRepository retornoAgendamentoRepository)
     {
@@ -41,7 +41,8 @@ public class AgendamentoRetornoEmEsperaService
         if (agendamento.DataHora.AddMinutes(30) < DateTime.Now)
             agendamento.CustoFinal = agendamento.CustoFinal * 1.1m;
 
-        if (agendamento.DataHora.AddHours(3) < DateTime.Now) {
+        if (agendamento.DataHora.AddHours(3) < DateTime.Now)
+        {
             agendamento.Status = AgendamentoStatus.Ausencia;
             await _retornoAgendamentoRepository.UpdateAsync(agendamento);
             throw new RequestError(

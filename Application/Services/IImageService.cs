@@ -1,8 +1,8 @@
 namespace Hospital.Application.Services;
 public interface IImageService
 {
-    Guid SaveDocId(IFormFile file);
-    Guid SaveDocConvenio(IFormFile file);
+    Guid SavePacienteDocId(IFormFile file);
+    Guid SavePacienteDocConvenio(IFormFile file);
     Guid SaveLaudoImage(IFormFile file);
     Guid SaveMedicoDocCRM(IFormFile file);
 }

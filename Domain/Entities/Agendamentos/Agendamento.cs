@@ -74,7 +74,7 @@ public abstract class Agendamento : Entity, IAtrasado, IDescontavel
         var validate = new DomainValidator(
             $"Não foi possível criar o agendamento: {DataHora}");
 
-        validate.MinDate(DataHora, DateTime.Now.AddMinutes(10), "DataHora");
+        validate.MinDate(DataHora, DateTime.Now.AddMinutes(30), "DataHora");
         validate.MinValue(Custo, 0, "Custo");
 
         validate.Check();

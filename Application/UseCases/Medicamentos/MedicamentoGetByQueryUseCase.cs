@@ -4,12 +4,12 @@ using Hospital.Enums;
 using Hospital.Repository;
 using Hospital.Repository.Medicamentos.Interfaces;
 
-namespace Hospital.Services.Medicamentos;
-public class MedicamentoGetByQueryService
+namespace Hospital.Application.UseCases.Medicamentos;
+public class MedicamentoGetByQueryUseCase
 {
     private readonly UnitOfWork _unitOfWork;
     private readonly IMedicamentoRepository _medicamentoRepository;
-    public MedicamentoGetByQueryService(
+    public MedicamentoGetByQueryUseCase(
         UnitOfWork unitOfWork,
         IMedicamentoRepository medicamentoRepository)
     {

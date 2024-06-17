@@ -7,16 +7,16 @@ using Hospital.Repository;
 using Hospital.Repository.MedicamentoLotes.Interfaces;
 using Hospital.Repository.Medicamentos.Interfaces;
 
-namespace Hospital.Services.Medicamentos;
-public class MedicamentoLoteCreateService
+namespace Hospital.Application.UseCases.Medicamentos;
+public class MedicamentoLoteCreateUseCase
 {
-    private readonly ILogger<MedicamentoLoteCreateService> _logger;
+    private readonly ILogger<MedicamentoLoteCreateUseCase> _logger;
     private readonly AppDbContext _context;
     private readonly UnitOfWork _uow;
     private readonly IMedicamentoRepository _medicamentoRepository;
     private readonly IMedicamentoLoteRepository _medicamentoLoteRepository;
-    public MedicamentoLoteCreateService(
-        ILogger<MedicamentoLoteCreateService> logger,
+    public MedicamentoLoteCreateUseCase(
+        ILogger<MedicamentoLoteCreateUseCase> logger,
         AppDbContext context,
         UnitOfWork uow,
         IMedicamentoRepository medicamentoRepository,

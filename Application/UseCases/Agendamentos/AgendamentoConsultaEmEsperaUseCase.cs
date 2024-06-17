@@ -3,7 +3,7 @@ using Hospital.Domain.Exceptions;
 using Hospital.Domain.Repositories;
 using Hospital.Domain.Repositories.Agendamentos;
 
-namespace Hospital.Services.Agendamentos;
+namespace Hospital.Application.UseCases.Agendamentos;
 public class AgendamentoConsultaEmEsperaUseCase
 {
     private readonly IUnitOfWork _unitOfWork;

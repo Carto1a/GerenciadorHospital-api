@@ -3,14 +3,14 @@ using Hospital.Exceptions;
 using Hospital.Repository;
 using Hospital.Repository.Medicamentos.Interfaces;
 
-namespace Hospital.Services.Medicamentos;
-public class MedicamentoGetByIdService
+namespace Hospital.Application.UseCases.Medicamentos;
+public class MedicamentoGetByIdUseCase
 {
-    private readonly ILogger<MedicamentoGetByIdService> _logger;
+    private readonly ILogger<MedicamentoGetByIdUseCase> _logger;
     private readonly UnitOfWork _uow;
     private readonly IMedicamentoRepository _medicamentoRepository;
-    public MedicamentoGetByIdService(
-        ILogger<MedicamentoGetByIdService> logger,
+    public MedicamentoGetByIdUseCase(
+        ILogger<MedicamentoGetByIdUseCase> logger,
         UnitOfWork uow,
         IMedicamentoRepository medicamentoRepository)
     {

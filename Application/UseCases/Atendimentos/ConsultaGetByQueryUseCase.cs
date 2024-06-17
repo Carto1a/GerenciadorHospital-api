@@ -2,11 +2,11 @@ using Hospital.Dtos.Input.Atendimentos;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
 
-namespace Hospital.Services.Atendimentos;
-public class ConsultaGetByQueryService
+namespace Hospital.Application.UseCases.Atendimentos;
+public class ConsultaGetByQueryUseCase
 {
     private readonly IConsultaRepository _consultaRepository;
-    public ConsultaGetByQueryService(
+    public ConsultaGetByQueryUseCase(
         IConsultaRepository consultaRepository)
     {
         _consultaRepository = consultaRepository;

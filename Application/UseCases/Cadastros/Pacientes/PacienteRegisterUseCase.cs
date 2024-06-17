@@ -1,13 +1,5 @@
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Exceptions;
-using Hospital.Models.Cadastro;
-using Hospital.Repository;
-using Hospital.Repository.Cadastros.Authentications.Interfaces;
-using Hospital.Repository.Convenios.Ineterfaces;
-using Hospital.Repository.Images.Interfaces;
-
-namespace Hospital.Services.Cadastros.Pacientes;
-public class PacienteRegisterService
+namespace Hospital.Application.UseCases.Cadastros.Pacientes;
+public class PacienteRegisterUseCase
 {
     private readonly ILogger<PacienteLoginService> _logger;
     private readonly IAuthPacienteRepository _manager;
@@ -15,7 +7,7 @@ public class PacienteRegisterService
     private readonly UnitOfWork _uow;
     private readonly IConvenioRepository _convenioRepository;
 
-    public PacienteRegisterService(
+    public PacienteRegisterUseCase(
         ILogger<PacienteLoginService> logger,
         IAuthPacienteRepository manager,
         IImageRepository imageRepository,

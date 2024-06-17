@@ -1,14 +1,9 @@
-
-using Hospital.Dtos.Output.Convenios;
-using Hospital.Repository;
-using Hospital.Repository.Convenios.Ineterfaces;
-
-namespace Hospital.Services.Convenios;
-public class ConvenioGetByIdService
+namespace Hospital.Application.UseCases.Convenios;
+public class ConvenioGetByIdUseCase
 {
     private readonly UnitOfWork _uow;
     private readonly IConvenioRepository _convenioRepository;
-    public ConvenioGetByIdService(
+    public ConvenioGetByIdUseCase(
         UnitOfWork uow)
     {
         _uow = uow;

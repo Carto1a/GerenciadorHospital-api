@@ -4,14 +4,14 @@ using Hospital.Models.Cadastro;
 using Hospital.Repository;
 using Hospital.Repository.Convenios.Ineterfaces;
 
-namespace Hospital.Services.Convenios;
-public class ConvenioCreateService
+namespace Hospital.Application.UseCases.Convenios;
+public class ConvenioCreateUseCase
 {
-    private readonly ILogger<ConvenioCreateService> _logger;
+    private readonly ILogger<ConvenioCreateUseCase> _logger;
     private readonly UnitOfWork _uow;
     private readonly IConvenioRepository _convenioRepository;
-    public ConvenioCreateService(
-        ILogger<ConvenioCreateService> logger,
+    public ConvenioCreateUseCase(
+        ILogger<ConvenioCreateUseCase> logger,
         UnitOfWork uow,
         IConvenioRepository convenioRepository)
     {

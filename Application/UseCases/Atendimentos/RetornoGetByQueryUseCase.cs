@@ -2,11 +2,11 @@ using Hospital.Dtos.Input.Atendimentos;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
 
-namespace Hospital.Services.Atendimentos;
-public class RetornoGetByQueryService
+namespace Hospital.Application.UseCases.Atendimentos;
+public class RetornoGetByQueryUseCase
 {
     private readonly IRetornoRepository _retornoRepository;
-    public RetornoGetByQueryService(
+    public RetornoGetByQueryUseCase(
         IRetornoRepository retornoRepository)
     {
         _retornoRepository = retornoRepository;

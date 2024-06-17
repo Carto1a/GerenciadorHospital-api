@@ -4,14 +4,14 @@ using Hospital.Models.Cadastro;
 using Hospital.Repository.Cadastros.Authentications.Interfaces;
 using Hospital.Repository.Images.Interfaces;
 
-namespace Hospital.Services.Cadastros.Medicos;
-public class MedicoRegisterService
+namespace Hospital.Application.UseCases.Cadastros.Medicos;
+public class MedicoRegisterUseCase
 {
     private readonly ILogger<MedicoRegisterService> _logger;
     private readonly IAuthMedicoRepository _manager;
     private readonly IImageRepository _imageRepository;
 
-    public MedicoRegisterService(
+    public MedicoRegisterUseCase(
         ILogger<MedicoRegisterService> logger,
         IImageRepository imageRepository,
         IAuthMedicoRepository manager)

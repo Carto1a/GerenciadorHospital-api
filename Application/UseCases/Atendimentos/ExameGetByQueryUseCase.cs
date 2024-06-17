@@ -2,11 +2,11 @@ using Hospital.Dtos.Input.Atendimentos;
 using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
 
-namespace Hospital.Services.Atendimentos;
-public class ExameGetByQueryService
+namespace Hospital.Application.UseCases.Atendimentos;
+public class ExameGetByQueryUseCase
 {
     private readonly IExameRepository _exameRepository;
-    public ExameGetByQueryService(
+    public ExameGetByQueryUseCase(
         IExameRepository exameRepository)
     {
         _exameRepository = exameRepository;

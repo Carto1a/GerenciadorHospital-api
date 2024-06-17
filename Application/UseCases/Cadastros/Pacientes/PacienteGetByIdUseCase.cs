@@ -1,13 +1,9 @@
-using Hospital.Dtos.Output.Cadastros;
-using Hospital.Repository;
-using Hospital.Repository.Cadastros.Interfaces;
-
-namespace Hospital.Services.Cadastros.Pacientes;
-public class PacienteGetByIdService
+namespace Hospital.Application.UseCases.Cadastros.Pacientes;
+public class PacienteGetByIdUseCase
 {
     private readonly UnitOfWork _unitOfWork;
     private readonly IPacienteRepository _pacienteRepository;
-    public PacienteGetByIdService(
+    public PacienteGetByIdUseCase(
         UnitOfWork unitOfWork,
         IPacienteRepository pacienteRepository)
     {

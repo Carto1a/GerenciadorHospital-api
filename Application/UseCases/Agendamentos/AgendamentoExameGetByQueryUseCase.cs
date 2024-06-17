@@ -3,11 +3,11 @@ using Hospital.Dtos.Output.Agendamentos;
 using Hospital.Enums;
 using Hospital.Repository.Atendimentos.Interfaces;
 
-namespace Hospital.Services.Agendamentos;
-public class AgendamentoExameGetByQueryService
+namespace Hospital.Application.UseCases.Agendamentos;
+public class AgendamentoExameGetByQueryUseCase
 {
     private readonly IExameAgendamentoRepository _exameAgendamentoRepository;
-    public AgendamentoExameGetByQueryService(
+    public AgendamentoExameGetByQueryUseCase(
         IExameAgendamentoRepository exameAgendamentoRepository)
     {
         _exameAgendamentoRepository = exameAgendamentoRepository;

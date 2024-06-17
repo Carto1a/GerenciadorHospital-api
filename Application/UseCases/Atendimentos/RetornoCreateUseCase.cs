@@ -5,8 +5,8 @@ using Hospital.Models.Atendimento;
 using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
 
-namespace Hospital.Services.Atendimentos;
-public class RetornoCreateService
+namespace Hospital.Application.UseCases.Atendimentos;
+public class RetornoCreateUseCase
 {
     private readonly IConsultaRepository _consultaRepository;
     private readonly IRetornoAgendamentoRepository _retornoAgendamentoRepository;
@@ -14,7 +14,7 @@ public class RetornoCreateService
     private readonly IPacienteRepository _pacienteRepository;
     private readonly IRetornoRepository _retornoRepository;
 
-    public RetornoCreateService(
+    public RetornoCreateUseCase(
         IConsultaRepository consultaRepository,
         IRetornoAgendamentoRepository retornoAgendamentoRepository,
         IMedicoRepository medicoRepository,

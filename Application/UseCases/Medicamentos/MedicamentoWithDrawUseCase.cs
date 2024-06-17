@@ -5,15 +5,15 @@ using Hospital.Repository;
 using Hospital.Repository.MedicamentoLotes.Interfaces;
 using Hospital.Repository.Medicamentos.Interfaces;
 
-namespace Hospital.Services.Medicamentos;
-public class MedicamentoWithdrawService
+namespace Hospital.Application.UseCases.Medicamentos;
+public class MedicamentoWithdrawUseCase
 {
-    private readonly ILogger<MedicamentoWithdrawService> _logger;
+    private readonly ILogger<MedicamentoWithdrawUseCase> _logger;
     private readonly UnitOfWork _uow;
     private readonly IMedicamentoRepository _medicamentoRepository;
     private readonly IMedicamentoLoteRepository _medicamentoLoteRepository;
-    public MedicamentoWithdrawService(
-        ILogger<MedicamentoWithdrawService> logger,
+    public MedicamentoWithdrawUseCase(
+        ILogger<MedicamentoWithdrawUseCase> logger,
         UnitOfWork uow,
         IMedicamentoRepository medicamentoRepository,
         IMedicamentoLoteRepository medicamentoLoteRepository)

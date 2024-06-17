@@ -1,7 +1,8 @@
 using Hospital.Application.Dto.Input.Agendamentos;
+using Hospital.Services.Agendamentos;
 
-namespace Hospital.Services.Agendamentos;
-public class AgendamentoExameCreateService
+namespace Hospital.Application.UseCases.Agendamentos;
+public class AgendamentoExameCreateUseCase
 {
     private ILogger<AgendamentoConsultaCreateService> _logger;
     private readonly UnitOfWork _uow;
@@ -10,7 +11,7 @@ public class AgendamentoExameCreateService
     private readonly IConvenioRepository _convenioRepository;
     private readonly IExameAgendamentoRepository _exameAgendamentoRepository;
     private readonly IConsultaRepository _consultaRepository;
-    public AgendamentoExameCreateService(
+    public AgendamentoExameCreateUseCase(
         ILogger<AgendamentoConsultaCreateService> logger,
         UnitOfWork uow,
         IMedicoRepository medicoRepository,

@@ -3,14 +3,14 @@ using Hospital.Exceptions;
 using Hospital.Repository;
 using Hospital.Repository.MedicamentoLotes.Interfaces;
 
-namespace Hospital.Services.Medicamentos;
-public class MedicamentoLoteGetByIdService
+namespace Hospital.Application.UseCases.Medicamentos;
+public class MedicamentoLoteGetByIdUseCase
 {
-    private readonly ILogger<MedicamentoLoteGetByIdService> _logger;
+    private readonly ILogger<MedicamentoLoteGetByIdUseCase> _logger;
     private readonly UnitOfWork _uow;
     private readonly IMedicamentoLoteRepository _medicamentoLoteRepository;
-    public MedicamentoLoteGetByIdService(
-        ILogger<MedicamentoLoteGetByIdService> logger,
+    public MedicamentoLoteGetByIdUseCase(
+        ILogger<MedicamentoLoteGetByIdUseCase> logger,
         UnitOfWork uow,
         IMedicamentoLoteRepository medicamentoLoteRepository)
     {

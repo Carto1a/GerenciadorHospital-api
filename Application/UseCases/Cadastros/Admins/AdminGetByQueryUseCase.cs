@@ -1,15 +1,9 @@
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Dtos.Output.Cadastros;
-using Hospital.Enums;
-using Hospital.Repository;
-using Hospital.Repository.Cadastros.Interfaces;
-
-namespace Hospital.Services.Cadastros.Admins;
-public class AdminGetByQueryService
+namespace Hospital.Application.UseCases.Cadastros.Admins;
+public class AdminGetByQueryUseCase
 {
     private readonly UnitOfWork _unitOfWork;
     private readonly IAdminRepository _adminRepository;
-    public AdminGetByQueryService(
+    public AdminGetByQueryUseCase(
         UnitOfWork unitOfWork,
         IAdminRepository adminRepository)
     {

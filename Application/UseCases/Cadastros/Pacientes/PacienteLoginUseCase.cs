@@ -1,15 +1,12 @@
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Exceptions;
-using Hospital.Helpers;
-using Hospital.Repository.Cadastros.Authentications.Interfaces;
+using Hospital.Services.Cadastros.Pacientes;
 
-namespace Hospital.Services.Cadastros.Pacientes;
-public class PacienteLoginService
+namespace Hospital.Application.UseCases.Cadastros.Pacientes;
+public class PacienteLoginUseCase
 {
     private readonly ILogger<PacienteLoginService> _logger;
     private readonly IConfiguration _configuration;
     private readonly IAuthPacienteRepository _manager;
-    public PacienteLoginService(
+    public PacienteLoginUseCase(
         ILogger<PacienteLoginService> logger,
         IConfiguration configuration,
         IAuthPacienteRepository manager)
