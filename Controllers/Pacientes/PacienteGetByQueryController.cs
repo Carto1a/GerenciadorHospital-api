@@ -1,3 +1,4 @@
+using Hospital.Application.UseCases.Cadastros.Pacientes;
 using Hospital.Consts;
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Services.Cadastros.Pacientes;

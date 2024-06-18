@@ -1,3 +1,4 @@
+using Hospital.Application.UseCases.Cadastros.Pacientes;
 using Hospital.Consts;
 using Hospital.Filter;
 using Hospital.Repository;

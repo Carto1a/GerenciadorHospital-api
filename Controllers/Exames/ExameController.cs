@@ -1,3 +1,4 @@
+using Hospital.Application.UseCases.Atendimentos;
 using Hospital.Consts;
 using Hospital.Dtos.Input.Atendimentos;
 using Hospital.Services.Atendimentos;

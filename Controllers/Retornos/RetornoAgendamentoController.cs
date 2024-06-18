@@ -1,3 +1,4 @@
+using Hospital.Application.UseCases.Agendamentos;
 using Hospital.Consts;
 using Hospital.Dtos.Input.Agendamentos;
 using Hospital.Services.Agendamentos;

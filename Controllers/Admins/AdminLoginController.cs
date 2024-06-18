@@ -1,3 +1,4 @@
+using Hospital.Application.UseCases.Cadastros.Admins;
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Filter;
 using Hospital.Services.Cadastros.Admins;
