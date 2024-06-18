@@ -6,5 +6,5 @@ namespace Hospital.Domain.Repositories;
 public interface ILaudoRepository
 : IRepository<Laudo, LaudoGetByQueryDto, LaudoOutputDto>
 {
-    Task<Guid> Create(Laudo laudo);
+    Task<Guid> CreateAsync(Laudo laudo);
 }

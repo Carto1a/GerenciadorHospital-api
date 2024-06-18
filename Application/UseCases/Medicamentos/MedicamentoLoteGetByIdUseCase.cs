@@ -1,35 +1,29 @@
-using Hospital.Dtos.Output.Medicamentos;
-using Hospital.Exceptions;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Repository.MedicamentoLotes.Interfaces;
+using Hospital.Application.Dto.Output.Medicamentos;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories;
 
 namespace Hospital.Application.UseCases.Medicamentos;
 public class MedicamentoLoteGetByIdUseCase
 {
     private readonly ILogger<MedicamentoLoteGetByIdUseCase> _logger;
-    private readonly UnitOfWork _uow;
     private readonly IMedicamentoLoteRepository _medicamentoLoteRepository;
     public MedicamentoLoteGetByIdUseCase(
         ILogger<MedicamentoLoteGetByIdUseCase> logger,
-        UnitOfWork uow,
         IMedicamentoLoteRepository medicamentoLoteRepository)
     {
         _logger = logger;
-        _uow = uow;
         _medicamentoLoteRepository = medicamentoLoteRepository;
     }
 
-    public MedicamentoLoteOutputDto Handler(
-        Guid id)
+    public async Task<MedicamentoLoteOutputDto> Handler(Guid id)
     {
         _logger.LogInformation($"Buscando medicamento lote: {id}");
-        var medicamentoLote = _medicamentoLoteRepository
-            .GetMedicamentoLoteByIdDto(id);
+        var medicamentoLote = await _medicamentoLoteRepository
+            .GetByIdDtoAsync(id);
         if (medicamentoLote == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Medicamento lote de id não existe, Não foi possivel buscar medicamento lote: {id}.",
-                "Medicamento lote não encontrado.",
-                StatusCodes.Status404NotFound);
+                "Medicamento lote não encontrado.");
 
         _logger.LogInformation($"Medicamento lote encontrado: {id}");
         return medicamentoLote;

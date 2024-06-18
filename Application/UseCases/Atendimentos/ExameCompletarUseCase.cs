@@ -1,16 +1,16 @@
-using Hospital.Exceptions;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Repository.Atendimentos.Interfaces;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Repositories.Atendimentos;
 
 namespace Hospital.Application.UseCases.Atendimentos;
 public class ExameCompletarUseCase
 {
     private readonly IExameRepository _exameRepository;
-    private readonly UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
 
     public ExameCompletarUseCase(
         IExameRepository exameRepository,
-        UnitOfWork uow)
+        IUnitOfWork uow)
     {
         _exameRepository = exameRepository;
         _uow = uow;
@@ -20,7 +20,7 @@ public class ExameCompletarUseCase
     {
         var exame = await _exameRepository.GetByIdAsync(id);
         if (exame == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Exame não encontrado: {id}",
                 "Exame não encontrado");
 
@@ -29,6 +29,7 @@ public class ExameCompletarUseCase
 
         // TODO: verificar se o ainda existe exame em processamento
 
-        await _exameRepository.Update(exame);
+        _exameRepository.UpdateAsync(exame);
+        await _uow.SaveAsync();
     }
 }

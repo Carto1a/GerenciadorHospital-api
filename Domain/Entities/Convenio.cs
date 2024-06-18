@@ -28,8 +28,6 @@ public class Convenio : Entity
     public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
     public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }
 
-    public void Deletar() => Ativo = false;
-
     public Convenio() { }
     [SetsRequiredMembers]
     public Convenio(ConvenioCreateDto request)

@@ -1,20 +1,23 @@
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Application.Dto.Output.Cadastros;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Repositories.Cadastros;
+using Hospital.Domain.Validators;
+
 namespace Hospital.Application.UseCases.Cadastros.Pacientes;
 public class PacienteGetByQueryUseCase
 {
-    private readonly UnitOfWork _unitOfWork;
     private readonly IPacienteRepository _pacienteRepository;
     public PacienteGetByQueryUseCase(
-        UnitOfWork unitOfWork,
         IPacienteRepository pacienteRepository)
     {
-        _unitOfWork = unitOfWork;
         _pacienteRepository = pacienteRepository;
     }
 
-    public List<PacienteOutputDto> Handler(
+    public async Task<IEnumerable<PacienteOutputDto>> Handler(
         PacienteGetByQueryDto query)
     {
-        var validator = new Validators("Não foi possível buscar pacientes");
+        var validator = new DomainValidator("Não foi possível buscar pacientes");
         validator.Query((int)query.Limit!, (int)query.Page!);
 
         if (query.Genero != null)
@@ -23,11 +26,10 @@ public class PacienteGetByQueryUseCase
                 typeof(GeneroEnum),
                 "Genero inválido");
 
-        // NOTE: break code execution if validation fails
         validator.Check();
 
-        var pacientes = _pacienteRepository
-            .GetPacienteByQueryDto(query);
+        var pacientes = await _pacienteRepository
+            .GetByQueryDtoAsync(query);
 
         return pacientes;
     }

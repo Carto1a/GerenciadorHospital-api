@@ -1,25 +1,25 @@
-using Hospital.Dtos.Input.Agendamentos;
-using Hospital.Exceptions;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Models.Agendamentos;
-using Hospital.Models.Cadastro;
-using Hospital.Repository.Atendimentos.Interfaces;
-using Hospital.Repository.Cadastros.Interfaces;
-using Hospital.Repository.Convenios.Ineterfaces;
+using Hospital.Application.Dto.Input.Agendamentos;
+using Hospital.Domain.Entities;
+using Hospital.Domain.Entities.Agendamentos;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Repositories.Agendamentos;
+using Hospital.Domain.Repositories.Atendimentos;
+using Hospital.Domain.Repositories.Cadastros;
 
-namespace Hospital.Services.Agendamentos;
-public class AgendamentoExameCreateService
+namespace Hospital.Application.UseCases.Agendamentos;
+public class AgendamentoExameCreateUseCase
 {
-    private ILogger<AgendamentoConsultaCreateService> _logger;
-    private readonly UnitOfWork _uow;
+    private readonly ILogger<AgendamentoConsultaCreateUseCase> _logger;
+    private readonly IUnitOfWork _uow;
     private readonly IMedicoRepository _medicoRepository;
     private readonly IPacienteRepository _pacienteRepository;
     private readonly IConvenioRepository _convenioRepository;
     private readonly IExameAgendamentoRepository _exameAgendamentoRepository;
     private readonly IConsultaRepository _consultaRepository;
-    public AgendamentoExameCreateService(
-        ILogger<AgendamentoConsultaCreateService> logger,
-        UnitOfWork uow,
+    public AgendamentoExameCreateUseCase(
+        ILogger<AgendamentoConsultaCreateUseCase> logger,
+        IUnitOfWork uow,
         IMedicoRepository medicoRepository,
         IPacienteRepository pacienteRepository,
         IConvenioRepository convenioRepository,
@@ -35,7 +35,7 @@ public class AgendamentoExameCreateService
         _consultaRepository = consultaRepository;
     }
 
-    public async Task<string> Handler(
+    public async Task<Guid> Handler(
         AgendamentoExameCreateDto request)
     {
         _logger.LogInformation($"Criando agendamento: {request.DataHora}");
@@ -45,22 +45,22 @@ public class AgendamentoExameCreateService
 
         var consulta = await _consultaRepository.GetByIdAsync(request.ConsultaId);
         if (consulta == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Consulta não encontrada: {request.ConsultaId}",
                 "Consulta não encontrada");
 
         var repo = _exameAgendamentoRepository;
-        var findMedico = _medicoRepository
-            .GetMedicoByIdAtivo(request.MedicoId);
+        var findMedico = await _medicoRepository
+            .GetByIdAtivoAsync(request.MedicoId);
         if (findMedico == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Médico não encontrado: {request.MedicoId}",
                 "Médico não encontrado");
 
-        var findPaciente = _pacienteRepository
-            .GetPacienteByIdAtivo(request.PacienteId);
+        var findPaciente = await _pacienteRepository
+            .GetByIdAtivoAsync(request.PacienteId);
         if (findPaciente == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Paciente não encontrado: {request.PacienteId}",
                 "Paciente não encontrado");
 
@@ -68,29 +68,26 @@ public class AgendamentoExameCreateService
         var findAgendamentos = await repo
             .GetByDataHoraMedicoAsync(request.DataHora, request.MedicoId);
         if (findAgendamentos.Count > 0)
-            throw new RequestError(
+            throw new DomainException(
                 $"Horario ocupado para agendamento: {request.DataHora}",
                 "Horario ocupado para agendamento");
 
         Convenio? findConvenio = null;
-        var CustoFinal = request.Custo;
-
         if (request.ConvenioId != null)
         {
-            findConvenio = _convenioRepository
-                .GetConvenioByIdAtivo((Guid)request.ConvenioId);
+            findConvenio = await _convenioRepository
+                .GetByIdAtivoAsync((Guid)request.ConvenioId);
             if (findConvenio == null)
-                throw new RequestError(
+                throw new DomainException(
                     $"Convênio não encontrado: {request.ConvenioId}",
                     "Convênio não encontrado");
-            CustoFinal -= request.Custo * findConvenio.Desconto;
-
         }
-        agendamento.CustoFinal = CustoFinal;
+        agendamento.CalcularDesconto(findConvenio);
 
-        var entity = await repo.CreateAsync(agendamento);
+        var id = await repo.CreateAsync(agendamento);
+        await _uow.SaveAsync();
 
         _logger.LogInformation($"Agendamento criado: {request.DataHora}");
-        return $"/api/agendamentos/{entity}";
+        return id;
     }
 }

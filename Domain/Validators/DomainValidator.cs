@@ -1,10 +1,12 @@
 using System.Text.RegularExpressions;
 
+using Hospital.Domain.Exceptions;
+
 namespace Hospital.Domain.Validators;
 public class DomainValidator
 {
     private readonly string _logMessage;
-    private readonly ICollection<string> _errors = [];
+    private readonly List<string> _errors = [];
     public DomainValidator(string logMessage)
     {
         _logMessage = logMessage;
@@ -121,7 +123,7 @@ public class DomainValidator
     {
         if (_errors.Count > 0)
         {
-            throw new RequestError(_logMessage, _errors);
+            throw new DomainException(_logMessage, _errors);
         }
     }
 }

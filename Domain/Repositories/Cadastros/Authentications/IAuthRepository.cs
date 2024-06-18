@@ -9,6 +9,6 @@ public interface IAuthRepository<T, TCheck>
     Task<T?> FindByEmailAsync(string email);
     Task<bool> CheckPasswordAsync(T entity, string password);
     Task<bool> IsInRoleAsync(T entity, Roles role);
-    Task<IEnumerable<string>> GetRolesAsync(T entity);
+    Task<IList<string>> GetRolesAsync(T entity);
     Task<bool> CheckIfCadastroExistsAsync(TCheck request);
 }

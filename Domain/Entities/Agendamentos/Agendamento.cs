@@ -27,6 +27,7 @@ public abstract class Agendamento : Entity, IAtrasado, IDescontavel
     public void Realizar() => Status = AgendamentoStatus.Realizado;
     public void EmEspera() => Status = AgendamentoStatus.EmEspera;
     public void EmAndamento() => Status = AgendamentoStatus.EmAndamento;
+    public void Ausencia() => Status = AgendamentoStatus.Ausencia;
 
     public override void Deletar()
     {

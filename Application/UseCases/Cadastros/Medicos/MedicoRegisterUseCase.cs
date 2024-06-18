@@ -1,47 +1,47 @@
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Exceptions;
-using Hospital.Models.Cadastro;
-using Hospital.Repository.Cadastros.Authentications.Interfaces;
-using Hospital.Repository.Images.Interfaces;
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Application.Services;
+using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories.Cadastros.Authentications;
 
 namespace Hospital.Application.UseCases.Cadastros.Medicos;
 public class MedicoRegisterUseCase
 {
-    private readonly ILogger<MedicoRegisterService> _logger;
+    private readonly ILogger<MedicoRegisterUseCase> _logger;
     private readonly IAuthMedicoRepository _manager;
-    private readonly IImageRepository _imageRepository;
+    private readonly IImageService _imageService;
 
     public MedicoRegisterUseCase(
-        ILogger<MedicoRegisterService> logger,
-        IImageRepository imageRepository,
-        IAuthMedicoRepository manager)
+        ILogger<MedicoRegisterUseCase> logger,
+        IAuthMedicoRepository manager,
+        IImageService imageService)
     {
-        _manager = manager;
         _logger = logger;
-        _imageRepository = imageRepository;
-        _logger.LogDebug(1, $"NLog injected into MedicoRegisterService");
+        _manager = manager;
+        _imageService = imageService;
     }
 
-    public async Task<string> Handler(
+    public async Task<Guid> Handler(
         RegisterRequestMedicoDto request)
     {
         _logger.LogInformation($"Registrando medico: {request.Email}");
 
-        var findMedico = _manager
-            .CheckIfCadastroExists(request);
+        var findMedico = await _manager
+            .CheckIfCadastroExistsAsync(request);
         if (findMedico)
-            throw new RequestError(
+            throw new DomainException(
                 $"Cadastro de medico já existe: {request.Email}",
                 "Senha ou Email Inválidos");
 
         var medico = new Medico(request);
         if (request.DocCRMImg != null)
-            medico.DocCRMPath = _imageRepository
+            medico.DocCRMPath = _imageService
                 .SaveMedicoDocCRM(request.DocCRMImg);
 
         await _manager.CreateAsync(medico, request.Password);
 
         _logger.LogInformation($"Medico registrado: {medico.Id}");
-        return $"/api/Medico/{medico.Id}";
+
+        return medico.Id;
     }
 }

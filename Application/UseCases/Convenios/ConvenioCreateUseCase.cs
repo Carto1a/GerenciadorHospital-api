@@ -1,18 +1,17 @@
-using Hospital.Dtos.Input.Convenios;
-using Hospital.Exceptions;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Models.Cadastro;
-using Hospital.Repository.Convenios.Ineterfaces;
+using Hospital.Application.Dto.Input.Convenios;
+using Hospital.Domain.Entities;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories;
 
 namespace Hospital.Application.UseCases.Convenios;
 public class ConvenioCreateUseCase
 {
     private readonly ILogger<ConvenioCreateUseCase> _logger;
-    private readonly UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
     private readonly IConvenioRepository _convenioRepository;
     public ConvenioCreateUseCase(
         ILogger<ConvenioCreateUseCase> logger,
-        UnitOfWork uow,
+        IUnitOfWork uow,
         IConvenioRepository convenioRepository)
     {
         _logger = logger;
@@ -20,23 +19,26 @@ public class ConvenioCreateUseCase
         _convenioRepository = convenioRepository;
     }
 
-    public async Task<string> Handler(
+    public async Task<Guid> Handler(
         ConvenioCreateDto request)
     {
         _logger.LogInformation($"Criando convenio: {request.CNPJ}");
-        var findConvenio = _convenioRepository
-            .GetConvenioByCnpj(request.CNPJ);
+        var findConvenio = await _convenioRepository
+            .GetByCnpjAsync(request.CNPJ);
         if (findConvenio != null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Convenio já existe: {request.CNPJ}",
                 "Convenio já existe");
 
         var convenio = new Convenio(request);
 
-        var entity = await _convenioRepository
-            .CreateConvenioAsync(convenio);
+        var id = await _convenioRepository
+            .CreateAsync(convenio);
+
+        await _uow.SaveAsync();
 
         _logger.LogInformation($"Convenio criado: {request.CNPJ}");
-        return $"/api/convenios/{entity}";
+
+        return id;
     }
 }

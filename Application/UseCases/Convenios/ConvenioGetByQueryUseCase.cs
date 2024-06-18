@@ -1,18 +1,22 @@
+using Hospital.Application.Dto.Input.Convenios;
+using Hospital.Application.Dto.Output.Convenios;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Validators;
+
 namespace Hospital.Application.UseCases.Convenios;
 public class ConvenioGetByQueryUseCase
 {
-    private readonly UnitOfWork _unitOfWork;
     private readonly IConvenioRepository _convenioRepository;
     public ConvenioGetByQueryUseCase(
-        UnitOfWork unitOfWork)
+        IConvenioRepository convenioRepository)
     {
-        _unitOfWork = unitOfWork;
+        _convenioRepository = convenioRepository;
     }
 
-    public List<ConvenioOutputDto> Handler(
+    public async Task<IEnumerable<ConvenioOutputDto>> Handler(
         ConvenioGetByQueryDto query)
     {
-        var validator = new Validators("Não foi possível buscar convenios");
+        var validator = new DomainValidator("Não foi possível buscar convenios");
         // NOTE: colocar essas coisa no construtor da dto?
         validator.Query((int)query.Limit!, (int)query.Page!);
         if (query.CNPJ != null)
@@ -27,8 +31,8 @@ public class ConvenioGetByQueryUseCase
         // NOTE: break code execution if validation fails
         validator.Check();
 
-        var convenios = _convenioRepository
-            .GetConveniosGetByQueryDto(query);
+        var convenios = await _convenioRepository
+            .GetByQueryDtoAsync(query);
         return convenios;
     }
 }

@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
+using Hospital.Application.Dto.Input.Authentications;
 using Hospital.Domain.Entities.Agendamentos;
 using Hospital.Domain.Entities.Atendimentos;
 using Hospital.Domain.Entities.Medicamentos;

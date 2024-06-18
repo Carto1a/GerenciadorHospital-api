@@ -1,21 +1,21 @@
+using Hospital.Application.Dto.Output.Cadastros;
+using Hospital.Domain.Repositories.Cadastros;
+
 namespace Hospital.Application.UseCases.Cadastros.Pacientes;
 public class PacienteGetByIdUseCase
 {
-    private readonly UnitOfWork _unitOfWork;
     private readonly IPacienteRepository _pacienteRepository;
     public PacienteGetByIdUseCase(
-        UnitOfWork unitOfWork,
         IPacienteRepository pacienteRepository)
     {
-        _unitOfWork = unitOfWork;
         _pacienteRepository = pacienteRepository;
     }
 
-    public PacienteOutputDto? Handler(
+    public Task<PacienteOutputDto?> Handler(
         Guid id)
     {
         var paciente = _pacienteRepository
-            .GetPacienteByIdDto(id);
+            .GetByIdDtoAsync(id);
         return paciente;
     }
 }

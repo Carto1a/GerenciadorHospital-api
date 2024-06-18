@@ -1,3 +1,4 @@
+using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Enums;
 
 namespace Hospital.Application.Dto.Output.Cadastros;

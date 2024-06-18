@@ -1,20 +1,20 @@
-using Hospital.Exceptions;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Repository.Images.Interfaces;
+using Hospital.Application.Services;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories;
 
 namespace Hospital.Application.UseCases.Laudos;
 public class LaudoAddImageUseCase
 {
-    private readonly IImageRepository _imageRepository;
+    private readonly IImageService _imageService;
     private readonly ILaudoRepository _laudoRepository;
-    private readonly UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
 
     public LaudoAddImageUseCase(
-        IImageRepository imageRepository,
+        IImageService imageService,
         ILaudoRepository laudoRepository,
-        UnitOfWork uow)
+        IUnitOfWork uow)
     {
-        _imageRepository = imageRepository;
+        _imageService = imageService;
         _laudoRepository = laudoRepository;
         _uow = uow;
     }
@@ -23,13 +23,14 @@ public class LaudoAddImageUseCase
     {
         var laudo = await _laudoRepository.GetByIdAsync(id);
         if (laudo == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Laudo não encontrado: {id}",
                 "Laudo não encontrado");
 
-        var imageId = _imageRepository.SaveLaudoImage(image);
+        var imageId = _imageService.SaveLaudoImage(image);
         laudo.DocPath = imageId;
 
-        await _laudoRepository.Update(laudo);
+        _laudoRepository.UpdateAsync(laudo);
+        await _uow.SaveAsync();
     }
 }

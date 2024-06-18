@@ -1,31 +1,30 @@
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Exceptions;
-using Hospital.Models.Cadastro;
-using Hospital.Repository.Cadastros.Authentications.Interfaces;
-using Hospital.Services.Cadastros;
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories.Cadastros.Authentications;
 
 namespace Hospital.Application.UseCases.Cadastros.Admins;
 public class AdminRegisterUseCase
 {
-    private readonly ILogger<AuthAdminRegisterService> _logger;
+    private readonly ILogger<AdminRegisterUseCase> _logger;
     private readonly IAuthAdminRepository _adminManager;
     public AdminRegisterUseCase(
         IAuthAdminRepository adminManager,
-        ILogger<AuthAdminRegisterService> logger)
+        ILogger<AdminRegisterUseCase> logger)
     {
         _adminManager = adminManager;
         _logger = logger;
         _logger.LogDebug(1, $"NLog injected into AuthAdminRegisterService");
     }
-    public async Task<string> Handler(
+    public async Task<Guid> Handler(
         RegisterRequestAdminDto request)
     {
         _logger.LogInformation($"Registrando admin: {request.Email}");
 
-        var findAdmin = _adminManager
-            .CheckIfCadastroExists(request);
+        var findAdmin = await _adminManager
+            .CheckIfCadastroExistsAsync(request);
         if (findAdmin)
-            throw new RequestError(
+            throw new DomainException(
                 $"Cadastro de admin já existe: {request.Email}",
                 "Senha | Email | CPF Inválidos");
 
@@ -34,6 +33,6 @@ public class AdminRegisterUseCase
         await _adminManager.CreateAsync(admin, request.Password);
 
         _logger.LogInformation($"Admin registrado: {admin.Id}");
-        return $"/api/Admin/{admin.Id}";
+        return admin.Id;
     }
 }

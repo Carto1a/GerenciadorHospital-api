@@ -1,56 +1,57 @@
-using Hospital.Enums;
-using Hospital.Exceptions;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Repository.Atendimentos.Interfaces;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Repositories.Agendamentos;
 
 namespace Hospital.Application.UseCases.Agendamentos;
 public class AgendamentoRetornoEmEsperaUseCase
 {
-    private readonly UnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IRetornoAgendamentoRepository _retornoAgendamentoRepository;
 
     public AgendamentoRetornoEmEsperaUseCase(
-        UnitOfWork unitOfWork,
+        IUnitOfWork unitOfWork,
         IRetornoAgendamentoRepository retornoAgendamentoRepository)
     {
         _unitOfWork = unitOfWork;
         _retornoAgendamentoRepository = retornoAgendamentoRepository;
     }
 
-    public async Task Handler(
-        Guid agendamentoId)
+    public async Task Handler(Guid agendamentoId)
     {
         var agendamento = await _retornoAgendamentoRepository
             .GetByIdAsync(agendamentoId);
         if (agendamento == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Agendamento não encontrado: {agendamentoId}",
                 "Agendamento não encontrado");
 
         if (agendamento.Status == AgendamentoStatus.Cancelado
             || agendamento.Status == AgendamentoStatus.Realizado)
-            throw new RequestError(
+            throw new DomainException(
                 $"Agendamento já foi {agendamento.Status}",
                 "Agendamento já foi cancelado ou realizado");
 
         if (agendamento.Status == AgendamentoStatus.EmEspera)
-            throw new RequestError(
+            throw new DomainException(
                 $"Agendamento já está em espera: {agendamento.Status}",
                 "Agendamento já está em espera");
 
-        if (agendamento.DataHora.AddMinutes(30) < DateTime.Now)
-            agendamento.CustoFinal = agendamento.CustoFinal * 1.1m;
+        if (agendamento.Atrasado(DateTime.Now))
+            agendamento.CalcularMulta(null);
 
-        if (agendamento.DataHora.AddHours(3) < DateTime.Now)
+        if (agendamento.Ausente(DateTime.Now))
         {
-            agendamento.Status = AgendamentoStatus.Ausencia;
-            await _retornoAgendamentoRepository.UpdateAsync(agendamento);
-            throw new RequestError(
+            agendamento.Ausencia();
+            _retornoAgendamentoRepository.UpdateAsync(agendamento);
+            await _unitOfWork.SaveAsync();
+            throw new DomainException(
                 $"Agendamento cancelado por atraso: {agendamento.DataHora}",
                 "Agendamento cancelado por atraso");
         }
 
-        agendamento.Status = AgendamentoStatus.EmEspera;
-        await _retornoAgendamentoRepository.UpdateAsync(agendamento);
+        agendamento.EmEspera();
+        _retornoAgendamentoRepository.UpdateAsync(agendamento);
+        await _unitOfWork.SaveAsync();
     }
 }

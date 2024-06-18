@@ -7,11 +7,13 @@ using Hospital.Application.UseCases.Convenios;
 using Hospital.Application.UseCases.Laudos;
 using Hospital.Application.UseCases.Medicamentos;
 
-namespace Hospital.Application;
+namespace Hospital.Application.UseCases;
 public static class InjectionAppUseCases
 {
     public static IServiceCollection RegisterServices(
-        this IServiceCollection services) => services
+        this IServiceCollection services)
+    {
+        return services
 
         .AddScoped<MedicamentoCreateUseCase>()
         .AddScoped<MedicamentoGetByIdUseCase>()
@@ -95,8 +97,6 @@ public static class InjectionAppUseCases
         .AddScoped<AgendamentoRetornoCreateUseCase>()
         .AddScoped<AgendamentoRetornoEmEsperaUseCase>()
         .AddScoped<AgendamentoRetornoGetByQueryUseCase>()
-
-
-
         ;
+    }
 }

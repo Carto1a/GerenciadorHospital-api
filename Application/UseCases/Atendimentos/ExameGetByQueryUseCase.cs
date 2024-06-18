@@ -1,6 +1,8 @@
-using Hospital.Dtos.Input.Atendimentos;
-using Hospital.Models.Atendimento;
-using Hospital.Repository.Atendimentos.Interfaces;
+using Hospital.Application.Dto.Input.Atendimentos;
+using Hospital.Application.Dto.Output.Atendimentos;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Repositories.Atendimentos;
+using Hospital.Domain.Validators;
 
 namespace Hospital.Application.UseCases.Atendimentos;
 public class ExameGetByQueryUseCase
@@ -12,21 +14,20 @@ public class ExameGetByQueryUseCase
         _exameRepository = exameRepository;
     }
 
-    public IList<Exame> Handler(
-        AtendimentoGetByQueryDto request)
+    public async Task<IEnumerable<ExameOutputDto>> Handler(ExameGetByQueryDto request)
     {
-        var validator = new Validators("Não foi possível buscar consultas");
+        var validator = new DomainValidator("Não foi possível buscar consultas");
         validator.Query((int)request.Limit!, (int)request.Page!);
 
-        /* if (request.Status != null) */
-        /*     validator.isInEnum( */
-        /*         request.Status, */
-        /*         typeof(ConsultaStatus), */
-        /*         "Status inválido"); */
+        if (request.Status != null)
+            validator.isInEnum(
+                request.Status,
+                typeof(ConsultaStatus),
+                "Status inválido");
 
         validator.Check();
 
-        var consulta = _exameRepository
+        var consulta = await _exameRepository
             .GetByQueryDtoAsync(request);
         return consulta;
     }

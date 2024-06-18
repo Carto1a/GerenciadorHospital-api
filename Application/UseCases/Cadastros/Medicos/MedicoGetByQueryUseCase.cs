@@ -1,19 +1,19 @@
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Dtos.Output.Cadastros;
-using Hospital.Enums;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Repository.Cadastros.Interfaces;
-using Hospital.Services.Cadastros.Medicos;
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Application.Dto.Output.Cadastros;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Repositories.Cadastros;
+using Hospital.Domain.Validators;
 
 namespace Hospital.Application.UseCases.Cadastros.Medicos;
 public class MedicoGetByQueryUseCase
 {
-    private readonly ILogger<MedicoGetByQueryService> _logger;
-    private readonly UnitOfWork _uow;
+    private readonly ILogger<MedicoGetByQueryUseCase> _logger;
+    private readonly IUnitOfWork _uow;
     private readonly IMedicoRepository _medicoRepository;
     public MedicoGetByQueryUseCase(
-        ILogger<MedicoGetByQueryService> logger,
-        UnitOfWork uow,
+        ILogger<MedicoGetByQueryUseCase> logger,
+        IUnitOfWork uow,
         IMedicoRepository medicoRepository)
     {
         _logger = logger;
@@ -21,12 +21,12 @@ public class MedicoGetByQueryUseCase
         _medicoRepository = medicoRepository;
     }
 
-    public List<MedicoOutputDto> Handler(
+    public async Task<IEnumerable<MedicoOutputDto>> Handler(
         MedicoGetByQueryDto query)
     {
         _logger.LogInformation($"Buscando medicos: {query.Limit} - {query.Page}");
 
-        var validator = new Validators("Não foi possível buscar medicos");
+        var validator = new DomainValidator("Não foi possível buscar medicos");
         validator.Query((int)query.Limit!, (int)query.Page!);
 
         if (query.Genero != null)
@@ -35,11 +35,10 @@ public class MedicoGetByQueryUseCase
                 typeof(GeneroEnum),
                 "Genero inválido");
 
-        // NOTE: break code execution if validation fails
         validator.Check();
 
-        var medicos = _medicoRepository
-            .GetMedicoByQueryDto(query);
+        var medicos = await _medicoRepository
+            .GetByQueryDtoAsync(query);
 
         _logger.LogInformation($"Medicos encontrados: {medicos.Count}");
         return medicos;

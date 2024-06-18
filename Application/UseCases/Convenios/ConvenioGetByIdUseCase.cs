@@ -1,18 +1,20 @@
+using Hospital.Application.Dto.Output.Convenios;
+using Hospital.Domain.Repositories;
+
 namespace Hospital.Application.UseCases.Convenios;
 public class ConvenioGetByIdUseCase
 {
-    private readonly UnitOfWork _uow;
     private readonly IConvenioRepository _convenioRepository;
     public ConvenioGetByIdUseCase(
-        UnitOfWork uow)
+        IConvenioRepository convenioRepository)
     {
-        _uow = uow;
+        _convenioRepository = convenioRepository;
     }
 
-    public ConvenioOutputDto? Handler(Guid id)
+    public async Task<ConvenioOutputDto?> Handler(Guid id)
     {
-        var convenio = _convenioRepository
-            .GetConvenioByIdDto(id);
+        var convenio = await _convenioRepository
+            .GetByIdDtoAsync(id);
 
         return convenio;
     }

@@ -1,46 +1,47 @@
-using Hospital.Dtos.Input.Agendamentos;
-using Hospital.Dtos.Output.Agendamentos;
-using Hospital.Enums;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Models.Agendamentos;
-using Hospital.Models.Atendimento;
-using Hospital.Repository.Atendimentos.Interfaces;
+/* using Hospital.Application.Dto.Input.Agendamentos; */
+/* using Hospital.Application.Dto.Output.Agendamentos; */
+/* using Hospital.Domain.Entities.Agendamentos; */
+/* using Hospital.Domain.Entities.Atendimentos; */
+/* using Hospital.Domain.Enums; */
+/* using Hospital.Domain.Repositories; */
+/* using Hospital.Domain.Repositories.Agendamentos; */
+/* using Hospital.Domain.Validators; */
 
-namespace Hospital.Services.Agendamentos;
-public class AgendamentoConsultaGetByQueryService<T, TAgendamento, TQuery>
-where T : Atendimento, new()
-where TAgendamento : Agendamento, new()
-where TQuery : AgendamentoGetByQueryDto
-{
-    private readonly UnitOfWork _uow;
-    private readonly IConsultaAgendamentoRepository _consultaAgendamentoRepository;
-    public AgendamentoConsultaGetByQueryService(
-        UnitOfWork uow,
-        IConsultaAgendamentoRepository consultaAgendamentoRepository)
-    {
-        _uow = uow;
-        _consultaAgendamentoRepository = consultaAgendamentoRepository;
-    }
+/* namespace Hospital.Application.UseCases.Agendamentos; */
+/* public class AgendamentoConsultaGetByQueryUseCase<T, TAgendamento, TQuery> */
+/* where T : Atendimento, new() */
+/* where TAgendamento : Agendamento, new() */
+/* where TQuery : AgendamentoGetByQueryDto */
+/* { */
+/*     private readonly IUnitOfWork _uow; */
+/*     private readonly IConsultaAgendamentoRepository _consultaAgendamentoRepository; */
+/*     public AgendamentoConsultaGetByQueryUseCase( */
+/*         IUnitOfWork uow, */
+/*         IConsultaAgendamentoRepository consultaAgendamentoRepository) */
+/*     { */
+/*         _uow = uow; */
+/*         _consultaAgendamentoRepository = consultaAgendamentoRepository; */
+/*     } */
 
-    public async Task<List<AgendamentoOutputDto>> Handler(
-        TQuery query)
-    {
-        var validator = new Validators(
-            "Não foi possível buscar agendamentos");
-        validator.Query((int)query.Limit!, (int)query.Page!);
+/*     public async Task<List<AgendamentoOutputDto>> Handler( */
+/*         TQuery query) */
+/*     { */
+/*         var validator = new DomainValidator( */
+/*             "Não foi possível buscar agendamentos"); */
+/*         validator.Query((int)query.Limit!, (int)query.Page!); */
 
-        if (query.Status != null)
-            validator.isInEnum(
-                query.Status,
-                typeof(AgendamentoStatus),
-                "Status inválido");
+/*         if (query.Status != null) */
+/*             validator.isInEnum( */
+/*                 query.Status, */
+/*                 typeof(AgendamentoStatus), */
+/*                 "Status inválido"); */
 
-        // NOTE: break code execution if validation fails
-        validator.Check();
+/*         // NOTE: break code execution if validation fails */
+/*         validator.Check(); */
 
-        var agendamentos = await _consultaAgendamentoRepository
-            .GetByQueryDtoAsync(query);
+/*         var agendamentos = await _consultaAgendamentoRepository */
+/*             .GetByQueryDtoAsync(query); */
 
-        return agendamentos;
-    }
-}
+/*         return agendamentos; */
+/*     } */
+/* } */

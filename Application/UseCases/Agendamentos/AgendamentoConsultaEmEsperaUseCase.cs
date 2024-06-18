@@ -39,11 +39,11 @@ public class AgendamentoConsultaEmEsperaUseCase
                 "Agendamento já está em espera");
 
         if (agendamento.Atrasado(DateTime.Now))
-            agendamento.CalcularMulta();
+            agendamento.CalcularMulta(null);
 
         if (agendamento.Ausente(DateTime.Now))
         {
-            agendamento.Status = AgendamentoStatus.Ausencia;
+            agendamento.Ausencia();
             _consultaAgendamentoRepository
                 .UpdateAsync(agendamento);
             await _unitOfWork.SaveAsync();
@@ -52,7 +52,7 @@ public class AgendamentoConsultaEmEsperaUseCase
                 "Agendamento cancelado por atraso");
         }
 
-        agendamento.Status = AgendamentoStatus.EmEspera;
+        agendamento.EmEspera();
         _consultaAgendamentoRepository.UpdateAsync(agendamento);
         await _unitOfWork.SaveAsync();
     }

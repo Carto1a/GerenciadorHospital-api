@@ -58,7 +58,7 @@ public class ConsultaCreateUseCase
         consulta.LoadInfoFromAgendamento(findAgendamento);
 
         var id = await _consultaRepository.CreateAsync(consulta);
-        findAgendamento.Status = AgendamentoStatus.Realizado;
+        findAgendamento.Realizar();
         _consultaAgendamentoRepository.UpdateAsync(findAgendamento);
         await _unitOfWork.SaveAsync();
 

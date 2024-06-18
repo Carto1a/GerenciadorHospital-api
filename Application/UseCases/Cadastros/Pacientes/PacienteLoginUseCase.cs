@@ -1,19 +1,25 @@
-using Hospital.Services.Cadastros.Pacientes;
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Application.Services;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories.Cadastros.Authentications;
 
 namespace Hospital.Application.UseCases.Cadastros.Pacientes;
 public class PacienteLoginUseCase
 {
-    private readonly ILogger<PacienteLoginService> _logger;
+    private readonly ILogger<PacienteLoginUseCase> _logger;
     private readonly IConfiguration _configuration;
     private readonly IAuthPacienteRepository _manager;
+    private readonly IJwtTokenService _jwtTokenService;
     public PacienteLoginUseCase(
-        ILogger<PacienteLoginService> logger,
+        ILogger<PacienteLoginUseCase> logger,
         IConfiguration configuration,
-        IAuthPacienteRepository manager)
+        IAuthPacienteRepository manager,
+        IJwtTokenService jwtTokenService)
     {
         _logger = logger;
         _configuration = configuration;
         _manager = manager;
+        _jwtTokenService = jwtTokenService;
     }
 
     public async Task<string> Handler(
@@ -25,18 +31,18 @@ public class PacienteLoginUseCase
 
         // NOTE: brecha para side channel attack ao vivo
         if (user == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Cadastro de Paciente não existe: {request.Email}",
                 "Email ou senha errada");
 
         if (!user.Ativo)
-            throw new RequestError(
+            throw new DomainException(
                 $"Cadastro de Paciente inativo: {request.Email}",
                 "Email ou senha errada");
 
         if (!await _manager
             .CheckPasswordAsync(user, request.Password))
-            throw new RequestError(
+            throw new DomainException(
                 $"Senha de Paciente errada: {request.Email}",
                 "Email ou senha errada");
 
@@ -45,8 +51,7 @@ public class PacienteLoginUseCase
 
         var userRoles = await _manager.GetRolesAsync(user);
 
-        var token = TokenHelper.GenerateUserToken(
-            _configuration, user, userRoles);
+        var token = _jwtTokenService.GenerateUserToken(user, userRoles);
 
         _logger.LogInformation($"Paciente logado: {request.Email}");
         return token;

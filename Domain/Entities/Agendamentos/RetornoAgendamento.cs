@@ -17,4 +17,12 @@ public class RetornoAgendamento : Agendamento
         ConsultaId = request.ConsultaId;
         return this;
     }
+
+    public void GratuidadeRetorno(DateTime FimConsulta, Convenio? convenio)
+    {
+        if (FimConsulta.AddDays(30) < DateTime.Now)
+            CustoFinal = Custo;
+        else
+            CustoFinal = 0;
+    }
 }

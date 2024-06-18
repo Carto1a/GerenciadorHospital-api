@@ -1,29 +1,29 @@
-using Hospital.Dtos.Input.Laudos;
-using Hospital.Exceptions;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Models;
-using Hospital.Repository.Atendimentos.Interfaces;
-using Hospital.Repository.Cadastros.Interfaces;
-using Hospital.Repository.Images.Interfaces;
+using Hospital.Application.Dto.Input.Laudos;
+using Hospital.Application.Services;
+using Hospital.Domain.Entities;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Repositories.Atendimentos;
+using Hospital.Domain.Repositories.Cadastros;
 
 namespace Hospital.Application.UseCases.Laudos;
 public class LaudoCreateUseCase
 {
-    private readonly UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
     private readonly IExameRepository _exameRepository;
     private readonly IConsultaRepository _consultaRepository;
     private readonly ILaudoRepository _laudoRepository;
     private readonly IPacienteRepository _pacienteRepository;
     private readonly IMedicoRepository _medicoRepository;
-    private readonly IImageRepository _imageRepository;
+    private readonly IImageService _imageService;
     public LaudoCreateUseCase(
-        UnitOfWork uow,
+        IUnitOfWork uow,
         IExameRepository exameRepository,
         IConsultaRepository consultaRepository,
         ILaudoRepository laudoRepository,
         IPacienteRepository pacienteRepository,
         IMedicoRepository medicoRepository,
-        IImageRepository imageRepository)
+        IImageService imageService)
     {
         _uow = uow;
         _exameRepository = exameRepository;
@@ -31,24 +31,24 @@ public class LaudoCreateUseCase
         _laudoRepository = laudoRepository;
         _pacienteRepository = pacienteRepository;
         _medicoRepository = medicoRepository;
-        _imageRepository = imageRepository;
+        _imageService = imageService;
     }
 
-    public async Task<string> Handler(LaudoCreateDto request)
+    public async Task<Guid> Handler(LaudoCreateDto request)
     {
         var laudo = new Laudo(request);
 
-        var findPaciente = _pacienteRepository
-            .GetPacienteById(request.PacienteId);
+        var findPaciente = await _pacienteRepository
+            .GetByIdAsync(request.PacienteId);
         if (findPaciente == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Paciente não encontrado: {request.PacienteId}",
                 "Paciente não encontrado");
 
-        var findMedico = _medicoRepository
-            .GetMedicoById(request.MedicoId);
+        var findMedico = await _medicoRepository
+            .GetByIdAsync(request.MedicoId);
         if (findMedico == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Médico não encontrado: {request.MedicoId}",
                 "Médico não encontrado");
 
@@ -58,7 +58,7 @@ public class LaudoCreateUseCase
         {
             var examesNotFound = request.ExameIds
                 .Except(findExames.Select(e => e.Id));
-            throw new RequestError(
+            throw new DomainException(
                 $"Exames não encontrados: {string.Join(", ", examesNotFound)}",
                 "Exames não encontrados");
         }
@@ -68,16 +68,17 @@ public class LaudoCreateUseCase
         var findConsulta = await _consultaRepository
             .GetByIdAsync(request.ConsultaId);
         if (findConsulta == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Consulta não encontrada: {request.ConsultaId}",
                 "Consulta não encontrada");
 
         if (request.DocImg != null)
-            laudo.DocPath = _imageRepository
+            laudo.DocPath = _imageService
                 .SaveLaudoImage(request.DocImg);
 
-        await _laudoRepository.Create(laudo);
+        var id = await _laudoRepository.CreateAsync(laudo);
+        await _uow.SaveAsync();
 
-        return $"/api/Laudo/{laudo.Id}";
+        return id;
     }
 }

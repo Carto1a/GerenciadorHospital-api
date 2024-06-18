@@ -1,17 +1,16 @@
-using Hospital.Dtos.Input.Medicamentos;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Models.Medicamentos;
-using Hospital.Repository.Medicamentos.Interfaces;
+using Hospital.Application.Dto.Input.Medicamentos;
+using Hospital.Domain.Entities.Medicamentos;
+using Hospital.Domain.Repositories;
 
 namespace Hospital.Application.UseCases.Medicamentos;
 public class MedicamentoCreateUseCase
 {
     private readonly ILogger<MedicamentoCreateUseCase> _logger;
-    private readonly UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
     private readonly IMedicamentoRepository _medicamentoRepository;
     public MedicamentoCreateUseCase(
         ILogger<MedicamentoCreateUseCase> logger,
-        UnitOfWork uow,
+        IUnitOfWork uow,
         IMedicamentoRepository medicamentoRepository)
     {
         _logger = logger;
@@ -19,17 +18,17 @@ public class MedicamentoCreateUseCase
         _medicamentoRepository = medicamentoRepository;
     }
 
-    public async Task<string> Handler(
+    public async Task<Guid> Handler(
         MedicamentoCreateDto request)
     {
         _logger.LogInformation($"Criando medicamento: {request.Nome}");
         var medicamento = new Medicamento(request);
         medicamento.UpdateStatus();
 
-        var entity = await _medicamentoRepository
-            .CreateMedicamentoAsync(medicamento);
+        var id = await _medicamentoRepository.CreateAsync(medicamento);
 
         _logger.LogInformation($"Medicamento criado: {request.Nome}");
-        return $"/api/medicamentos/{entity}";
+
+        return id;
     }
 }

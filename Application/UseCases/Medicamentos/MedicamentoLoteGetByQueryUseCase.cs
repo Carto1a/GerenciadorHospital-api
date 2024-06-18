@@ -1,26 +1,23 @@
-using Hospital.Dtos.Input.Medicamentos;
-using Hospital.Dtos.Output.Medicamentos;
-using Hospital.Enums;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Repository.MedicamentoLotes.Interfaces;
+using Hospital.Application.Dto.Input.Medicamentos;
+using Hospital.Application.Dto.Output.Medicamentos;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Validators;
 
 namespace Hospital.Application.UseCases.Medicamentos;
 public class MedicamentoLoteGetByQueryUseCase
 {
-    private readonly UnitOfWork _unitOfWork;
     private readonly IMedicamentoLoteRepository _medicamentoLoteRepository;
     public MedicamentoLoteGetByQueryUseCase(
-        UnitOfWork unitOfWork,
         IMedicamentoLoteRepository medicamentoLoteRepository)
     {
-        _unitOfWork = unitOfWork;
         _medicamentoLoteRepository = medicamentoLoteRepository;
     }
 
-    public List<MedicamentoLoteOutputDto> Handler(
+    public async Task<IEnumerable<MedicamentoLoteOutputDto>> Handler(
         MedicamentoLoteGetByQueryDto query)
     {
-        var validator = new Validators("Não foi possível buscar lotes de medicamento");
+        var validator = new DomainValidator("Não foi possível buscar lotes de medicamento");
         validator.Query((int)query.Limit!, (int)query.Page!);
 
         if (query.Status != null)
@@ -32,8 +29,8 @@ public class MedicamentoLoteGetByQueryUseCase
         // NOTE: break code execution if validation fails
         validator.Check();
 
-        var medicamentoLotes = _medicamentoLoteRepository
-            .GetMedicamentoLotesByQueryDto(query);
+        var medicamentoLotes = await _medicamentoLoteRepository
+            .GetByQueryDtoAsync(query);
         return medicamentoLotes;
     }
 }

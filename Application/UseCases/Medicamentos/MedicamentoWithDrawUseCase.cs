@@ -1,20 +1,18 @@
-using Hospital.Dtos.Input.Medicamentos;
-using Hospital.Enums;
-using Hospital.Exceptions;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Repository.MedicamentoLotes.Interfaces;
-using Hospital.Repository.Medicamentos.Interfaces;
+using Hospital.Application.Dto.Input.Medicamentos;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Exceptions;
+using Hospital.Domain.Repositories;
 
 namespace Hospital.Application.UseCases.Medicamentos;
 public class MedicamentoWithdrawUseCase
 {
     private readonly ILogger<MedicamentoWithdrawUseCase> _logger;
-    private readonly UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
     private readonly IMedicamentoRepository _medicamentoRepository;
     private readonly IMedicamentoLoteRepository _medicamentoLoteRepository;
     public MedicamentoWithdrawUseCase(
         ILogger<MedicamentoWithdrawUseCase> logger,
-        UnitOfWork uow,
+        IUnitOfWork uow,
         IMedicamentoRepository medicamentoRepository,
         IMedicamentoLoteRepository medicamentoLoteRepository)
     {
@@ -29,33 +27,33 @@ public class MedicamentoWithdrawUseCase
         MedicamentoWithdrawDto request)
     {
         _logger.LogInformation($"Retirando medicamento: {id} do lote: {request.CodigoLote}");
-        var medicamentoLote = _medicamentoLoteRepository
-            .GetMedicamentoLoteByCodigoByMedicamentoId(
+        var medicamentoLote = await _medicamentoLoteRepository
+            .GetByCodigoByMedicamentoIdAsync(
                 request.CodigoLote, id);
         if (medicamentoLote == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Lote de medicamento não existe, Não foi possivel retirar medicamento: {id}.",
                 "Lote de medicamento não encontrado.");
 
         if (medicamentoLote.Status == MedicamentoLoteStatus.Vencido)
-            throw new RequestError(
+            throw new DomainException(
                 $"Lote de medicamento Vencido, Não foi possivel retirar medicamento: {id}.",
                 "Lote de medicamento Vencido.");
 
-        var medicamento = _medicamentoRepository
-            .GetMedicamentoById(medicamentoLote.MedicamentoId);
+        var medicamento = await _medicamentoRepository
+            .GetByIdAsync(medicamentoLote.MedicamentoId);
         if (medicamento == null)
-            throw new RequestError(
+            throw new DomainException(
                 $"Medicamento de id não existe, Não foi possivel retirar medicamento: {id}.",
                 "Medicamento não encontrado.");
 
         if (request.Quantidade < 1)
-            throw new RequestError(
+            throw new DomainException(
                 $"Quantidade de medicamento inválida, Não foi possivel retirar medicamento: {id}.",
                 "Quantidade inválida.");
 
         if (medicamentoLote.Quantidade < request.Quantidade)
-            throw new RequestError(
+            throw new DomainException(
                 $"Quantidade de medicamento insuficiente, Não foi possivel retirar medicamento: {id}.",
                 "Quantidade insuficiente.");
 
@@ -64,8 +62,9 @@ public class MedicamentoWithdrawUseCase
         medicamento.UpdateStatus();
         medicamentoLote.UpdateStatus();
 
-        _medicamentoRepository.UpdateMedicamento(medicamento);
-        _medicamentoLoteRepository.UpdateMedicamentoLote(medicamentoLote);
+        _medicamentoRepository.UpdateAsync(medicamento);
+        _medicamentoLoteRepository.UpdateAsync(medicamentoLote);
+
         await _uow.SaveAsync();
 
         _logger.LogInformation($"Medicamento retirado: {id}");

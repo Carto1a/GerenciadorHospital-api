@@ -1,7 +1,8 @@
-using Hospital.Dtos.Input.Agendamentos;
-using Hospital.Dtos.Output.Agendamentos;
-using Hospital.Enums;
-using Hospital.Repository.Atendimentos.Interfaces;
+using Hospital.Application.Dto.Input.Agendamentos;
+using Hospital.Application.Dto.Output.Agendamentos;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Repositories.Agendamentos;
+using Hospital.Domain.Validators;
 
 namespace Hospital.Application.UseCases.Agendamentos;
 public class AgendamentoConsultaGetByQueryUseCase
@@ -13,10 +14,10 @@ public class AgendamentoConsultaGetByQueryUseCase
         _consultaAgendamentoRepository = consultaAgendamentoRepository;
     }
 
-    public async Task<IEnumerable<AgendamentoOutputDto>> Handler(
-        AgendamentoGetByQueryDto request)
+    public async Task<IEnumerable<AgendamentoConsultaOutputDto>> Handler(
+        AgendamentoConsultaGetByQuery request)
     {
-        var validator = new Validators("Não foi possível buscar agendamentos");
+        var validator = new DomainValidator("Não foi possível buscar agendamentos");
         validator.Query((int)request.Limit!, (int)request.Page!);
 
         if (request.Status != null)

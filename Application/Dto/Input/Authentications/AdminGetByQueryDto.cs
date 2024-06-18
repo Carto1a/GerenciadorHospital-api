@@ -1,2 +1,2 @@
 namespace Hospital.Application.Dto.Input.Authentications;
-public record AdminGetByQueryDto : GetByQueryDto { }
+public record AdminGetByQueryDto : LoginGetByQueryDto { }
