@@ -64,12 +64,12 @@ builder.Services.InjectCORS();
 
 var app = builder.Build();
 
-/* // 4.1. Add seed */
-/* using (var scope = app.Services.CreateScope()) */
-/* { */
-/*     var services = scope.ServiceProvider; */
-/*     await SeedManager.Seed(services); */
-/* } */
+// 4.1. Add seed
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await SeedManager.Seed(services);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

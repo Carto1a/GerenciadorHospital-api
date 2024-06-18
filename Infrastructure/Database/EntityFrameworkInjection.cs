@@ -11,6 +11,7 @@ using Hospital.Infrastructure.Database.Repositories.Cadastros.Authentications;
 using Hospital.Infrastructure.Database.Repositories.Convenios;
 using Hospital.Infrastructure.Database.Repositories.Medicamentos;
 using Hospital.Repository.MedicamentoLotes;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Infrastructure.Database;
