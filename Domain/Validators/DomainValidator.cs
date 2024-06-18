@@ -12,6 +12,18 @@ public class DomainValidator
         _logMessage = logMessage;
     }
 
+    public void IsNome(string? target, string fildName)
+    {
+        if (target == null)
+        {
+            _errors.Add($"{fildName} is invalid");
+            return;
+        }
+
+        if (!Regex.IsMatch(target, @"^[A-Za-z]{3,30}$"))
+            _errors.Add($"{fildName} is invalid");
+    }
+
     public void NotNull(object? target, string fildName)
     {
         if (target is null)

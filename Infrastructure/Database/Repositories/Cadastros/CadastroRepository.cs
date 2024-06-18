@@ -1,11 +1,15 @@
+using Hospital.Application.Dto.Output.Cadastros;
 using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Repositories;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Infrastructure.Database.Repositories.Cadastros;
 public abstract class CadastroRepository<T, TQuery, TOut>
 : IRepository<T, TQuery, TOut>
 where T : Cadastro
+where TQuery : class
+where TOut : CadastroOutputDto, new()
 {
     private readonly AppDbContext _ctx;
     private readonly IUnitOfWork _uow;
@@ -75,7 +79,7 @@ where T : Cadastro
         {
             var result = _dbSet
                 .Where(e => e.Id == id)
-                .Select(e => (TOut)Activator.CreateInstance(typeof(TOut), e));
+                .Select(e => (TOut)new TOut().Create(e));
 
             return result.FirstOrDefaultAsync();
         }

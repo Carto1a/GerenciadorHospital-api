@@ -48,8 +48,8 @@ public abstract class Cadastro : IdentityUser<Guid>
         var validator = new DomainValidator(
             $"Não foi possível validar o usuário de email: {Email}");
 
-        validator.MinLength(Nome, 3, "Nome");
-        validator.MinLength(Sobrenome, 3, "Sobrenome");
+        validator.IsNome(Nome, "Nome");
+        validator.IsNome(Sobrenome, "Sobrenome");
         validator.MinDate(
             DataNascimento.ToDateTime(TimeOnly.MinValue),
             DateTime.Parse("1800-01-01"), "Data de Nascimento");
@@ -74,6 +74,6 @@ public abstract class Cadastro : IdentityUser<Guid>
         return Equals(cadastro);
     }
 
-    protected abstract bool Equals<TRegister>(TRegister request)
+    public abstract bool Equals<TRegister>(TRegister request)
     where TRegister : RegisterRequestDto;
 }

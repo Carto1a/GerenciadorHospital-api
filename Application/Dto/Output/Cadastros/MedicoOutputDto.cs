@@ -1,39 +1,23 @@
 using Hospital.Domain.Entities.Cadastros;
-using Hospital.Domain.Enums;
 
 namespace Hospital.Application.Dto.Output.Cadastros;
-public class MedicoOutputDto
+public class MedicoOutputDto : CadastroOutputDto
 {
-    public Guid Id { get; set; }
-    public string Email { get; set; }
-    public string Nome { get; set; }
-    public DateOnly DataNascimento { get; set; }
-    public GeneroEnum Genero { get; set; }
-    public string? Telefone { get; set; }
-    public string CPF { get; set; }
-    public string CEP { get; set; }
-    public string? NumeroCasa { get; set; }
-    public bool Ativo { get; set; }
-
     public int CRM { get; init; }
     public Guid? DocCRMPath { get; init; }
     public string Especialidade { get; init; }
 
-    public MedicoOutputDto(Medico medico)
+    public MedicoOutputDto(Medico medico) : base(medico)
     {
-        Id = medico.Id;
-        Email = medico.Email!;
-        Nome = medico.Nome;
-        DataNascimento = medico.DataNascimento;
-        Genero = medico.Genero;
-        Telefone = medico.Telefone;
-        CPF = medico.CPF;
-        CEP = medico.CEP;
-        NumeroCasa = medico.NumeroCasa;
-        Ativo = medico.Ativo;
-
         CRM = medico.CRM;
         DocCRMPath = medico.DocCRMPath;
         Especialidade = medico.Especialidade;
+    }
+
+    public MedicoOutputDto() { }
+
+    public override MedicoOutputDto Create<T>(T cadastro)
+    {
+        return new MedicoOutputDto(cadastro as Medico);
     }
 }

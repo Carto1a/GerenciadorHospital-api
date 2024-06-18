@@ -1,31 +1,23 @@
-/* using Hospital.Application.UseCases.Cadastros.Pacientes; */
-/* using Hospital.Consts; */
-/* using Hospital.Dtos.Input.Authentications; */
-/* using Hospital.Services.Cadastros.Pacientes; */
+using Hospital.Application.Consts;
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Application.UseCases.Cadastros.Pacientes;
 
-/* using Microsoft.AspNetCore.Authorization; */
-/* using Microsoft.AspNetCore.Mvc; */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/* namespace Hospital.Controllers.Pacientes; */
-/* [ApiController] */
-/* [Route("api/Paciente")] */
-/* [Tags("Paciente")] */
-/* public class PacienteGetByQueryController */
-/* : ControllerBase */
-/* { */
-/*     private readonly PacienteGetByQueryService _service; */
-/*     public PacienteGetByQueryController( */
-/*         PacienteGetByQueryService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
-
-/*     [HttpGet] */
-/*     [Authorize(Policy = PoliciesConsts.Elevated)] */
-/*     public IActionResult Execute( */
-/*         [FromQuery] PacienteGetByQueryDto query) */
-/*     { */
-/*         var pacientes = _service.Handler(query); */
-/*         return Ok(pacientes); */
-/*     } */
-/* } */
+namespace Hospital.Infrastructure.Controllers.Pacientes;
+[ApiController]
+[Route("api/Paciente")]
+[Tags("Paciente")]
+public class PacienteGetByQueryController : ControllerBase
+{
+    [HttpGet]
+    [Authorize(Policy = PoliciesConsts.Elevated)]
+    public async Task<IActionResult> Execute(
+        [FromServices] PacienteGetByQueryUseCase _service,
+        [FromQuery] PacienteGetByQueryDto query)
+    {
+        var pacientes = await _service.Handler(query);
+        return Ok(pacientes);
+    }
+}

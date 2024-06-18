@@ -90,10 +90,12 @@ where TRegister : RegisterRequestDto
         return _manager.IsInRoleAsync(entity, role);
     }
 
-    public async Task<bool> CheckIfCadastroExistsAsync(TRegister request)
-    {
-        var result = await _manager.Users.FirstOrDefaultAsync(user =>
-            user.CheckUniqueness(request));
-        return result != null;
-    }
+    /* public async Task<bool> CheckIfCadastroExistsAsync(TRegister request) */
+    /* { */
+    /*     var result = await _manager.Users.FirstOrDefaultAsync(user => */
+    /*         user.Equals(request)); */
+    /*     return result != null; */
+    /* } */
+
+    public abstract Task<bool> CheckIfCadastroExistsAsync(TRegister request);
 }

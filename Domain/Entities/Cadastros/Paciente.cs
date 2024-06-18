@@ -31,7 +31,7 @@ public class Paciente : Cadastro
         ConvenioId = request.ConvenioId;
     }
 
-    protected override bool Equals<TRegister>(TRegister request)
+    public override bool Equals<TRegister>(TRegister request)
     {
         if (request is RegisterRequestPacienteDto requestPaciente)
         {

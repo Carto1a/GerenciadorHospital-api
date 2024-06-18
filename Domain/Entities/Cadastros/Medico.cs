@@ -45,7 +45,7 @@ public class Medico : Cadastro
         validation.Check();
     }
 
-    protected override bool Equals<TRegister>(TRegister request)
+    public override bool Equals<TRegister>(TRegister request)
     {
         if (request is RegisterRequestMedicoDto requestMedico)
         {

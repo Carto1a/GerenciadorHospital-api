@@ -13,7 +13,7 @@ public class AdminGetByQueryController
 : ControllerBase
 {
     [HttpGet]
-    /* [Authorize(Policy = PoliciesConsts.Elevated)] */
+    [Authorize(Policy = PoliciesConsts.Elevated)]
     public async Task<IActionResult> Execute(
         [FromServices] AdminGetByQueryUseCase _service,
         [FromQuery] AdminGetByQueryDto query)

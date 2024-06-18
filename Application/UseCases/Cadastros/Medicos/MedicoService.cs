@@ -34,18 +34,4 @@
 /*         return Result.Ok(response.Value); */
 /*     } */
 
-/*     public Result<List<Medico>> GetMedicos( */
-/*         int limit, int page = 0) */
-/*     { */
-/*         _logger.LogInformation($"Buscando medicos: {limit} - {page}"); */
-/*         var response = _medicoRepository.GetMedicos(limit, page); */
-/*         if (response.IsFailed) */
-/*         { */
-/*             _logger.LogError("Erro ao buscar medicos"); */
-/*             return Result.Fail("Erro ao buscar medicos"); */
-/*         } */
-
-/*         _logger.LogInformation($"Medicos encontrados: {response.Value.Count}"); */
-/*         return Result.Ok(response.Value); */
-/*     } */
 /* } */

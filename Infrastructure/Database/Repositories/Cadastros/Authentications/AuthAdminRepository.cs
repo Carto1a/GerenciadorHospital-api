@@ -4,6 +4,7 @@ using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Repositories.Cadastros.Authentications;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Infrastructure.Database.Repositories.Cadastros.Authentications;
 
@@ -15,5 +16,13 @@ IAuthAdminRepository
         UserManager<Admin> userManager) : base(userManager, Roles.Admin)
     {
         _manager = userManager;
+    }
+
+    public override async Task<bool> CheckIfCadastroExistsAsync(RegisterRequestAdminDto request)
+    {
+        var result = await _manager.Users.FirstOrDefaultAsync(
+            user => user.Email == request.Email
+                || user.CPF == request.CPF);
+        return result != null;
     }
 }

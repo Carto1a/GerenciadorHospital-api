@@ -37,6 +37,12 @@ IAdminRepository
                 queryCtx = queryCtx.Where(e => e.DataNascimento <= DateOnly
                     .FromDateTime((DateTime)query.MaxDateNasc));
 
+            if (query.MinDateCriado != null)
+                queryCtx = queryCtx.Where(e => e.Criado >= query.MinDateCriado);
+
+            if (query.MaxDateCriado != null)
+                queryCtx = queryCtx.Where(e => e.Criado <= query.MaxDateCriado);
+
             if (query.Genero != null)
                 queryCtx = queryCtx.Where(e => e.Genero == query.Genero);
 

@@ -10,7 +10,7 @@ public class Admin : Cadastro
     public Admin(RegisterRequestAdminDto request) : base(request)
     { }
 
-    protected override bool Equals<TRegister>(TRegister request)
+    public override bool Equals<TRegister>(TRegister request)
     {
         if (request is RegisterRequestAdminDto requestAdmin)
         {

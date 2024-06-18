@@ -8,7 +8,7 @@ public class DiskImageService : IImageService
     public DiskImageService(IConfiguration configuration)
     {
         _configuration = configuration;
-        _imagePath = _configuration["Path:BaseImagens"];
+        _imagePath = _configuration["Paths:BaseImagens"];
         if (!Directory.Exists(_imagePath))
             throw new ArgumentException("Diretório de imagens não existe");
     }
@@ -93,7 +93,7 @@ public class DiskImageService : IImageService
         var fullImagePath = Path.Combine(path, id.ToString());
         if (!File.Exists(fullImagePath))
             throw new ArgumentException(
-                "Documento de identificação não existe");
+                "Documento do Convenio não existe");
 
         return new FileStream(fullImagePath, FileMode.Open);
     }
@@ -134,9 +134,8 @@ public class DiskImageService : IImageService
     {
         try
         {
-            var pacienteBase = _configuration["Paths:PacienteBase"]!;
             var MedicoPath = _configuration["Paths:MedicoDocumentos"]!;
-            var path = Path.Combine(_imagePath, pacienteBase, MedicoPath);
+            var path = Path.Combine(_imagePath, MedicoPath);
             return Guid.Parse(SaveImage(file, path));
         }
         catch (Exception error)
@@ -164,8 +163,9 @@ public class DiskImageService : IImageService
     {
         try
         {
+            var pacienteBase = _configuration["Paths:PacienteBase"]!;
             var pacientePath = _configuration["Paths:PacienteDocumentos"]!;
-            var path = Path.Combine(_imagePath, pacientePath);
+            var path = Path.Combine(_imagePath, pacienteBase, pacientePath);
             return Guid.Parse(SaveImage(file, path));
         }
         catch (Exception error)
