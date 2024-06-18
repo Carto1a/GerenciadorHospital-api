@@ -16,7 +16,7 @@ IMedicamentoLoteRepository
     private readonly IUnitOfWork _uow;
     public MedicamentoLoteRepository(
         AppDbContext context,
-        UnitOfWork uow) : base(context, uow)
+        IUnitOfWork uow) : base(context, uow)
     {
         _context = context;
         _uow = uow;

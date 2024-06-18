@@ -13,7 +13,7 @@ IConvenioRepository
     private readonly IUnitOfWork _uow;
     public ConvenioRepository(
         AppDbContext context,
-        UnitOfWork uow) : base(context, uow)
+        IUnitOfWork uow) : base(context, uow)
     {
         _ctx = context;
         _uow = uow;

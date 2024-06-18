@@ -11,7 +11,7 @@ ILaudoRepository
     private readonly IUnitOfWork _uow;
     public LaudoRepository(
         AppDbContext context,
-        UnitOfWork uow) : base(context, uow)
+        IUnitOfWork uow) : base(context, uow)
     {
         _ctx = context;
         _uow = uow;

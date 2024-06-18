@@ -1,7 +1,9 @@
 using Hospital.Application.UseCases;
 using Hospital.Database;
+using Hospital.Helpers;
 using Hospital.Infrastructure.Database;
 using Hospital.Infrastructure.Filter;
+using Hospital.Infrastructure.Helpers;
 using Hospital.Infrastructure.Injections;
 using Hospital.Infrastructure.Services;
 
@@ -20,8 +22,9 @@ var configuration = builder.Configuration;
 
 configuration.AddJsonFile("appsettings.Local.json");
 
-FolderFileHelper.CheckConfigurations(configuration);
-FolderFileHelper.CheckAndCreateFolders(configuration);
+configuration
+    .CheckConfigurations()
+    .CheckAndCreateFolders();
 
 logger.Debug("Starting application");
 
@@ -45,8 +48,8 @@ builder.Services.AddMvc(options =>
 ));
 
 builder.Services.InjectEntityFramework(configuration);
-
 builder.Services.InjectIdentity();
+
 builder.Services.InjectAuthAuthen(configuration);
 builder.Services.InjectServices();
 builder.Services.RegisterUseCase();
@@ -61,12 +64,12 @@ builder.Services.InjectCORS();
 
 var app = builder.Build();
 
-// 4.1. Add seed
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await SeedManager.Seed(services);
-}
+/* // 4.1. Add seed */
+/* using (var scope = app.Services.CreateScope()) */
+/* { */
+/*     var services = scope.ServiceProvider; */
+/*     await SeedManager.Seed(services); */
+/* } */
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

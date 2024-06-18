@@ -48,7 +48,6 @@ public static class EntityFrameworkInjection
 
         .AddScoped<IMedicamentoRepository, MedicamentoRepository>()
 
-
         .AddScoped<ILaudoRepository, LaudoRepository>();
     }
 }
