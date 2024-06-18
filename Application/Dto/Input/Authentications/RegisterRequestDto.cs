@@ -10,7 +10,7 @@ public class RegisterRequestDto
     public required string Sobrenome { get; set; }
     public DateTime DataNascimento { get; set; }
     public GeneroEnum Genero { get; set; }
-    public long? Telefone { get; set; }
+    public string? Telefone { get; set; }
     public required string CPF { get; set; }
     public required string CEP { get; set; }
     public required string NumeroCasa { get; set; }

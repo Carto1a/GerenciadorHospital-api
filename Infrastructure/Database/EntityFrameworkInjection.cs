@@ -22,8 +22,8 @@ public static class EntityFrameworkInjection
         IConfiguration configuration)
     {
         return services.AddDbContext<AppDbContext>(options =>
-            /* options.UseSqlServer(configuration.GetConnectionString("DbSqlServer")!) */
-            options.UseSqlite(configuration.GetConnectionString("DbSqlite")!)
+            options.UseSqlServer(configuration.GetConnectionString("DbSqlServer")!)
+            /* options.UseSqlite(configuration.GetConnectionString("DbSqlite")!) */
         )
         .AddScoped<IUnitOfWork, UnitOfWork>()
 

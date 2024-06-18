@@ -13,7 +13,7 @@ public abstract class Cadastro : IdentityUser<Guid>
     public required string Sobrenome { get; set; }
     public DateOnly DataNascimento { get; set; }
     public GeneroEnum Genero { get; set; }
-    public long? Telefone { get; set; }
+    public string? Telefone { get; set; }
     public required string CPF { get; set; }
     public required string CEP { get; set; }
     public required string NumeroCasa { get; set; }
@@ -59,7 +59,7 @@ public abstract class Cadastro : IdentityUser<Guid>
         validator.Cpf(CPF, "CPF");
         validator.Cep(CEP, "CEP");
         if (Telefone != null)
-            validator.Telefone((long)Telefone, "Telefone");
+            validator.Telefone(Telefone, "Telefone");
         validator.NumeroCasa(NumeroCasa, "NumeroCasa");
         validator.isInEnum(
             Genero,

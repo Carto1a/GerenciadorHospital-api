@@ -70,13 +70,10 @@ public class DomainValidator
             _errors.Add($"{fildName} is invalid");
     }
 
-    public void Telefone(long target, string fildName)
+    public void Telefone(string target, string fildName)
     {
-        // TODO: melhorar a validação
-        long MovelRangeMax = 99999999999;
-        long FixoRangeMin = 9999999999;
-
-        if (target < FixoRangeMin || target > MovelRangeMax)
+        var regex = @"/\d{9,10}/";
+        if (Regex.IsMatch(target, regex))
             _errors.Add($"{fildName} is invalid");
     }
 

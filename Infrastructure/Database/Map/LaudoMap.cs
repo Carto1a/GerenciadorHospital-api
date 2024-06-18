@@ -17,8 +17,8 @@ public class LaudoMap
             .WithMany(p => p.Laudos)
             .HasForeignKey(x => x.PacienteId);
 
-        builder.HasMany(x => x.Exames)
-            .WithMany(e => e.Laudos);
+        /* builder.HasMany(x => x.Exames) */
+        /*     .WithMany(e => e.Laudos); */
 
         builder.HasOne(x => x.Consulta)
             .WithMany(c => c.Laudos)

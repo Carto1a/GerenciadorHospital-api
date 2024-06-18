@@ -4,16 +4,19 @@ using Hospital.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Hospital.Infrastructure.Database.Sqlite
+namespace Hospital.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240618184438_Initial SqlServer")]
+    partial class InitialSqlServer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace Hospital.Infrastructure.Database.Sqlite
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ExameLaudo", b =>
-                {
-                    b.Property<Guid>("ExamesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("LaudosId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ExamesId", "LaudosId");
-
-                    b.HasIndex("LaudosId");
-
-                    b.ToTable("ExameLaudo");
-                });
 
             modelBuilder.Entity("Hospital.Domain.Entities.Agendamentos.ConsultaAgendamento", b =>
                 {
@@ -454,8 +442,8 @@ namespace Hospital.Infrastructure.Database.Sqlite
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("Telefone")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Telefone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -541,6 +529,29 @@ namespace Hospital.Infrastructure.Database.Sqlite
                         .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Convenios");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Entities.Exame_Laudo", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid?>("ExameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("LaudoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExameId");
+
+                    b.HasIndex("LaudoId");
+
+                    b.ToTable("Exame_Laudo");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Entities.Laudo", b =>
@@ -919,21 +930,6 @@ namespace Hospital.Infrastructure.Database.Sqlite
                     b.ToTable("Pacientes");
                 });
 
-            modelBuilder.Entity("ExameLaudo", b =>
-                {
-                    b.HasOne("Hospital.Domain.Entities.Atendimentos.Exame", null)
-                        .WithMany()
-                        .HasForeignKey("ExamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hospital.Domain.Entities.Laudo", null)
-                        .WithMany()
-                        .HasForeignKey("LaudosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Hospital.Domain.Entities.Agendamentos.ConsultaAgendamento", b =>
                 {
                     b.HasOne("Hospital.Domain.Entities.Convenio", "Convenio")
@@ -1116,6 +1112,21 @@ namespace Hospital.Infrastructure.Database.Sqlite
                     b.Navigation("Paciente");
                 });
 
+            modelBuilder.Entity("Hospital.Domain.Entities.Exame_Laudo", b =>
+                {
+                    b.HasOne("Hospital.Domain.Entities.Atendimentos.Exame", "Exame")
+                        .WithMany("ExamesLaudos")
+                        .HasForeignKey("ExameId");
+
+                    b.HasOne("Hospital.Domain.Entities.Laudo", "Laudo")
+                        .WithMany("ExamesLaudos")
+                        .HasForeignKey("LaudoId");
+
+                    b.Navigation("Exame");
+
+                    b.Navigation("Laudo");
+                });
+
             modelBuilder.Entity("Hospital.Domain.Entities.Laudo", b =>
                 {
                     b.HasOne("Hospital.Domain.Entities.Atendimentos.Consulta", "Consulta")
@@ -1292,6 +1303,11 @@ namespace Hospital.Infrastructure.Database.Sqlite
                     b.Navigation("Retornos");
                 });
 
+            modelBuilder.Entity("Hospital.Domain.Entities.Atendimentos.Exame", b =>
+                {
+                    b.Navigation("ExamesLaudos");
+                });
+
             modelBuilder.Entity("Hospital.Domain.Entities.Convenio", b =>
                 {
                     b.Navigation("AgendamentosConsultas");
@@ -1307,6 +1323,11 @@ namespace Hospital.Infrastructure.Database.Sqlite
                     b.Navigation("Pacientes");
 
                     b.Navigation("Retornos");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Entities.Laudo", b =>
+                {
+                    b.Navigation("ExamesLaudos");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Entities.Medicamentos.Medicamento", b =>

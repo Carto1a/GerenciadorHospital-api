@@ -51,7 +51,7 @@ public static class SeedManager
                 CPF = "09787717027",
                 CEP = "69200970",
                 NumeroCasa = "2",
-                Telefone = 1130654894,
+                Telefone = "1130654894",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 Ativo = true
             };
@@ -72,7 +72,7 @@ public static class SeedManager
                 CPF = "01905130040",
                 CEP = "64034538",
                 NumeroCasa = "2",
-                Telefone = 11984825657,
+                Telefone = "11984825657",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 CRM = 124901,
                 CRMUF = "SP",
@@ -103,7 +103,7 @@ public static class SeedManager
                 CPF = "19787717027",
                 CEP = "69200970",
                 NumeroCasa = "2",
-                Telefone = 1140654894,
+                Telefone = "1140654894",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 Ativo = true
             };

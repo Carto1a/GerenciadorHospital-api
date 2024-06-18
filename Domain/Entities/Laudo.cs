@@ -13,8 +13,9 @@ public class Laudo : Entity
     public virtual Medico? Medico { get; set; }
     public virtual Paciente? Paciente { get; set; }
     public virtual Consulta? Consulta { get; set; }
-    public virtual ICollection<Exame>? Exames { get; set; }
+    /* public virtual ICollection<Exame>? Exames { get; set; } */
     public virtual ICollection<Medicamento>? Medicamentos { get; set; }
+    public virtual ICollection<Exame_Laudo>? ExamesLaudos { get; set; }
 
     public string Descricao { get; set; }
     public Guid? DocPath { get; set; }

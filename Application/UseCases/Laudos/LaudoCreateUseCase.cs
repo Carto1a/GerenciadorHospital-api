@@ -63,7 +63,7 @@ public class LaudoCreateUseCase
                 "Exames não encontrados");
         }
 
-        laudo.Exames = findExames;
+        /* laudo.Exames = findExames; */
 
         var findConsulta = await _consultaRepository
             .GetByIdAsync(request.ConsultaId);
