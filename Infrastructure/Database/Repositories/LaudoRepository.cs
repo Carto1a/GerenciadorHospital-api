@@ -17,7 +17,7 @@ ILaudoRepository
         _uow = uow;
     }
 
-    public async Task<Guid> Create(Laudo laudo)
+    public async Task<Guid> CreateAsync(Laudo laudo)
     {
         try
         {
@@ -32,7 +32,7 @@ ILaudoRepository
         }
     }
 
-    public override Task<IEnumerable<LaudoOutputDto>> GetByQueryDtoAsync(
+    public override Task<List<LaudoOutputDto>> GetByQueryDtoAsync(
         LaudoGetByQueryDto query)
     {
         throw new NotImplementedException();

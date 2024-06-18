@@ -1,8 +1,8 @@
-using Hospital.Exceptions;
+using Hospital.Domain.Exceptions;
 
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Hospital.Filter;
+namespace Hospital.Infrastructure.Filter;
 public class ExceptionFilter
 : IExceptionFilter
 {
@@ -14,26 +14,28 @@ public class ExceptionFilter
 
     public void OnException(ExceptionContext context)
     {
-        if (context.Exception is RequestError)
+        if (context.Exception is DomainException)
         {
-            RequestError error = (RequestError)context.Exception;
+            var error = (DomainException)context.Exception;
 
-            context.Result = new RequestErrorResponse(error);
+            context.Result = new RequestErrorResponse(
+                error, StatusCodes.Status400BadRequest);
 
-            if (error.LoggerMessage != null)
-                _logger.LogError(error.LoggerMessage);
+            if (error.LogMessage != null)
+                _logger.LogError(error.LogMessage);
             return;
         }
 
         // TODO: mudar isso
         context.Result =
             new RequestErrorResponse(
-                new RequestError(
+                new DomainException(
                     context.Exception.Message,
-                    "Error interno no servidor",
-                    StatusCodes.Status500InternalServerError
-                )
+                    "Error interno no servidor"
+                ),
+                StatusCodes.Status500InternalServerError
             );
+
         _logger.LogError(context.Exception.Message);
     }
 }

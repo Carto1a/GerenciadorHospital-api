@@ -1,24 +1,26 @@
-using Hospital.Database;
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Dtos.Output.Cadastros;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Application.Dto.Output.Cadastros;
+using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Repositories.Cadastros;
 
-namespace Hospital.Repository.Cadastros;
-public class AdminRepository
-: IAdminRepository
+using Microsoft.EntityFrameworkCore;
+
+namespace Hospital.Infrastructure.Database.Repositories.Cadastros;
+public class AdminRepository : CadastroRepository<Admin, AdminGetByQueryDto, AdminOutputDto>,
+IAdminRepository
 {
     private readonly AppDbContext _ctx;
-    private UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
     public AdminRepository(
         AppDbContext context,
-        UnitOfWork uow)
+        IUnitOfWork uow) : base(context, uow)
     {
         _ctx = context;
         _uow = uow;
     }
 
-    public List<AdminOutputDto> GetAdminByQueryDto(
+    public override Task<List<AdminOutputDto>> GetByQueryDtoAsync(
         AdminGetByQueryDto query)
     {
         try
@@ -27,13 +29,13 @@ public class AdminRepository
             if (query.Ativo != null)
                 queryCtx = queryCtx.Where(e => e.Ativo == query.Ativo);
 
-            if (query.MinDate != null)
+            if (query.MinDateNasc != null)
                 queryCtx = queryCtx.Where(e => e.DataNascimento >= DateOnly
-                    .FromDateTime((DateTime)query.MinDate));
+                    .FromDateTime((DateTime)query.MinDateNasc));
 
-            if (query.MaxDate != null)
+            if (query.MaxDateNasc != null)
                 queryCtx = queryCtx.Where(e => e.DataNascimento <= DateOnly
-                    .FromDateTime((DateTime)query.MaxDate));
+                    .FromDateTime((DateTime)query.MaxDateNasc));
 
             if (query.Genero != null)
                 queryCtx = queryCtx.Where(e => e.Genero == query.Genero);
@@ -41,10 +43,9 @@ public class AdminRepository
             var result = queryCtx
                 .Skip((int)query.Page!)
                 .Take((int)query.Limit!)
-                .Select(e => new AdminOutputDto(e))
-                .ToList();
+                .Select(e => new AdminOutputDto(e));
 
-            return result;
+            return result.ToListAsync();
         }
         catch (Exception error)
         {

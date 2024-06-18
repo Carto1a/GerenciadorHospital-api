@@ -30,4 +30,16 @@ public class Paciente : Cadastro
     {
         ConvenioId = request.ConvenioId;
     }
+
+    protected override bool Equals<TRegister>(TRegister request)
+    {
+        if (request is RegisterRequestPacienteDto requestPaciente)
+        {
+            return Email == request.Email
+                || CPF == request.CPF;
+        }
+
+        throw new ArgumentException(
+            "O tipo de registro não é um paciente.");
+    }
 }

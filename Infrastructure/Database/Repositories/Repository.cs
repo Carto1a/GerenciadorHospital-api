@@ -72,7 +72,7 @@ where TOut : class
         }
     }
 
-    public async Task<TOut?> GetByIdDtoAsync(Guid id)
+    public Task<TOut?> GetByIdDtoAsync(Guid id)
     {
         try
         {
@@ -80,7 +80,7 @@ where TOut : class
                 .Where(e => e.Id == id)
                 .Select(e => (TOut)Activator.CreateInstance(typeof(TOut), e));
 
-            return result.FirstOrDefault();
+            return result.FirstOrDefaultAsync();
         }
         catch (Exception error)
         {

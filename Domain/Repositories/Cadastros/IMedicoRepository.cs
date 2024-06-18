@@ -6,6 +6,6 @@ namespace Hospital.Domain.Repositories.Cadastros;
 public interface IMedicoRepository
 : IRepository<Medico, MedicoGetByQueryDto, MedicoOutputDto>
 {
-    Task<Medico?> GetMedicoByCRMAsync(string crm);
-    Task<Medico?> GetMedicoByCPFAsync(string crm);
+    Task<Medico?> GetByCRMAsync(int crm);
+    Task<Medico?> GetByCPFAsync(string cpf);
 }

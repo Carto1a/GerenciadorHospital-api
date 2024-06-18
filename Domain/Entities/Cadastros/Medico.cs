@@ -44,4 +44,17 @@ public class Medico : Cadastro
 
         validation.Check();
     }
+
+    protected override bool Equals<TRegister>(TRegister request)
+    {
+        if (request is RegisterRequestMedicoDto requestMedico)
+        {
+            return Email == requestMedico.Email
+                || CPF == requestMedico.CPF
+                || CRM == requestMedico.CRM;
+        }
+
+        throw new ArgumentException(
+            "O tipo de registro não é um médico.");
+    }
 }

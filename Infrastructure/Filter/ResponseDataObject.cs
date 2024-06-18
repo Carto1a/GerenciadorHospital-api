@@ -1,4 +1,4 @@
-namespace Hospital.Filter;
+namespace Hospital.Infrastructure.Filter;
 public class ResponseDataObject
 {
     public object? Value { get; set; }
@@ -7,7 +7,7 @@ public class ResponseDataObject
 
     public ResponseDataObject(
         object? value,
-        IList<string>?errors = null)
+        IList<string>? errors = null)
     {
         Value = value;
         Errors = errors ?? new List<string>();

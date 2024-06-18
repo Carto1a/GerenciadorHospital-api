@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Domain.Entities;
-public abstract class Entity
+public abstract class Entity : IEntity
 {
     [Key]
     public Guid Id { get; set; }

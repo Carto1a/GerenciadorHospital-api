@@ -1,11 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
+
 using Hospital.Application.Dto.Input.Authentications;
 using Hospital.Domain.Enums;
 using Hospital.Domain.Validators;
+
 using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Domain.Entities.Cadastros;
-public class Cadastro : IdentityUser<Guid>
+public abstract class Cadastro : IdentityUser<Guid>
 {
     public required string Nome { get; set; }
     public required string Sobrenome { get; set; }
@@ -66,4 +68,12 @@ public class Cadastro : IdentityUser<Guid>
 
         validator.Check();
     }
+
+    public bool CheckUniqueness(RegisterRequestDto cadastro)
+    {
+        return Equals(cadastro);
+    }
+
+    protected abstract bool Equals<TRegister>(TRegister request)
+    where TRegister : RegisterRequestDto;
 }

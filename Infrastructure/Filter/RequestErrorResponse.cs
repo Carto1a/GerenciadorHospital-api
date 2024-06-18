@@ -1,7 +1,8 @@
-using Hospital.Exceptions;
+using Hospital.Domain.Exceptions;
+
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hospital.Filter;
+namespace Hospital.Infrastructure.Filter;
 public class RequestErrorResponse
 : IActionResult
 {
@@ -9,10 +10,12 @@ public class RequestErrorResponse
     public int StatusCode { get; set; }
 
     // TODO: refazer isso
-    public RequestErrorResponse(RequestError error)
+    public RequestErrorResponse(
+        DomainException error,
+        int statusCode)
     {
         ErrorList = error.ErrorList;
-        StatusCode = (int)error.StatusCode;
+        StatusCode = statusCode;
     }
 
     public Task ExecuteResultAsync(ActionContext context)
@@ -21,12 +24,12 @@ public class RequestErrorResponse
             null,
             ErrorList
         );
-        var ResposeData =
+        var resposeData =
             new ObjectResult(response)
-        {
-            StatusCode = StatusCode,
-        };
+            {
+                StatusCode = StatusCode,
+            };
 
-        return ResposeData.ExecuteResultAsync(context);
+        return resposeData.ExecuteResultAsync(context);
     }
 }

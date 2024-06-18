@@ -1,31 +1,31 @@
-using Hospital.Database;
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Dtos.Output.Cadastros;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Models.Cadastro;
-using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Application.Dto.Output.Cadastros;
+using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Repositories.Cadastros;
 
+using Microsoft.EntityFrameworkCore;
 
-namespace Hospital.Repository.Cadastros;
-public class PacienteRepository
-: IPacienteRepository
+namespace Hospital.Infrastructure.Database.Repositories.Cadastros;
+public class PacienteRepository : CadastroRepository<Paciente, PacienteGetByQueryDto, PacienteOutputDto>,
+IPacienteRepository
 {
     private readonly AppDbContext _ctx;
-    private UnitOfWork _uow;
+    private IUnitOfWork _uow;
     public PacienteRepository(
         AppDbContext context,
-        UnitOfWork uow)
+        IUnitOfWork uow) : base(context, uow)
     {
         _ctx = context;
         _uow = uow;
     }
 
-    public Paciente? GetPacienteById(Guid id)
+    public Task<Paciente?> GetByCPFAsync(string cpf)
     {
         try
         {
             return _ctx.Pacientes
-                .FirstOrDefault(e => e.Id == id);
+                .FirstOrDefaultAsync(e => e.CPF == cpf);
         }
         catch (Exception error)
         {
@@ -34,68 +34,7 @@ public class PacienteRepository
         }
     }
 
-    public Paciente? GetPacienteByIdAtivo(Guid id)
-    {
-        try
-        {
-            return _ctx.Pacientes
-                .FirstOrDefault(e => e.Id == id && e.Ativo == true);
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
-    }
-
-    public PacienteOutputDto? GetPacienteByIdDto(Guid id)
-    {
-        try
-        {
-            return _ctx.Pacientes
-                .Where(e => e.Id == id)
-                .Select(e => new PacienteOutputDto(e))
-                .FirstOrDefault();
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
-    }
-
-    public Paciente? GetPacienteByCPF(string cpf)
-    {
-        try
-        {
-            return _ctx.Pacientes
-                .FirstOrDefault(e => e.CPF == cpf);
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
-    }
-
-    public List<Paciente> GetPacientes(
-        int limit, int page = 0)
-    {
-        try
-        {
-            return _ctx.Pacientes
-                .Skip(page)
-                .Take(limit)
-                .ToList();
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
-    }
-
-    public List<PacienteOutputDto> GetPacienteByQueryDto(
+    public override Task<List<PacienteOutputDto>> GetByQueryDtoAsync(
         PacienteGetByQueryDto query)
     {
         try
@@ -127,10 +66,9 @@ public class PacienteRepository
             var result = queryCtx
                 .Skip((int)query.Page!)
                 .Take((int)query.Limit!)
-                .Select(e => new PacienteOutputDto(e))
-                .ToList();
+                .Select(e => new PacienteOutputDto(e));
 
-            return result;
+            return result.ToListAsync();
         }
         catch (Exception error)
         {

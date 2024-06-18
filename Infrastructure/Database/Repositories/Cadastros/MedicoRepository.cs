@@ -1,61 +1,32 @@
-using Hospital.Database;
-using Hospital.Dtos.Input.Authentications;
-using Hospital.Dtos.Output.Cadastros;
-using Hospital.Infrastructure.Database.Repositories;
-using Hospital.Models.Cadastro;
-using Hospital.Repository.Cadastros.Interfaces;
+using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Application.Dto.Output.Cadastros;
+using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Repositories;
+using Hospital.Domain.Repositories.Cadastros;
 
-namespace Hospital.Repository.Cadastros;
-public class MedicoRepository
-: IMedicoRepository
+using Microsoft.EntityFrameworkCore;
+
+namespace Hospital.Infrastructure.Database.Repositories.Cadastros;
+public class MedicoRepository : CadastroRepository<Medico, MedicoGetByQueryDto, MedicoOutputDto>,
+IMedicoRepository
 {
     protected readonly AppDbContext _ctx;
-    private UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
 
     public MedicoRepository(
         AppDbContext context,
-        UnitOfWork uow)
+        IUnitOfWork uow) : base(context, uow)
     {
         _ctx = context;
         _uow = uow;
     }
 
-    public Medico? GetMedicoById(Guid id)
-    {
-        try
-        {
-            var medico = _ctx.Medicos
-                .FirstOrDefault(e => e.Id == id);
-            return medico;
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
-    }
-
-    public Medico? GetMedicoByIdAtivo(Guid id)
-    {
-        try
-        {
-            var medico = _ctx.Medicos
-                .FirstOrDefault(e => e.Id == id && e.Ativo == true);
-            return medico;
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
-    }
-
-    public Medico? GetMedicoByCRM(int crm)
+    public Task<Medico?> GetByCRMAsync(int crm)
     {
         try
         {
             return _ctx.Medicos
-                .FirstOrDefault(e => e.CRM == crm);
+                .FirstOrDefaultAsync(e => e.CRM == crm);
         }
         catch (Exception error)
         {
@@ -64,12 +35,12 @@ public class MedicoRepository
         }
     }
 
-    public Medico? GetMedicoByCPF(string cpf)
+    public Task<Medico?> GetByCPFAsync(string cpf)
     {
         try
         {
             return _ctx.Medicos
-                .FirstOrDefault(e => e.CPF == cpf);
+                .FirstOrDefaultAsync(e => e.CPF == cpf);
         }
         catch (Exception error)
         {
@@ -78,38 +49,7 @@ public class MedicoRepository
         }
     }
 
-    public List<Medico> GetMedicos(int limit, int page = 0)
-    {
-        try
-        {
-            return _ctx
-                .Medicos
-                .Skip(page)
-                .Take(limit)
-                .ToList();
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
-    }
-
-    public void UpdateMedico(Medico medico)
-    {
-        try
-        {
-            _ctx.Medicos.Update(medico);
-            _uow.SaveAsync();
-        }
-        catch (Exception error)
-        {
-            _uow.Dispose();
-            throw new Exception(error.Message);
-        }
-    }
-
-    public List<MedicoOutputDto> GetMedicoByQueryDto(
+    public override Task<List<MedicoOutputDto>> GetByQueryDtoAsync(
         MedicoGetByQueryDto query)
     {
         try
@@ -123,15 +63,15 @@ public class MedicoRepository
                 queryCtx = queryCtx.Where(x =>
                     x.Ativo == query.Ativo);
 
-            if (query.MinDate != null)
+            if (query.MinDateNasc != null)
                 queryCtx = queryCtx.Where(x =>
                     x.DataNascimento >= DateOnly.FromDateTime(
-                        (DateTime)query.MinDate));
+                        (DateTime)query.MinDateNasc));
 
-            if (query.MaxDate != null)
+            if (query.MaxDateNasc != null)
                 queryCtx = queryCtx.Where(x =>
                     x.DataNascimento <= DateOnly.FromDateTime(
-                        (DateTime)query.MaxDate));
+                        (DateTime)query.MaxDateNasc));
 
             if (query.Genero != null)
                 queryCtx = queryCtx.Where(x =>
@@ -140,10 +80,9 @@ public class MedicoRepository
             var result = queryCtx
                 .Skip((int)query.Page!)
                 .Take((int)query.Limit!)
-                .Select(x => new MedicoOutputDto(x))
-                .ToList();
+                .Select(x => new MedicoOutputDto(x));
 
-            return result;
+            return result.ToListAsync();
         }
         catch (Exception error)
         {
