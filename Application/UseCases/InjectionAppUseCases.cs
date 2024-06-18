@@ -10,7 +10,7 @@ using Hospital.Application.UseCases.Medicamentos;
 namespace Hospital.Application.UseCases;
 public static class InjectionAppUseCases
 {
-    public static IServiceCollection RegisterServices(
+    public static IServiceCollection RegisterUseCase(
         this IServiceCollection services)
     {
         return services
