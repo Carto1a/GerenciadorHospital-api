@@ -1,3 +1,4 @@
+using Hospital.Domain.Entities.Medicamentos;
 using Hospital.Domain.Enums;
 
 namespace Hospital.Application.Dto.Output.Medicamentos;

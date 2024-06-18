@@ -1,7 +1,7 @@
 using Hospital.Dtos.Input.Authentications;
 using Hospital.Dtos.Output.Cadastros;
 using Hospital.Enums;
-using Hospital.Repository;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Services.Cadastros.Medicos;
 

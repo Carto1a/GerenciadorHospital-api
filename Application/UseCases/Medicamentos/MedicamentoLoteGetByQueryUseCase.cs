@@ -1,7 +1,7 @@
 using Hospital.Dtos.Input.Medicamentos;
 using Hospital.Dtos.Output.Medicamentos;
 using Hospital.Enums;
-using Hospital.Repository;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Repository.MedicamentoLotes.Interfaces;
 
 namespace Hospital.Application.UseCases.Medicamentos;

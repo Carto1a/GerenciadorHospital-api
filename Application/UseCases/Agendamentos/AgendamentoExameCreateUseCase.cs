@@ -1,8 +1,8 @@
 using Hospital.Dtos.Input.Agendamentos;
 using Hospital.Exceptions;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Cadastro;
-using Hospital.Repository;
 using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Repository.Convenios.Ineterfaces;

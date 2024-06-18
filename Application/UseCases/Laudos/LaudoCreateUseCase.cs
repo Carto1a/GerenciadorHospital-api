@@ -1,7 +1,7 @@
 using Hospital.Dtos.Input.Laudos;
 using Hospital.Exceptions;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Models;
-using Hospital.Repository;
 using Hospital.Repository.Atendimentos.Interfaces;
 using Hospital.Repository.Cadastros.Interfaces;
 using Hospital.Repository.Images.Interfaces;

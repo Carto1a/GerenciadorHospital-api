@@ -4,9 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 using Hospital.Application.Dto.Input.Convenios;
 using Hospital.Domain.Entities.Agendamentos;
 using Hospital.Domain.Entities.Atendimentos;
+using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Validators;
 
-namespace Hospital.Domain.Entities.Cadastros;
+namespace Hospital.Domain.Entities;
 public class Convenio : Entity
 {
     public required string CNPJ { get; set; }

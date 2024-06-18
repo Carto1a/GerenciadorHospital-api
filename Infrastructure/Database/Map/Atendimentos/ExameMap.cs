@@ -1,9 +1,9 @@
-using Hospital.Models.Atendimento;
+using Hospital.Domain.Entities.Atendimentos;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hospital.Database.Map.Atendimentos;
+namespace Hospital.Infrastructure.Database.Map.Atendimentos;
 public class ExameMap
 : IEntityTypeConfiguration<Exame>
 {

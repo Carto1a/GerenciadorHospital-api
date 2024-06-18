@@ -1,14 +1,11 @@
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Hospital.Application.Dto.Input.Medicamentos;
 using Hospital.Domain.Enums;
 using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Medicamentos;
-public class MedicamentoLote
+public class MedicamentoLote : Entity
 {
-    [Key]
-    public Guid Id { get; set; }
     public Guid MedicamentoId { get; set; }
 
     public virtual Medicamento? Medicamento { get; set; }

@@ -1,5 +1,5 @@
 using Hospital.Exceptions;
-using Hospital.Repository;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Repository.Images.Interfaces;
 
 namespace Hospital.Application.UseCases.Laudos;

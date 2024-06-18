@@ -1,3 +1,5 @@
+using Hospital.Domain.Entities;
+
 namespace Hospital.Application.Dto.Output.Convenios;
 public record ConvenioOutputDto(
     Guid Id,
@@ -11,7 +13,7 @@ public record ConvenioOutputDto(
     string? Email,
     string? Site,
     DateTime Criado,
-    bool Deletado
+    bool Ativo
 )
 {
     public ConvenioOutputDto(Convenio original)
@@ -27,7 +29,7 @@ public record ConvenioOutputDto(
         original.Email,
         original.Site,
         original.Criado,
-        original.Deletado
+        original.Ativo
     )
     { }
 }

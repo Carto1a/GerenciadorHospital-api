@@ -1,9 +1,9 @@
-using Hospital.Models.Cadastro;
+using Hospital.Domain.Entities.Cadastros;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hospital.Database.Map.Cadastros;
+namespace Hospital.Infrastructure.Database.Map.Cadastros;
 public class CadastroMap
 : IEntityTypeConfiguration<Cadastro>
 {

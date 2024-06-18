@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 using Hospital.Application.Dto.Input.Medicamentos;
@@ -7,10 +6,8 @@ using Hospital.Domain.Enums;
 using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Medicamentos;
-public class Medicamento
+public class Medicamento : Entity
 {
-    [Key]
-    public Guid Id { get; set; }
     public int CodigoDeBarras { get; set; }
 
     public required string Nome { get; set; }
@@ -26,13 +23,10 @@ public class Medicamento
     public virtual ICollection<MedicamentoLote>? MedicamentoLotes { get; set; }
     public virtual ICollection<Laudo>? Laudos { get; set; }
 
-    public DateTime Criado { get; set; }
-
     public Medicamento() { }
     [SetsRequiredMembers]
     public Medicamento(MedicamentoCreateDto request)
     {
-        Id = Guid.NewGuid();
         CodigoDeBarras = request.CodigoDeBarras;
         Nome = request.Nome;
         Descricao = request.Descricao;
@@ -42,7 +36,6 @@ public class Medicamento
         QuantidadeMinima = request.QuantidadeMinima;
         Quantidade = 0;
         Status = request.Status;
-        Criado = DateTime.Now;
 
         Validate();
     }

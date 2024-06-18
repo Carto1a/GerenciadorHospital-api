@@ -1,16 +1,16 @@
-using Hospital.Models.Cadastro;
+using Hospital.Domain.Entities;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hospital.Database.Map;
+namespace Hospital.Infrastructure.Database.Map;
 public class ConvenioMap
 : IEntityTypeConfiguration<Convenio>
 {
     public void Configure(EntityTypeBuilder<Convenio> builder)
     {
         builder.HasIndex(x => x.Email).IsUnique();
-        builder.HasIndex(x => x.Deletado);
+        builder.HasIndex(x => x.Ativo);
         builder.HasIndex(x => x.CNPJ);
 
         builder.HasMany(x => x.Pacientes)

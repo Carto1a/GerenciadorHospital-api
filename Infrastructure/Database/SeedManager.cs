@@ -1,5 +1,7 @@
-using Hospital.Enums;
-using Hospital.Models.Cadastro;
+using Hospital.Domain.Entities;
+using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Enums;
+using Hospital.Infrastructure.Database;
 
 using Microsoft.AspNetCore.Identity;
 
@@ -11,6 +13,7 @@ public static class SeedManager
         await SeedRoles(services);
         await SeedAdminUser(services);
     }
+
     private static async Task SeedRoles(IServiceProvider services)
     {
         var roleManager = services
@@ -20,6 +23,7 @@ public static class SeedManager
         await roleManager.CreateAsync(new IdentityRole<Guid>(Roles.Paciente));
         await roleManager.CreateAsync(new IdentityRole<Guid>(Roles.Medico));
     }
+
     private static async Task SeedAdminUser(IServiceProvider services)
     {
         var context = services.GetRequiredService<AppDbContext>();

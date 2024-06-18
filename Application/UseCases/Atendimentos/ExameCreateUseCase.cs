@@ -1,8 +1,8 @@
 using Hospital.Dtos.Input.Atendimentos;
 using Hospital.Enums;
 using Hospital.Exceptions;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Models.Atendimento;
-using Hospital.Repository;
 using Hospital.Repository.Atendimentos.Interfaces;
 
 namespace Hospital.Application.UseCases.Atendimentos;

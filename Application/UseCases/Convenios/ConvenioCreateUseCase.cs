@@ -1,7 +1,7 @@
 using Hospital.Dtos.Input.Convenios;
 using Hospital.Exceptions;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Models.Cadastro;
-using Hospital.Repository;
 using Hospital.Repository.Convenios.Ineterfaces;
 
 namespace Hospital.Application.UseCases.Convenios;

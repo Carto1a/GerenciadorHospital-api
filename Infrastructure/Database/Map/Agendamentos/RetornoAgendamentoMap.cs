@@ -1,9 +1,9 @@
-using Hospital.Models.Agendamentos;
+using Hospital.Domain.Entities.Agendamentos;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hospital.Database.Map.Agendamentos;
+namespace Hospital.Infrastructure.Database.Map.Agendamentos;
 public class RetornoAgendamentoMap
 : IEntityTypeConfiguration<RetornoAgendamento>
 {

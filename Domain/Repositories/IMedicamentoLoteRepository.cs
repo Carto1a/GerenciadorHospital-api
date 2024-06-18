@@ -8,6 +8,6 @@ public interface IMedicamentoLoteRepository
 {
     Task<Guid> CreateAsync(MedicamentoLote medicoLote);
     Task<MedicamentoLote?> GetByCodigoAsync(string codigo);
-    Task<MedicamentoLote?> GetByCodigoByMedicamentoId(string codigo, Guid medicamentoId);
-    Task<MedicamentoLoteOutputDto?> GetByCodigoDto(string codigo);
+    Task<MedicamentoLote?> GetByCodigoByMedicamentoIdAsync(string codigo, Guid medicamentoId);
+    Task<MedicamentoLoteOutputDto?> GetByCodigoDtoAsync(string codigo);
 }

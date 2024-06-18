@@ -1,9 +1,9 @@
 using Hospital.Dtos.Input.Agendamentos;
 using Hospital.Dtos.Output.Agendamentos;
 using Hospital.Enums;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Models.Agendamentos;
 using Hospital.Models.Atendimento;
-using Hospital.Repository;
 using Hospital.Repository.Atendimentos.Interfaces;
 
 namespace Hospital.Services.Agendamentos;

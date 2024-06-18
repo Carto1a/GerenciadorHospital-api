@@ -1,6 +1,6 @@
 using Hospital.Dtos.Output.Medicamentos;
 using Hospital.Exceptions;
-using Hospital.Repository;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Repository.MedicamentoLotes.Interfaces;
 
 namespace Hospital.Application.UseCases.Medicamentos;

@@ -1,6 +1,6 @@
 using Hospital.Dtos.Input.Medicamentos;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Models.Medicamentos;
-using Hospital.Repository;
 using Hospital.Repository.Medicamentos.Interfaces;
 
 namespace Hospital.Application.UseCases.Medicamentos;

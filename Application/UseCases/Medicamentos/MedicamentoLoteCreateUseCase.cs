@@ -1,9 +1,9 @@
-using Hospital.Database;
 using Hospital.Dtos.Input.Medicamentos;
 using Hospital.Enums;
 using Hospital.Exceptions;
+using Hospital.Infrastructure.Database;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Models.Medicamentos;
-using Hospital.Repository;
 using Hospital.Repository.MedicamentoLotes.Interfaces;
 using Hospital.Repository.Medicamentos.Interfaces;
 

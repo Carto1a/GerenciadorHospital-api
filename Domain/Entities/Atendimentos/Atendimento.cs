@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 using Hospital.Domain.Entities.Agendamentos;
 using Hospital.Domain.Entities.Cadastros;
 

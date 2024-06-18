@@ -19,4 +19,18 @@ public record AgendamentoOutputDto
     public DateTime DataHora { get; init; }
     public DateTime Criado { get; init; }
     public bool Ativo { get; init; }
+
+    public AgendamentoOutputDto(Agendamento original)
+    {
+        Id = original.Id;
+        MedicoId = original.MedicoId;
+        PacienteId = (Guid)original.PacienteId!;
+        ConvenioId = original.ConvenioId;
+        Status = original.Status;
+        Custo = original.Custo;
+        CustoFinal = original.CustoFinal;
+        DataHora = original.DataHora;
+        Criado = original.Criado;
+        Ativo = original.Ativo;
+    }
 }

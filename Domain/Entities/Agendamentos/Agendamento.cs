@@ -87,7 +87,7 @@ public abstract class Agendamento : Entity, IAtrasado, IDescontavel
             CustoFinal = Custo * convenio.Desconto;
     }
 
-    public void CalcularMulta()
+    public void CalcularMulta(Convenio? convenio)
     {
         CustoAtraso = CustoFinal * 1.2m;
     }

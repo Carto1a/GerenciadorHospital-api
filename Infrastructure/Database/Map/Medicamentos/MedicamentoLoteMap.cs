@@ -1,9 +1,9 @@
-using Hospital.Models.Medicamentos;
+using Hospital.Domain.Entities.Medicamentos;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hospital.Database.Map.Medicamentos;
+namespace Hospital.Infrastructure.Database.Map.Medicamentos;
 public class MedicamentoLoteMap
 : IEntityTypeConfiguration<MedicamentoLote>
 {

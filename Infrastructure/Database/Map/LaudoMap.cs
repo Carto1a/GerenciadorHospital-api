@@ -1,9 +1,9 @@
-using Hospital.Models;
+using Hospital.Domain.Entities;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hospital.Database.Map;
+namespace Hospital.Infrastructure.Database.Map;
 public class LaudoMap
 : IEntityTypeConfiguration<Laudo>
 {

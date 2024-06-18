@@ -1,6 +1,6 @@
 using Hospital.Enums;
 using Hospital.Exceptions;
-using Hospital.Repository;
+using Hospital.Infrastructure.Database.Repositories;
 using Hospital.Repository.Atendimentos.Interfaces;
 
 namespace Hospital.Application.UseCases.Agendamentos;

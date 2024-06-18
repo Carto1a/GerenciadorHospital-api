@@ -5,6 +5,7 @@ using Hospital.Consts;
 using Hospital.Database;
 using Hospital.Filter;
 using Hospital.Helpers;
+using Hospital.Infrastructure.Database;
 using Hospital.Models.Cadastro;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;

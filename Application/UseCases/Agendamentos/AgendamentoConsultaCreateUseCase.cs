@@ -1,6 +1,5 @@
 using Hospital.Application.Dto.Input.Agendamentos;
 using Hospital.Domain.Entities.Agendamentos;
-using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Exceptions;
 using Hospital.Domain.Repositories;
 using Hospital.Domain.Repositories.Agendamentos;

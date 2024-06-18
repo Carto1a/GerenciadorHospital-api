@@ -1,4 +1,4 @@
-using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Entities;
 
 namespace Hospital.Domain;
 public interface IDescontavel

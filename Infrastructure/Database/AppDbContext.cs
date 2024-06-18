@@ -1,19 +1,19 @@
-using Hospital.Database.Map;
-using Hospital.Database.Map.Agendamentos;
-using Hospital.Database.Map.Atendimentos;
-using Hospital.Database.Map.Cadastros;
-using Hospital.Database.Map.Medicamentos;
-using Hospital.Models;
-using Hospital.Models.Agendamentos;
-using Hospital.Models.Atendimento;
-using Hospital.Models.Cadastro;
-using Hospital.Models.Medicamentos;
+using Hospital.Domain.Entities;
+using Hospital.Domain.Entities.Agendamentos;
+using Hospital.Domain.Entities.Atendimentos;
+using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Entities.Medicamentos;
+using Hospital.Infrastructure.Database.Map;
+using Hospital.Infrastructure.Database.Map.Agendamentos;
+using Hospital.Infrastructure.Database.Map.Atendimentos;
+using Hospital.Infrastructure.Database.Map.Cadastros;
+using Hospital.Infrastructure.Database.Map.Medicamentos;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hospital.Database;
+namespace Hospital.Infrastructure.Database;
 #pragma warning disable CS8618
 public class AppDbContext
 : IdentityDbContext<Cadastro, IdentityRole<Guid>, Guid>
@@ -48,6 +48,7 @@ public class AppDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        // TODO: many to many exames laudos
 
         builder.ApplyConfiguration(new ConsultaAgendamentoMap());
         builder.ApplyConfiguration(new ExameAgendamentoMap());
