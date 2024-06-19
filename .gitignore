@@ -484,6 +484,9 @@ $RECYCLE.BIN/
 *.swp
 
 /lixo
-/Database/app.sqlite
-/Database/app.sqlite-shm
-/Database/app.sqlite-wal
+app.sqlite
+app.sqlite-shm
+app.sqlite-wal
+/appsettings.Local.json
+
+c:*
