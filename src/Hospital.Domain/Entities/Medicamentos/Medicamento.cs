@@ -1,9 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-
-using Hospital.Application.Dto.Input.Medicamentos;
-using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Enums;
-using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Medicamentos;
 public class Medicamento : Entity
@@ -23,8 +18,6 @@ public class Medicamento : Entity
     public virtual ICollection<MedicamentoLote>? MedicamentoLotes { get; set; }
     public virtual ICollection<Laudo>? Laudos { get; set; }
 
-    public Medicamento() { }
-    [SetsRequiredMembers]
     public Medicamento(MedicamentoCreateDto request)
     {
         CodigoDeBarras = request.CodigoDeBarras;
@@ -75,5 +68,10 @@ public class Medicamento : Entity
         }
 
         Status = MedicamentoStatus.Disponivel;
+    }
+
+    public override void Validate()
+    {
+        throw new NotImplementedException();
     }
 }

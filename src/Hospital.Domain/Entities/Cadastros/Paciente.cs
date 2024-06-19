@@ -23,8 +23,6 @@ public class Paciente : Cadastro
     public Guid? DocConvenioPath { get; set; }
     public Guid? DocIDPath { get; set; }
 
-    public Paciente() { }
-    [SetsRequiredMembers]
     public Paciente(RegisterRequestPacienteDto request)
     : base(request)
     {

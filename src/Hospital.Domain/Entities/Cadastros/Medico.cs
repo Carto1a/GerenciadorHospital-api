@@ -1,14 +1,10 @@
-using System.Diagnostics.CodeAnalysis;
-using Hospital.Application.Dto.Input.Authentications;
-using Hospital.Domain.Entities.Agendamentos;
-using Hospital.Domain.Entities.Atendimentos;
+using Hospital.Domain.Entities.ValueObjects;
 using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Cadastros;
 public class Medico : Cadastro
 {
-    public int CRM { get; set; }
-    public required string CRMUF { get; set; }
+    public Crm CRM { get; set; }
     public Guid? DocCRMPath { get; set; }
     public required string Especialidade { get; set; }
 
@@ -20,38 +16,35 @@ public class Medico : Cadastro
     public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
     public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }
 
-    public Medico() { }
-    [SetsRequiredMembers]
-    public Medico(
-        RegisterRequestMedicoDto request)
+    public Medico(RegisterRequestMedicoDto request)
     : base(request)
     {
         CRM = request.CRM;
-        CRMUF = request.CRMUF;
         Especialidade = request.Especialidade;
 
         Validate();
     }
 
-    new void Validate()
+    public override void Validate()
     {
         var validation = new DomainValidator(
             $"Não foi possível validar o medico de email: {Email}");
 
-        validation.Crm(CRM, "CRM");
-        validation.CrmUf(CRMUF, "CRMUF");
         validation.MinLength(Especialidade, 4, "Especialidade");
+        validation.MaxLength(Especialidade, 50, "Especialidade");
+
+        validation.LoadValueObjectValidations(CRM.Validations());
 
         validation.Check();
     }
 
-    public override bool Equals<TRegister>(TRegister request)
+    public override bool CheckUniqueness<TCadastro>(TCadastro cadastro)
     {
-        if (request is RegisterRequestMedicoDto requestMedico)
+        if (cadastro is Medico medico)
         {
-            return Email == requestMedico.Email
-                || CPF == requestMedico.CPF
-                || CRM == requestMedico.CRM;
+            return Email == medico.Email
+                || CPF == medico.CPF
+                || CRM == medico.CRM;
         }
 
         throw new ArgumentException(

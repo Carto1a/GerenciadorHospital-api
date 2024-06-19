@@ -1,23 +1,14 @@
-using System.ComponentModel.DataAnnotations;
-
-using Hospital.Application.Dto.Input.Agendamentos;
-using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Enums;
-using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Agendamentos;
 public abstract class Agendamento : Entity, IAtrasado, IDescontavel
 {
-    public Guid MedicoId { get; set; }
-    public Guid? PacienteId { get; set; }
-    public Guid? ConvenioId { get; set; }
     public DateTime DataHora { get; set; }
 
     public virtual Medico? Medico { get; set; }
     public virtual Paciente? Paciente { get; set; }
     public virtual Convenio? Convenio { get; set; }
 
-    [EnumDataType(typeof(AgendamentoStatus))]
     public AgendamentoStatus Status { get; set; }
     public decimal Custo { get; set; }
     public decimal CustoFinal { get; set; }

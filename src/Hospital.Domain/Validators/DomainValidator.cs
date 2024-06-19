@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 
 using Hospital.Domain.Exceptions;
@@ -5,11 +6,24 @@ using Hospital.Domain.Exceptions;
 namespace Hospital.Domain.Validators;
 public class DomainValidator
 {
-    private readonly string _logMessage;
+    private readonly string? _logMessage;
     private readonly List<string> _errors = [];
-    public DomainValidator(string logMessage)
+    private IDictionary<string, string> _errors2 = new Dictionary<string, string>();
+    private readonly string _fildNameError;
+    public DomainValidator(string logMessage, string fildNameError)
     {
         _logMessage = logMessage;
+        _fildNameError = fildNameError;
+    }
+
+    public DomainValidator(string fildNameError)
+    {
+        _fildNameError = fildNameError;
+    }
+
+    private void AddToErrors(string message, string fildName)
+    {
+        _errors2.Add(fildName, message);
     }
 
     public void IsNome(string? target, string fildName)
@@ -30,10 +44,22 @@ public class DomainValidator
             _errors.Add($"{fildName} should not be null");
     }
 
+    public void DDD(string? target, string fildName)
+    {
+        if (!Regex.IsMatch(target, @"^[0-9]{2}$"))
+            _errors.Add($"{fildName} is invalid");
+    }
+
     public void NotNullOrEmpty(string? target, string fildName)
     {
         if (string.IsNullOrWhiteSpace(target))
             _errors.Add($"{fildName} not be null or empty");
+    }
+
+    public void NotEmptyOrWhitespaces(string? target, string fildName)
+    {
+        if (target!.Trim().Length == 0)
+            _errors.Add($"{fildName} not be empty or whitespaces");
     }
 
     public void MinLength(string? target, int minLenght, string fildName)
@@ -69,7 +95,7 @@ public class DomainValidator
     public void Cpf(string target, string fildName)
     {
         if (!Regex.IsMatch(target, @"^[0-9]{11}$"))
-            _errors.Add($"{fildName} is invalid");
+            _errors.Add($"{fildName} é inválido");
 
         // TODO: CPF validation algorithm
     }
@@ -82,10 +108,19 @@ public class DomainValidator
             _errors.Add($"{fildName} is invalid");
     }
 
-    public void Telefone(string target, string fildName)
+    public void NumeroTelefone(string target, string fildName)
     {
-        var regex = @"/\d{9,10}/";
-        if (Regex.IsMatch(target, regex))
+        var regexTelefone = @"/^[2-5]\d{7}$/";
+
+        if (Regex.IsMatch(target, regexTelefone))
+            _errors.Add($"{fildName} is invalid");
+    }
+
+    public void NumeroCelular(string target, string fildName)
+    {
+        var regexCelular = @"^/9\d{8}$/";
+
+        if (Regex.IsMatch(target, regexCelular))
             _errors.Add($"{fildName} is invalid");
     }
 
@@ -96,9 +131,10 @@ public class DomainValidator
             _errors.Add($"{fildName} is invalid");
     }
 
-    public void Crm(int target, string fildName)
+    public void Crm(string target, string fildName)
     {
-        if (target < 100000 || target > 999999)
+        var regex = @"^[0-9]{6}$";
+        if (!Regex.IsMatch(target, regex))
             _errors.Add($"{fildName} is invalid");
     }
 
@@ -122,17 +158,42 @@ public class DomainValidator
             _errors.Add($"{fildName} is invalid");
     }
 
+    public void Email(string target, string fildName)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(target))
+            {
+                _errors.Add($"{fildName} is invalid");
+                return;
+            }
+
+            var addr = new MailAddress(target);
+        }
+        catch
+        {
+            _errors.Add($"{fildName} is invalid");
+        }
+    }
+
     public void Query(int limit, int page)
     {
         if (limit < 1 || page < 0)
             _errors.Add("Invalid query parameters");
     }
 
-    public void Check()
+    public virtual void Check()
     {
         if (_errors.Count > 0)
         {
             throw new DomainException(_logMessage, _errors);
         }
+    }
+
+    public void LoadValueObjectValidations(
+        DomainValidator validations)
+    {
+        var errors = validations._errors2;
+        _errors2 = _errors2.Concat(errors).ToDictionary(x => x.Key, x => x.Value);
     }
 }

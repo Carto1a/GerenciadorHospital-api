@@ -1,79 +1,70 @@
-using System.Diagnostics.CodeAnalysis;
-
-using Hospital.Application.Dto.Input.Authentications;
+using Hospital.Domain.Entities.ValueObjects;
 using Hospital.Domain.Enums;
 using Hospital.Domain.Validators;
 
-using Microsoft.AspNetCore.Identity;
-
 namespace Hospital.Domain.Entities.Cadastros;
-public abstract class Cadastro : IdentityUser<Guid>
+public abstract class Cadastro : Entity
 {
-    public required string Nome { get; set; }
-    public required string Sobrenome { get; set; }
+    public Email Email { get; set; }
+    public string PasswordHash { get; set; }
+    public bool EmailConfirmed { get; set; }
+
+    public NomeCompleto NomeCompleto { get; set; }
     public DateOnly DataNascimento { get; set; }
     public GeneroEnum Genero { get; set; }
-    public string? Telefone { get; set; }
-    public required string CPF { get; set; }
-    public required string CEP { get; set; }
-    public required string NumeroCasa { get; set; }
+    public Telefone? Telefone { get; set; }
+    public Cpf CPF { get; set; }
+    public Endereco Endereco { get; set; }
 
-    public DateTime Criado { get; set; }
-    public bool Ativo { get; set; }
-
-    public Cadastro() { }
-    [SetsRequiredMembers]
-    public Cadastro(RegisterRequestDto request)
+    public Cadastro(
+        string email, string passwordHash, bool emailConfirmed,
+        string nome, string sobrenome, DateOnly dataNascimento,
+        GeneroEnum genero, string? ddd, string? telefoneNumero, TipoTelefone tipoTelefone,
+        string cpf, string cep, string numeroCasa, string? complemento)
     {
-        Nome = request.Nome.ToUpper();
-        Sobrenome = request.Sobrenome.ToUpper();
-        Genero = request.Genero;
-        Telefone = request.Telefone;
-        CPF = request.CPF;
-        CEP = request.CEP;
-        NumeroCasa = request.NumeroCasa.ToUpper();
-        Email = request.Email;
-        UserName = request.Email;
-        DataNascimento = DateOnly
-            .FromDateTime(request.DataNascimento);
+        Email = new Email(email);
+        PasswordHash = passwordHash;
+        EmailConfirmed = emailConfirmed;
 
-        Criado = DateTime.Now;
-        Ativo = true;
+        NomeCompleto = new NomeCompleto(nome, sobrenome);
+        DataNascimento = dataNascimento;
+        Genero = genero;
+        CPF = new Cpf(cpf);
+        Endereco = new Endereco(cep, numeroCasa, complemento);
+
+        if (ddd != null && telefoneNumero != null)
+            Telefone = new Telefone(ddd, telefoneNumero, tipoTelefone);
 
         Validate();
     }
 
-    public void Validate()
+    public override void Validate()
     {
         var validator = new DomainValidator(
             $"Não foi possível validar o usuário de email: {Email}");
 
-        validator.IsNome(Nome, "Nome");
-        validator.IsNome(Sobrenome, "Sobrenome");
         validator.MinDate(
             DataNascimento.ToDateTime(TimeOnly.MinValue),
             DateTime.Parse("1800-01-01"), "Data de Nascimento");
+        // NOTE: validar isso
         validator.MaxDate(
             DataNascimento.ToDateTime(TimeOnly.MaxValue),
-            DateTime.Now.AddYears(-1), "Data de Nascimento");
-        validator.Cpf(CPF, "CPF");
-        validator.Cep(CEP, "CEP");
+            DateTime.Now.AddYears(-18), "Data de Nascimento");
+
+        validator.isInEnum(Genero, typeof(GeneroEnum), "Genero");
+
+        // NOTE: não parece legal
+        validator.LoadValueObjectValidations(NomeCompleto.Validations());
+        validator.LoadValueObjectValidations(Email.Validations());
+        validator.LoadValueObjectValidations(Endereco.Validations());
+        validator.LoadValueObjectValidations(CPF.Validations());
+
         if (Telefone != null)
-            validator.Telefone(Telefone, "Telefone");
-        validator.NumeroCasa(NumeroCasa, "NumeroCasa");
-        validator.isInEnum(
-            Genero,
-            typeof(GeneroEnum),
-            "Genero");
+            validator.LoadValueObjectValidations(Telefone.Validations());
 
         validator.Check();
     }
 
-    public bool CheckUniqueness(RegisterRequestDto cadastro)
-    {
-        return Equals(cadastro);
-    }
-
-    public abstract bool Equals<TRegister>(TRegister request)
-    where TRegister : RegisterRequestDto;
+    public abstract bool CheckUniqueness<TCadastro>(TCadastro cadastro)
+    where TCadastro : Cadastro;
 }
