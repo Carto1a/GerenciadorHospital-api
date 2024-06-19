@@ -11,7 +11,7 @@ namespace Hospital.Infrastructure.Controllers.Retornos;
 [Tags("Retorno")]
 public class RetornoGetByQueryController : ControllerBase
 {
-    [HttpGet("{id}")]
+    [HttpGet]
     [Authorize(Policy = PoliciesConsts.Operational)]
     public async Task<IActionResult> Execute(
         [FromServices] RetornoGetByQueryUseCase service,
