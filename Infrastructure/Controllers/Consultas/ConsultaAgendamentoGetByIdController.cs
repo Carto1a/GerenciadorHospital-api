@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Infrastructure.Controllers.Consultas;
+[ApiController]
+[Route("api/Agendamento/Consulta")]
+[Tags("Agendamento Consulta")]
 public class ConsultaAgendamentoGetByIdController : ControllerBase
 {
     [HttpGet("{id}")]

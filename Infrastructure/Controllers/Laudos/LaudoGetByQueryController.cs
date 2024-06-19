@@ -15,7 +15,7 @@ public class LaudoGetByQueryController : ControllerBase
     [Authorize(Policy = PoliciesConsts.Operational)]
     public async Task<IActionResult> Execute(
         [FromServices] LaudoGetByQueryUseCase _service,
-        [FromBody] LaudoGetByQueryDto query)
+        [FromQuery] LaudoGetByQueryDto query)
     {
         var result = await _service.Handler(query);
         return Ok(result);
