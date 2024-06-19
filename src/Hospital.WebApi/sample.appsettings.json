@@ -1,0 +1,27 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+
+  "ConnectionStrings": {
+    "DbSqlServer": ""
+  },
+
+  "JWT": {
+    "ValidAudience": "",
+    "ValidIssuer": "",
+    "Secret": ""
+  },
+
+  "Paths": {
+    "BaseImagens": "",
+    "PacienteBase": "",
+    "PacienteDocumentos": "",
+    "PacienteConvenio": "",
+    "MedicoDocumentos": "",
+    "Laudos": "",
+  }
+}

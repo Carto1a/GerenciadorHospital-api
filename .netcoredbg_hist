@@ -1,3 +1,0 @@
-Content-Length: 343
-{"type":"request","seq":1,"command":"initialize","arguments":{"columnsStartAt1":true,"pathFormat":"path","clientName":"neovim","clientID":"neovim","locale":"en_US","adapterID":"nvim-dap","supportsStartDebuggingRequest":true,"supportsProgressReporting":true,"supportsVariableType":true,"supportsRunInTerminalRequest":true,"linesStartAt1":true}}Content-Length: 104
-{"type":"request","seq":2,"command":"disconnect","arguments":{"restart":false,"terminateDebuggee":true}}

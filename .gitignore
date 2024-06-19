@@ -483,10 +483,4 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
-/lixo
-app.sqlite
-app.sqlite-shm
-app.sqlite-wal
-/appsettings.Local.json
-
-c:*
+appsettings.*.json
