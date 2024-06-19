@@ -1,26 +1,20 @@
-/* using Hospital.Dtos.Input.Medicamentos; */
-/* using Hospital.Services.Medicamentos; */
-/* using Microsoft.AspNetCore.Mvc; */
+using Hospital.Application.Dto.Input.Medicamentos;
+using Hospital.Application.UseCases.Medicamentos;
 
-/* namespace Hospital.Controllers.MedicamentoLotes; */
-/* [ApiController] */
-/* [Route("api/Medicamento/Lotes")] */
-/* [Tags("Medicamentos/Lotes")] */
-/* public class MedicamentoLoteGetByQueryController */
-/* : ControllerBase */
-/* { */
-/*     private readonly MedicamentoLoteGetByQueryService _service; */
-/*     public MedicamentoLoteGetByQueryController( */
-/*         MedicamentoLoteGetByQueryService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
+using Microsoft.AspNetCore.Mvc;
 
-/*     [HttpGet] */
-/*     public IActionResult Execute( */
-/*         [FromQuery] MedicamentoLoteGetByQueryDto query) */
-/*     { */
-/*         var medicamentoLotes = _service.Handler(query); */
-/*         return Ok(medicamentoLotes); */
-/*     } */
-/* } */
+namespace Hospital.Infrastructure.Controllers.MedicamentoLotes;
+[ApiController]
+[Route("api/Medicamento/Lotes")]
+[Tags("Medicamentos/Lotes")]
+public class MedicamentoLoteGetByQueryController : ControllerBase
+{
+    [HttpGet]
+    public async Task<IActionResult> Execute(
+        [FromServices] MedicamentoLoteGetByQueryUseCase _service,
+        [FromQuery] MedicamentoLoteGetByQueryDto query)
+    {
+        var medicamentoLotes = await _service.Handler(query);
+        return Ok(medicamentoLotes);
+    }
+}

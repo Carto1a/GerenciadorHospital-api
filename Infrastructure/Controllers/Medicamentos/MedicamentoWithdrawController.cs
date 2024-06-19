@@ -1,27 +1,24 @@
-/* using Hospital.Dtos.Input.Medicamentos; */
-/* using Hospital.Services.Medicamentos; */
-/* using Microsoft.AspNetCore.Mvc; */
+using Hospital.Application.Consts;
+using Hospital.Application.Dto.Input.Medicamentos;
+using Hospital.Application.UseCases.Medicamentos;
 
-/* namespace Hospital.Controllers.Medicamentos; */
-/* [ApiController] */
-/* [Route("api/Medicamentos")] */
-/* [Tags("Medicamentos")] */
-/* public class MedicamentoWithdrawController */
-/* : ControllerBase */
-/* { */
-/*     private readonly MedicamentoWithdrawService _service; */
-/*     public MedicamentoWithdrawController( */
-/*         MedicamentoWithdrawService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/*     [HttpPatch("{id}/Retirar")] */
-/*     public IActionResult Withdraw( */
-/*         [FromRoute] Guid id, */
-/*         [FromBody] MedicamentoWithdrawDto request) */
-/*     { */
-/*         _service.Handler(id, request); */
-/*         return Ok(); */
-/*     } */
-/* } */
+namespace Hospital.Controllers.Medicamentos;
+[ApiController]
+[Route("api/Medicamentos")]
+[Tags("Medicamentos")]
+public class MedicamentoWithdrawController : ControllerBase
+{
+    [HttpPatch("{id}/Retirar")]
+    [Authorize(Policy = PoliciesConsts.Operational)]
+    public async Task<IActionResult> Withdraw(
+        [FromServices] MedicamentoWithdrawUseCase _service,
+        [FromRoute] Guid id,
+        [FromBody] MedicamentoWithdrawDto request)
+    {
+        await _service.Handler(id, request);
+        return Ok();
+    }
+}

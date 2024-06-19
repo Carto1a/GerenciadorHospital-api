@@ -1,26 +1,23 @@
-/* using Hospital.Dtos.Input.Medicamentos; */
-/* using Hospital.Services.Medicamentos; */
-/* using Microsoft.AspNetCore.Mvc; */
+using Hospital.Application.Consts;
+using Hospital.Application.Dto.Input.Medicamentos;
+using Hospital.Application.UseCases.Medicamentos;
 
-/* namespace Hospital.Controllers.Medicamentos; */
-/* [ApiController] */
-/* [Route("api/Medicamentos")] */
-/* [Tags("Medicamentos")] */
-/* public class MedicamentoCreateController */
-/* : ControllerBase */
-/* { */
-/*     private readonly MedicamentoCreateService _service; */
-/*     public MedicamentoCreateController( */
-/*         MedicamentoCreateService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/*     [HttpPost] */
-/*     public async Task<IActionResult> Post( */
-/*         [FromBody] MedicamentoCreateDto request) */
-/*     { */
-/*         var result = await _service.Handler(request); */
-/*         return Created("", result); */
-/*     } */
-/* } */
+namespace Hospital.Infrastructure.Controllers.Medicamentos;
+[ApiController]
+[Route("api/Medicamentos")]
+[Tags("Medicamentos")]
+public class MedicamentoCreateController : ControllerBase
+{
+    [HttpPost]
+    [Authorize(Policy = PoliciesConsts.Operational)]
+    public async Task<IActionResult> Post(
+        [FromServices] MedicamentoCreateUseCase _service,
+        [FromBody] MedicamentoCreateDto request)
+    {
+        var result = await _service.Handler(request);
+        return Created("", result);
+    }
+}

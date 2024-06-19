@@ -1,28 +1,23 @@
-/* using Hospital.Application.UseCases.Convenios; */
-/* using Hospital.Dtos.Input.Convenios; */
-/* using Hospital.Services.Convenios; */
+using Hospital.Application.Consts;
+using Hospital.Application.Dto.Input.Convenios;
+using Hospital.Application.UseCases.Convenios;
 
-/* using Microsoft.AspNetCore.Mvc; */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/* namespace Hospital.Controllers.Convenios; */
-/* [ApiController] */
-/* [Route("api/Convenio")] */
-/* [Tags("Convenio")] */
-/* public class ConvenioGetByQueryController */
-/* : ControllerBase */
-/* { */
-/*     private readonly ConvenioGetByQueryService _service; */
-/*     public ConvenioGetByQueryController( */
-/*         ConvenioGetByQueryService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
-
-/*     [HttpGet] */
-/*     public IActionResult Execute( */
-/*         [FromQuery] ConvenioGetByQueryDto query) */
-/*     { */
-/*         var convenios = _service.Handler(query); */
-/*         return Ok(convenios); */
-/*     } */
-/* } */
+namespace Hospital.Infrastructure.Controllers.Convenios;
+[ApiController]
+[Route("api/Convenio")]
+[Tags("Convenio")]
+public class ConvenioGetByQueryController : ControllerBase
+{
+    [HttpGet]
+    [Authorize(Policy = PoliciesConsts.Standard)]
+    public async Task<IActionResult> Execute(
+        [FromServices] ConvenioGetByQueryUseCase _service,
+        [FromQuery] ConvenioGetByQueryDto query)
+    {
+        var convenios = await _service.Handler(query);
+        return Ok(convenios);
+    }
+}

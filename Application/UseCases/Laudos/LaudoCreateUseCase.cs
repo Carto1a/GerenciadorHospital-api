@@ -34,7 +34,7 @@ public class LaudoCreateUseCase
         _imageService = imageService;
     }
 
-    public async Task<Guid> Handler(LaudoCreateDto request)
+    public async Task<Guid> Handler(LaudoCreateDto request, Guid medicoId)
     {
         var laudo = new Laudo(request);
 
@@ -46,10 +46,10 @@ public class LaudoCreateUseCase
                 "Paciente não encontrado");
 
         var findMedico = await _medicoRepository
-            .GetByIdAsync(request.MedicoId);
+            .GetByIdAsync(medicoId);
         if (findMedico == null)
             throw new DomainException(
-                $"Médico não encontrado: {request.MedicoId}",
+                $"Médico não encontrado: {medicoId}",
                 "Médico não encontrado");
 
         var findExames = await _exameRepository

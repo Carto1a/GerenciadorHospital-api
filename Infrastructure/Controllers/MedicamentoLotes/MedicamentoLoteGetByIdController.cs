@@ -1,25 +1,22 @@
-/* using Hospital.Services.Medicamentos; */
-/* using Microsoft.AspNetCore.Mvc; */
+using Hospital.Application.Consts;
+using Hospital.Application.UseCases.Medicamentos;
 
-/* namespace Hospital.Controllers.MedicamentoLotes; */
-/* [ApiController] */
-/* [Route("api/Medicamento/Lotes")] */
-/* [Tags("Medicamentos/Lotes")] */
-/* public class MedicamentoLoteGetByIdController */
-/* : ControllerBase */
-/* { */
-/*     private readonly MedicamentoLoteGetByIdService _service; */
-/*     public MedicamentoLoteGetByIdController( */
-/*         MedicamentoLoteGetByIdService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/*     [HttpGet("{id}")] */
-/*     public IActionResult Get( */
-/*         [FromRoute] Guid id) */
-/*     { */
-/*         var result = _service.Handler(id); */
-/*         return Ok(result); */
-/*     } */
-/* } */
+namespace Hospital.Infrastructure.Controllers.MedicamentoLotes;
+[ApiController]
+[Route("api/Medicamento/Lotes")]
+[Tags("Medicamentos/Lotes")]
+public class MedicamentoLoteGetByIdController : ControllerBase
+{
+    [HttpGet("{id}")]
+    [Authorize(Policy = PoliciesConsts.Elevated)]
+    public async Task<IActionResult> Get(
+        [FromServices] MedicamentoLoteGetByIdUseCase _service,
+        [FromRoute] Guid id)
+    {
+        var result = await _service.Handler(id);
+        return Ok(result);
+    }
+}

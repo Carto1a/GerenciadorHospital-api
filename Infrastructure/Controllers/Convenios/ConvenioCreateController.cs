@@ -1,27 +1,24 @@
-/* using Hospital.Dtos.Input.Convenios; */
-/* using Hospital.Filter; */
-/* using Hospital.Services.Convenios; */
-/* using Microsoft.AspNetCore.Mvc; */
+using Hospital.Application.Consts;
+using Hospital.Application.Dto.Input.Convenios;
+using Hospital.Application.UseCases.Convenios;
+using Hospital.Infrastructure.Filter;
 
-/* namespace Hospital.Controllers.Cadastros; */
-/* [ApiController] */
-/* [Route("api/Convenio")] */
-/* [Tags("Convenio")] */
-/* public class ConvenioCreateController */
-/* : ControllerBase */
-/* { */
-/*     private readonly ConvenioCreateService _service; */
-/*     public ConvenioCreateController( */
-/*         ConvenioCreateService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/*     [HttpPost("Cadastro")] */
-/*     public async Task<IActionResult> Execute( */
-/*         [FromBody] ConvenioCreateDto request) */
-/*     { */
-/*         var uri = await _service.Handler(request); */
-/*         return Created("", new ResponseDataObject(uri)); */
-/*     } */
-/* } */
+namespace Hospital.Infrastructure.Controllers.Convenios;
+[ApiController]
+[Route("api/Convenio")]
+[Tags("Convenio")]
+public class ConvenioCreateController : ControllerBase
+{
+    [HttpPost]
+    [Authorize(Policy = PoliciesConsts.Elevated)]
+    public async Task<IActionResult> Execute(
+        [FromServices] ConvenioCreateUseCase _service,
+        [FromBody] ConvenioCreateDto request)
+    {
+        var uri = await _service.Handler(request);
+        return Created("", new ResponseDataObject(uri));
+    }
+}

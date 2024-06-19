@@ -26,6 +26,18 @@ public class ExceptionFilter
             return;
         }
 
+        if (context.Exception is NotImplementedException)
+        {
+            context.Result = new RequestErrorResponse(
+                new DomainException(
+                    context.Exception.Message,
+                    "Recurso não implementado"
+                ),
+                StatusCodes.Status501NotImplemented
+            );
+            return;
+        }
+
         // TODO: mudar isso
         context.Result =
             new RequestErrorResponse(

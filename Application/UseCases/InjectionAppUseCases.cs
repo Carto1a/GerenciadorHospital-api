@@ -31,7 +31,6 @@ public static class InjectionAppUseCases
 
         .AddScoped<LaudoAddImageUseCase>()
         .AddScoped<LaudoCreateUseCase>()
-        .AddScoped<LaudoGetByConsultaUseCase>()
         .AddScoped<LaudoGetByIdUseCase>()
         .AddScoped<LaudoGetByQueryUseCase>()
         .AddScoped<LaudoGetDocImageUseCase>()
@@ -76,27 +75,33 @@ public static class InjectionAppUseCases
 
         .AddScoped<ConsultaCreateUseCase>()
         .AddScoped<ConsultaGetByQueryUseCase>()
+        .AddScoped<ConsultaGetByIdUseCase>()
 
         .AddScoped<ExameCompletarUseCase>()
         .AddScoped<ExameCreateUseCase>()
         .AddScoped<ExameGetByQueryUseCase>()
+        .AddScoped<ExameGetByIdUseCase>()
 
         .AddScoped<RetornoCreateUseCase>()
         .AddScoped<RetornoGetByQueryUseCase>()
+        .AddScoped<RetornoGetByIdUseCase>()
 
 
         .AddScoped<AgendamentoConsultaCancelUseCase>()
         .AddScoped<AgendamentoConsultaCreateUseCase>()
         .AddScoped<AgendamentoConsultaEmEsperaUseCase>()
         .AddScoped<AgendamentoConsultaGetByQueryUseCase>()
+        .AddScoped<AgendamentoConsultaGetByIdUseCase>()
 
         .AddScoped<AgendamentoExameCreateUseCase>()
         .AddScoped<AgendamentoExameEmEsperaUseCase>()
         .AddScoped<AgendamentoExameGetByQueryUseCase>()
+        .AddScoped<AgendamentoExameGetByIdUseCase>()
 
         .AddScoped<AgendamentoRetornoCreateUseCase>()
         .AddScoped<AgendamentoRetornoEmEsperaUseCase>()
         .AddScoped<AgendamentoRetornoGetByQueryUseCase>()
+        .AddScoped<AgendamentoRetornoGetByIdUseCase>()
         ;
     }
 }

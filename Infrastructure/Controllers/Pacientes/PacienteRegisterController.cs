@@ -13,7 +13,7 @@ namespace Hospital.Infrastructure.Controllers.Pacientes;
 public class PacienteRegisterController : ControllerBase
 {
     [HttpPost("Cadastro")]
-    [Authorize(Policy = PoliciesConsts.Elevated)]
+    [Authorize(Policy = PoliciesConsts.Operational)]
     public async Task<IActionResult> Execute(
         [FromServices] PacienteRegisterUseCase _service,
         [FromForm] RegisterRequestPacienteDto request)

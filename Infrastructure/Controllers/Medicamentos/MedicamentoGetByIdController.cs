@@ -1,25 +1,22 @@
-/* using Hospital.Services.Medicamentos; */
-/* using Microsoft.AspNetCore.Mvc; */
+using Hospital.Application.Consts;
+using Hospital.Application.UseCases.Medicamentos;
 
-/* namespace Hospital.Controllers.Medicamentos; */
-/* [ApiController] */
-/* [Route("api/Medicamentos")] */
-/* [Tags("Medicamentos")] */
-/* public class MedicamentoGetByIdController */
-/* : ControllerBase */
-/* { */
-/*     private readonly MedicamentoGetByIdService _service; */
-/*     public MedicamentoGetByIdController( */
-/*         MedicamentoGetByIdService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/*     [HttpGet("{id}")] */
-/*     public IActionResult Get( */
-/*         [FromRoute] Guid id) */
-/*     { */
-/*         var result = _service.Handler(id); */
-/*         return Ok(result); */
-/*     } */
-/* } */
+namespace Hospital.Infrastructure.Controllers.Medicamentos;
+[ApiController]
+[Route("api/Medicamentos")]
+[Tags("Medicamentos")]
+public class MedicamentoGetByIdController : ControllerBase
+{
+    [HttpGet("{id}")]
+    [Authorize(Policy = PoliciesConsts.Standard)]
+    public async Task<IActionResult> Get(
+        [FromServices] MedicamentoGetByIdUseCase _service,
+        [FromRoute] Guid id)
+    {
+        var result = await _service.Handler(id);
+        return Ok(result);
+    }
+}

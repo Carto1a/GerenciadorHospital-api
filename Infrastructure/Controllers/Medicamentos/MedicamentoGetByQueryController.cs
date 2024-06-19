@@ -1,26 +1,23 @@
-/* using Hospital.Dtos.Input.Medicamentos; */
-/* using Hospital.Services.Medicamentos; */
-/* using Microsoft.AspNetCore.Mvc; */
+using Hospital.Application.Consts;
+using Hospital.Application.Dto.Input.Medicamentos;
+using Hospital.Application.UseCases.Medicamentos;
 
-/* namespace Hospital.Controllers.Medicamentos; */
-/* [ApiController] */
-/* [Route("api/Medicamentos")] */
-/* [Tags("Medicamentos")] */
-/* public class MedicamentoGetByQueryController */
-/* : ControllerBase */
-/* { */
-/*     private readonly MedicamentoGetByQueryService _service; */
-/*     public MedicamentoGetByQueryController( */
-/*         MedicamentoGetByQueryService service) */
-/*     { */
-/*         _service = service; */
-/*     } */
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-/*     [HttpGet] */
-/*     public IActionResult Execute( */
-/*         [FromQuery] MedicamentoGetByQueryDto query) */
-/*     { */
-/*         var medicamentos = _service.Handler(query); */
-/*         return Ok(medicamentos); */
-/*     } */
-/* } */
+namespace Hospital.Infrastructure.Controllers.Medicamentos;
+[ApiController]
+[Route("api/Medicamentos")]
+[Tags("Medicamentos")]
+public class MedicamentoGetByQueryController : ControllerBase
+{
+    [HttpGet]
+    [Authorize(Policy = PoliciesConsts.Standard)]
+    public async Task<IActionResult> Execute(
+        [FromServices] MedicamentoGetByQueryUseCase _service,
+        [FromQuery] MedicamentoGetByQueryDto query)
+    {
+        var medicamentos = await _service.Handler(query);
+        return Ok(medicamentos);
+    }
+}
