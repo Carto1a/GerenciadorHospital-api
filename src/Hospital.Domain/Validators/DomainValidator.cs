@@ -80,6 +80,12 @@ public class DomainValidator
             _errors.Add($"{fildName} must be at least {minValue}");
     }
 
+    public void MaxValue(decimal target, decimal minValue, string fildName)
+    {
+        if (target > minValue)
+            _errors.Add($"{fildName} must be at least {minValue}");
+    }
+
     public void MinDate(DateTime target, DateTime minDate, string fildName)
     {
         if (target < minDate)

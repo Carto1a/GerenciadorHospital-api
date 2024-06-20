@@ -1,57 +1,41 @@
-using System.Diagnostics.CodeAnalysis;
-using Hospital.Application.Dto.Input.Medicamentos;
 using Hospital.Domain.Enums;
 using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Medicamentos;
 public class MedicamentoLote : Entity
 {
-    public Guid MedicamentoId { get; set; }
-
-    public virtual Medicamento? Medicamento { get; set; }
-
-    public required string Codigo { get; set; }
+    public string Codigo { get; set; }
     public DateOnly DataFabricacao { get; set; }
     public DateOnly DataVencimento { get; set; }
 
-    public DateTime DataCadastro { get; set; }
-    public required string Fabricante { get; set; }
     public int Quantidade { get; set; }
     public int QuantidadeDisponivel { get; set; }
     public decimal PrecoUnitario { get; set; }
     public MedicamentoLoteStatus Status { get; set; }
 
-    public MedicamentoLote() { }
-    [SetsRequiredMembers]
     public MedicamentoLote(
-        MedicamentoLoteCreateDto request)
+        string codigo, DateOnly dataFabricacao, DateOnly dataVencimento,
+        int quantidade, int quantidadeDisponivel, decimal precoUnitario)
     {
-        MedicamentoId = request.MedicamentoId;
-        Codigo = request.Codigo;
-        DataFabricacao = DateOnly.FromDateTime(
-            request.DataFabricacao);
-        DataVencimento = DateOnly.FromDateTime(
-            request.DataVencimento);
-        DataCadastro = DateTime.Now;
-        Fabricante = request.Fabricante;
-        Quantidade = request.Quantidade;
-        QuantidadeDisponivel = request.QuantidadeDisponivel;
-        PrecoUnitario = request.PrecoUnitario;
-        Status = DataVencimento < DateOnly.FromDateTime(DateTime.Now)
-            ? MedicamentoLoteStatus.Vencido
-            : MedicamentoLoteStatus.Disponivel;
+        Codigo = codigo;
+        DataFabricacao = dataFabricacao;
+        DataVencimento = dataVencimento;
+        Quantidade = quantidade;
+        QuantidadeDisponivel = quantidadeDisponivel;
+        PrecoUnitario = precoUnitario;
+
+        UpdateStatus();
 
         Validate();
     }
 
-    public void Validate()
+    public override void Validate()
     {
         var validate = new DomainValidator(
             $"Não foi possível validar o lote de medicamento: {Codigo}");
 
         // NOTE: ainda não sei validar as coisas do medicamento
         validate.MinLength(Codigo, 3, "Código");
-        validate.MinLength(Fabricante, 3, "Fabricante");
         validate.MinValue(Quantidade, 0, "Quantidade");
         validate.MinValue(QuantidadeDisponivel, 0, "Quantidade Disponível");
         validate.MinValue(QuantidadeDisponivel, Quantidade, "Quantidade Disponível");

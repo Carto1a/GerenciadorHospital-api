@@ -1,5 +1,5 @@
 namespace Hospital.Domain.Entities;
-public abstract class Entity : IEntity
+public abstract class Entity
 {
     public Guid Id { get; set; }
     public DateTime Criado { get; set; }

@@ -1,40 +1,55 @@
-using System.Diagnostics.CodeAnalysis;
-
-using Hospital.Application.Dto.Input.Authentications;
-using Hospital.Domain.Entities.Agendamentos;
-using Hospital.Domain.Entities.Atendimentos;
-using Hospital.Domain.Entities.Medicamentos;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Exceptions;
 
 namespace Hospital.Domain.Entities.Cadastros;
 public class Paciente : Cadastro
 {
-    public Guid? ConvenioId { get; set; }
-
     public virtual Convenio? Convenio { get; set; }
-    public virtual ICollection<Consulta>? Consultas { get; set; }
-    public virtual ICollection<Exame>? Exames { get; set; }
-    public virtual ICollection<Retorno>? Retornos { get; set; }
-    public virtual ICollection<Laudo>? Laudos { get; set; }
-    public virtual ICollection<Medicamento>? Medicamentos { get; set; }
-    public virtual ICollection<ConsultaAgendamento>? AgendamentosConsultas { get; set; }
-    public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
-    public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }
 
     public Guid? DocConvenioPath { get; set; }
-    public Guid? DocIDPath { get; set; }
+    public Guid DocIDPath { get; set; }
 
-    public Paciente(RegisterRequestPacienteDto request)
-    : base(request)
+    public Paciente(
+        string email, string passwordHash, bool emailConfirmed,
+        string nome, string sobrenome, DateOnly dataNascimento,
+        GeneroEnum genero, string? ddd, string? telefoneNumero, TipoTelefone tipoTelefone,
+        string cpf, string cep, string numeroCasa, string? complemento)
+    : base(
+        email, passwordHash, emailConfirmed,
+        nome, sobrenome, dataNascimento,
+        genero, ddd, telefoneNumero, tipoTelefone,
+        cpf, cep, numeroCasa, complemento)
+    { }
+
+    public void AddDocId(Guid docName)
     {
-        ConvenioId = request.ConvenioId;
+        DocIDPath = docName;
     }
 
-    public override bool Equals<TRegister>(TRegister request)
+    public void AddDocConvenio(Guid docName)
     {
-        if (request is RegisterRequestPacienteDto requestPaciente)
+        if (Convenio == null)
+            throw new DomainException(
+                "O paciente não possui convênio.");
+
+        DocConvenioPath = docName;
+    }
+
+    public void AddConvenio(Convenio convenio)
+    {
+        if (convenio.Ativo == false)
+            throw new DomainException(
+                "O convênio não está ativo.");
+
+        Convenio = convenio;
+    }
+
+    public override bool CheckUniqueness<TCadastro>(TCadastro cadastro)
+    {
+        if (cadastro is Paciente paciente)
         {
-            return Email == request.Email
-                || CPF == request.CPF;
+            return Email == paciente.Email
+                || CPF == paciente.CPF;
         }
 
         throw new ArgumentException(

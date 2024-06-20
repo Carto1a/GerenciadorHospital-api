@@ -1,13 +1,15 @@
+using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Enums;
+using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Agendamentos;
-public abstract class Agendamento : Entity, IAtrasado, IDescontavel
+public abstract class Agendamento : Entity
 {
     public DateTime DataHora { get; set; }
 
-    public virtual Medico? Medico { get; set; }
-    public virtual Paciente? Paciente { get; set; }
-    public virtual Convenio? Convenio { get; set; }
+    public Medico? Medico { get; set; }
+    public Paciente? Paciente { get; set; }
+    public Convenio? Convenio { get; set; }
 
     public AgendamentoStatus Status { get; set; }
     public decimal Custo { get; set; }
@@ -25,22 +27,11 @@ public abstract class Agendamento : Entity, IAtrasado, IDescontavel
         Ativo = false;
         Status = AgendamentoStatus.Cancelado;
     }
-    public void Update(AgendamentoUpdateDto request)
-    {
-        DataHora = request.DataHora;
-        Custo = request.Custo;
-    }
 
-    public Agendamento() { }
     public Agendamento(AgendamentoCreateDto request)
     {
-        MedicoId = request.MedicoId;
-        PacienteId = request.PacienteId;
-        ConvenioId = request.ConvenioId;
         DataHora = request.DataHora;
         Custo = request.Custo;
-        Criado = DateTime.Now;
-        Ativo = true;
         Status = AgendamentoStatus.Agendado;
 
         Validate();
@@ -48,9 +39,6 @@ public abstract class Agendamento : Entity, IAtrasado, IDescontavel
 
     public Agendamento Create(AgendamentoCreateDto request)
     {
-        MedicoId = request.MedicoId;
-        PacienteId = request.PacienteId;
-        ConvenioId = request.ConvenioId;
         DataHora = request.DataHora;
         Custo = request.Custo;
         Criado = DateTime.Now;
@@ -92,5 +80,14 @@ public abstract class Agendamento : Entity, IAtrasado, IDescontavel
     public bool Ausente(DateTime now)
     {
         return DataHora.AddHours(1) < now;
+    }
+
+    public void Update(
+        DateTime dataHora, decimal custo)
+    {
+        DataHora = dataHora;
+        Custo = custo;
+
+        Validate();
     }
 }

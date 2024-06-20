@@ -1,4 +1,5 @@
 using Hospital.Domain.Entities.ValueObjects;
+using Hospital.Domain.Enums;
 using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Cadastros;
@@ -6,23 +7,29 @@ public class Medico : Cadastro
 {
     public Crm CRM { get; set; }
     public Guid? DocCRMPath { get; set; }
-    public required string Especialidade { get; set; }
+    public string Especialidade { get; set; }
 
-    public virtual ICollection<Consulta>? Consultas { get; set; }
-    public virtual ICollection<Exame>? Exames { get; set; }
-    public virtual ICollection<Retorno>? Retornos { get; set; }
-    public virtual ICollection<Laudo>? Laudos { get; set; }
-    public virtual ICollection<ConsultaAgendamento>? AgendamentosConsultas { get; set; }
-    public virtual ICollection<ExameAgendamento>? AgendamentosExames { get; set; }
-    public virtual ICollection<RetornoAgendamento>? AgendamentosRetornos { get; set; }
-
-    public Medico(RegisterRequestMedicoDto request)
-    : base(request)
+    public Medico(
+        string email, string passwordHash, bool emailConfirmed,
+        string nome, string sobrenome, DateOnly dataNascimento,
+        GeneroEnum genero, string? ddd, string? telefoneNumero, TipoTelefone tipoTelefone,
+        string cpf, string cep, string numeroCasa, string? complemento,
+        string crmNumero, string crmUf, string especialidade)
+    : base(
+        email, passwordHash, emailConfirmed,
+        nome, sobrenome, dataNascimento,
+        genero, ddd, telefoneNumero, tipoTelefone,
+        cpf, cep, numeroCasa, complemento)
     {
-        CRM = request.CRM;
-        Especialidade = request.Especialidade;
+        CRM = new Crm(crmNumero, crmUf);
+        Especialidade = especialidade;
 
         Validate();
+    }
+
+    public void AddCrmDoc(Guid docName)
+    {
+        DocCRMPath = docName;
     }
 
     public override void Validate()
