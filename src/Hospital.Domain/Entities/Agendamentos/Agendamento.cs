@@ -1,5 +1,7 @@
+using Hospital.Domain.Entities.Atendimentos;
 using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Enums;
+using Hospital.Domain.Exceptions;
 using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Agendamentos;
@@ -7,8 +9,8 @@ public abstract class Agendamento : Entity
 {
     public DateTime DataHora { get; set; }
 
-    public Medico? Medico { get; set; }
-    public Paciente? Paciente { get; set; }
+    public Medico Medico { get; set; }
+    public Paciente Paciente { get; set; }
     public Convenio? Convenio { get; set; }
 
     public AgendamentoStatus Status { get; set; }
@@ -16,40 +18,91 @@ public abstract class Agendamento : Entity
     public decimal CustoFinal { get; set; }
     public decimal CustoAtraso { get; set; }
 
-    public void Cancelar() => Status = AgendamentoStatus.Cancelado;
-    public void Realizar() => Status = AgendamentoStatus.Realizado;
-    public void EmEspera() => Status = AgendamentoStatus.EmEspera;
-    public void EmAndamento() => Status = AgendamentoStatus.EmAndamento;
-    public void Ausencia() => Status = AgendamentoStatus.Ausencia;
+    public abstract void Realizar(Atendimento atendimento);
 
-    public override void Deletar()
+    public void PodeSerRealizado()
     {
-        Ativo = false;
+        // NOTE: isso esta errado, o correto seria permitir o Atendimento
+        // se o Status for EmAndamento
+        var pode =
+            AgendamentoStatus.EmEspera;
+
+        if (!Status.HasFlag(pode))
+            throw new DomainException(
+                "O agendamento não pode ser realizado.");
+    }
+
+    public void Cancelar()
+    {
+        var pode =
+            AgendamentoStatus.Agendado;
+
+        if (!Status.HasFlag(pode))
+            throw new DomainException(
+                "O agendamento não pode ser cancelado.");
+
         Status = AgendamentoStatus.Cancelado;
     }
 
-    public Agendamento(AgendamentoCreateDto request)
+    public void EmEspera()
     {
-        DataHora = request.DataHora;
-        Custo = request.Custo;
+        var pode =
+            AgendamentoStatus.Agendado;
+
+        if (!Status.HasFlag(pode))
+            throw new DomainException(
+                "O agendamento não pode ser colocado em espera.");
+
+        Status = AgendamentoStatus.EmEspera;
+    }
+
+    public void EmAndamento()
+    {
+        var pode =
+            AgendamentoStatus.EmEspera | AgendamentoStatus.Agendado;
+
+        if (!Status.HasFlag(pode))
+            throw new DomainException(
+                "O agendamento não pode ser colocado em andamento.");
+
+        Status = AgendamentoStatus.EmAndamento;
+    }
+
+    public void Ausencia()
+    {
+        var pode =
+            AgendamentoStatus.Agendado | AgendamentoStatus.EmEspera;
+
+        if (!Status.HasFlag(pode))
+            throw new DomainException(
+                "O agendamento não pode ser colocado como ausência.");
+
+        Status = AgendamentoStatus.Ausencia;
+    }
+
+    public Agendamento(DateTime dataHora, Medico medico, Paciente paciente,
+        Convenio? convenio, decimal custo)
+    {
+        DataHora = dataHora;
+        Medico = medico;
+        Paciente = paciente;
+        Convenio = convenio;
+        Custo = custo;
         Status = AgendamentoStatus.Agendado;
+
+        if (convenio != null)
+        {
+            if (convenio.Id != Paciente.Convenio?.Id)
+                throw new DomainException(
+                    "O convênio do paciente não é o mesmo do agendamento.");
+
+            CalcularDesconto(convenio);
+        }
 
         Validate();
     }
 
-    public Agendamento Create(AgendamentoCreateDto request)
-    {
-        DataHora = request.DataHora;
-        Custo = request.Custo;
-        Criado = DateTime.Now;
-        Ativo = true;
-        Status = AgendamentoStatus.Agendado;
-
-        Validate();
-        return this;
-    }
-
-    public void Validate()
+    public override void Validate()
     {
         var validate = new DomainValidator(
             $"Não foi possível criar o agendamento: {DataHora}");

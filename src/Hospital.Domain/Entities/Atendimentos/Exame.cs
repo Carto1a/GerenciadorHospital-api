@@ -1,41 +1,46 @@
-using System.ComponentModel.DataAnnotations;
-
-using Hospital.Application.Dto.Input.Atendimentos;
 using Hospital.Domain.Entities.Agendamentos;
+using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Enums;
+using Hospital.Domain.Exceptions;
 
 namespace Hospital.Domain.Entities.Atendimentos;
 public class Exame : Atendimento
 {
     // TODO: colocar o tipo de exame
-    public Guid ConsultaId { get; set; }
+    public Consulta Consulta { get; set; }
 
-    public virtual ExameAgendamento? Agendamento { get; set; }
-    public virtual Consulta? Consulta { get; set; }
-    /* public virtual ICollection<Laudo?>? Laudos { get; set; } */
-    public virtual ICollection<Exame_Laudo?>? ExamesLaudos { get; set; }
-
-    // TODO: criar uma entidade para exame resultado
     public string? Resultado { get; set; }
-
-    [EnumDataType(typeof(ExameStatus))]
     public ExameStatus Status { get; set; }
-
-    public Exame() { }
-
-    public Exame(ExameCreateDto dto)
+    public Exame(Medico medico, DateTime inicio, DateTime fim,
+        string? resultado)
+    : base(medico, inicio, fim)
     {
-        AgendamentoId = dto.AgendamentoId;
-        Inicio = dto.Inicio;
-        Fim = dto.Fim;
-        Criado = DateTime.Now;
-        Status = dto.Status;
-        ConsultaId = dto.ConsultaId;
-        Resultado = dto.Resultado;
-        ConsultaId = dto.ConsultaId;
+        Status = ExameStatus.Processando;
+        if (Resultado != null)
+        {
+            Resultado = resultado;
+            Status = ExameStatus.Completado;
+        }
     }
 
-    public void Processar() => Status = ExameStatus.Processando;
-    public void Completar() => Status = ExameStatus.Completado;
-    public void Cancelar() => Status = ExameStatus.Cancelado;
+    public void Completar(string resultado)
+    {
+        if (Status == ExameStatus.Completado)
+            throw new DomainException(
+                "O exame já foi completado.");
+
+        Resultado = resultado;
+        Status = ExameStatus.Completado;
+    }
+
+    public override void GetInfoAgendamento(Agendamento agendamento)
+    {
+        if (agendamento is ExameAgendamento exameAgendamento)
+        {
+            Consulta = exameAgendamento.Consulta;
+        }
+
+        throw new DomainInternalException(
+            "O agendamento não é um exame.");
+    }
 }

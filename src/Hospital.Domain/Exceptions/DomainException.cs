@@ -3,25 +3,17 @@ public class DomainException
 : Exception
 {
     public string? LogMessage { get; set; }
-    public IList<string> ErrorList { get; set; } = [];
-    public bool HasErrors => ErrorList.Count > 0;
+    public IDictionary<string, List<string>> Errors { get; set; } = new Dictionary<string, List<string>>();
+    public List<string> ErrorList { get; set; } = new List<string>();
+    public bool HasErrors => Errors.Count > 0;
 
     public DomainException(
         string loggerMessage,
-        List<string> errors)
+        IDictionary<string, List<string>> errors)
     : base(loggerMessage)
     {
         LogMessage = loggerMessage;
-        ErrorList = errors;
-    }
-
-    public DomainException(
-        string loggerMessage,
-        string error)
-    : base(loggerMessage)
-    {
-        LogMessage = loggerMessage;
-        ErrorList.Add(error);
+        Errors = errors;
     }
 
     public DomainException(

@@ -2,7 +2,7 @@ using Hospital.Domain.Enums;
 using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Medicamentos;
-public class Medicamento : Entity
+public class MedicamentoEstoque : Entity
 {
     public int CodigoDeBarras { get; set; }
     public string Nome { get; set; }
@@ -17,7 +17,7 @@ public class Medicamento : Entity
 
     public ICollection<MedicamentoLote>? MedicamentoLotes { get; set; }
 
-    public Medicamento(
+    public MedicamentoEstoque(
         int codigoDeBarras, string nome, string descricao,
         string composicao, string principioAtivo, string fabricante,
         decimal preco, int quantidadeMinima, MedicamentoStatus status = MedicamentoStatus.Esgotado,

@@ -1,19 +1,33 @@
-using Hospital.Application.Dto.Input.Agendamentos;
 using Hospital.Domain.Entities.Atendimentos;
+using Hospital.Domain.Entities.Cadastros;
+using Hospital.Domain.Enums;
+using Hospital.Domain.Exceptions;
 
 namespace Hospital.Domain.Entities.Agendamentos;
 public class ExameAgendamento : Agendamento
 {
-    public Guid ConsultaId { get; set; }
+    public Consulta Consulta { get; set; }
+    public Exame Atendimento { get; set; }
 
-    public virtual Consulta? Consulta { get; set; }
-    public virtual Exame? Exame { get; set; }
-
-    public ExameAgendamento() { }
-    public ExameAgendamento Create(AgendamentoExameCreateDto request)
+    public ExameAgendamento(DateTime dataHora, Medico medico,
+        Paciente paciente, Convenio? convenio, decimal custo,
+        Consulta consulta)
+    : base(dataHora, medico, paciente, convenio, custo)
     {
-        base.Create(request);
-        ConsultaId = request.ConsultaId;
-        return this;
+        Consulta = consulta;
+    }
+
+    public override void Realizar(Atendimento atendimento)
+    {
+        if (atendimento is Exame exame)
+        {
+            PodeSerRealizado();
+            Status = AgendamentoStatus.Realizado;
+            exame.GetInfoAgendamento(this);
+            Atendimento = exame;
+        }
+
+        throw new DomainException(
+            "O atendimento não é um exame.");
     }
 }

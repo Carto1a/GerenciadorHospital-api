@@ -4,5 +4,4 @@ public enum ConsultaStatus
     Realizado,
     Processando,
     Terminado,
-    Ausencia,
 }

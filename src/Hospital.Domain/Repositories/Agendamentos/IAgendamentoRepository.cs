@@ -1,10 +1,9 @@
 using Hospital.Domain.Entities.Agendamentos;
 
 namespace Hospital.Domain.Repositories.Agendamentos;
-public interface IAgendamentoRepository<TAgendamento, TAgendamentoQuery, TAgendamentoOutputDto>
-: IRepository<TAgendamento, TAgendamentoQuery, TAgendamentoOutputDto>
-    where TAgendamento : Agendamento
+public interface IAgendamentoRepository<T>
+: IRepository<T>
+where T : Agendamento
 {
-    Task<Guid> CreateAsync(TAgendamento agentamento);
-    Task<List<TAgendamento>> GetByDataHoraMedicoAsync(DateTime dataHora, Guid medicoId);
+    Task<List<T>> GetByDataHoraMedicoAsync(DateTime dataHora, Guid medicoId);
 }

@@ -3,5 +3,4 @@ public enum RetornoStatus
 {
     Realizado,
     Terminado,
-    Cancelado,
 }

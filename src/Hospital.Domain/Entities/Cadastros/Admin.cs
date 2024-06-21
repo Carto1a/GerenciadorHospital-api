@@ -13,8 +13,7 @@ public class Admin : Cadastro
         nome, sobrenome, dataNascimento,
         genero, ddd, telefoneNumero, tipoTelefone,
         cpf, cep, numeroCasa, complemento)
-    {
-    }
+    { }
 
     public override bool CheckUniqueness<TCadastro>(TCadastro cadastro)
     {

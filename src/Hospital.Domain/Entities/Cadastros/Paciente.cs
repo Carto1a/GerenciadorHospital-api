@@ -4,7 +4,7 @@ using Hospital.Domain.Exceptions;
 namespace Hospital.Domain.Entities.Cadastros;
 public class Paciente : Cadastro
 {
-    public virtual Convenio? Convenio { get; set; }
+    public Convenio? Convenio { get; set; }
 
     public Guid? DocConvenioPath { get; set; }
     public Guid DocIDPath { get; set; }

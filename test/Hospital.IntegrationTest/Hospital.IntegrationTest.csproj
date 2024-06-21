@@ -19,10 +19,4 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Hospital.Infrastructure\Hospital.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Hospital.WebApi\Hospital.WebApi.csproj" />
-  </ItemGroup>
-
 </Project>

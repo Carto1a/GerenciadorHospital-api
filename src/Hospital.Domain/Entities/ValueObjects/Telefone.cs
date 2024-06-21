@@ -24,7 +24,7 @@ public class Telefone : ValueObject
     {
         var validator = new DomainValidator("Telefone");
         validator.DDD(DDD, "DDD");
-        validator.isInEnum(Tipo, typeof(GeneroEnum), "Tipo de telefone");
+        validator.isInEnum(Tipo, typeof(TipoTelefone), "Tipo de telefone");
 
         switch (Tipo)
         {
