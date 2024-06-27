@@ -1,3 +1,4 @@
+using Hospital.Domain.Entities.Agendamentos.Status;
 using Hospital.Domain.Entities.Atendimentos;
 using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Enums;
@@ -13,73 +14,38 @@ public abstract class Agendamento : Entity
     public Paciente Paciente { get; set; }
     public Convenio? Convenio { get; set; }
 
-    public AgendamentoStatus Status { get; set; }
+    public AgendamentoStatusEnum Status { get; set; }
+    public AgendamentoStatus State { get; set; }
     public decimal Custo { get; set; }
     public decimal CustoFinal { get; set; }
     public decimal CustoAtraso { get; set; }
 
-    public abstract void Realizar(Atendimento atendimento);
-
-    public void PodeSerRealizado()
-    {
-        // NOTE: isso esta errado, o correto seria permitir o Atendimento
-        // se o Status for EmAndamento
-        var pode =
-            AgendamentoStatus.EmEspera;
-
-        if (!Status.HasFlag(pode))
-            throw new DomainException(
-                "O agendamento não pode ser realizado.");
-    }
-
     public void Cancelar()
     {
-        var pode =
-            AgendamentoStatus.Agendado;
-
-        if (!Status.HasFlag(pode))
-            throw new DomainException(
-                "O agendamento não pode ser cancelado.");
-
-        Status = AgendamentoStatus.Cancelado;
+        State.Cancelar(this);
     }
 
     public void EmEspera()
     {
-        var pode =
-            AgendamentoStatus.Agendado;
-
-        if (!Status.HasFlag(pode))
-            throw new DomainException(
-                "O agendamento não pode ser colocado em espera.");
-
-        Status = AgendamentoStatus.EmEspera;
+        State.EmEspera(this);
     }
 
     public void EmAndamento()
     {
-        var pode =
-            AgendamentoStatus.EmEspera | AgendamentoStatus.Agendado;
-
-        if (!Status.HasFlag(pode))
-            throw new DomainException(
-                "O agendamento não pode ser colocado em andamento.");
-
-        Status = AgendamentoStatus.EmAndamento;
+        State.EmAndamento(this);
     }
 
     public void Ausencia()
     {
-        var pode =
-            AgendamentoStatus.Agendado | AgendamentoStatus.EmEspera;
-
-        if (!Status.HasFlag(pode))
-            throw new DomainException(
-                "O agendamento não pode ser colocado como ausência.");
-
-        Status = AgendamentoStatus.Ausencia;
+        State.Ausente(this);
     }
 
+    public virtual void Realizar(Atendimento atendimento)
+    {
+        State.Realizar(this, atendimento);
+    }
+
+    public Agendamento() { }
     public Agendamento(DateTime dataHora, Medico medico, Paciente paciente,
         Convenio? convenio, decimal custo)
     {
@@ -88,15 +54,16 @@ public abstract class Agendamento : Entity
         Paciente = paciente;
         Convenio = convenio;
         Custo = custo;
-        Status = AgendamentoStatus.Agendado;
+        CustoFinal = custo;
+        Status = AgendamentoStatusEnum.Agendado;
+        State = new AgendamentoAgendado();
+        State.CalcularDesconto(this);
 
         if (convenio != null)
         {
             if (convenio.Id != Paciente.Convenio?.Id)
                 throw new DomainException(
                     "O convênio do paciente não é o mesmo do agendamento.");
-
-            CalcularDesconto(convenio);
         }
 
         Validate();
@@ -113,24 +80,28 @@ public abstract class Agendamento : Entity
         validate.Check();
     }
 
-    public void CalcularDesconto(Convenio? convenio)
+    public virtual decimal CalcularDesconto()
     {
-        CustoFinal = Custo;
-        if (convenio != null)
-            CustoFinal = Custo * convenio.Desconto;
+        if (Convenio == null)
+            return Custo;
+
+        return Custo * Convenio.Desconto;
     }
 
-    public void CalcularMulta(Convenio? convenio)
+    public virtual decimal CalcularMultaAtraso()
     {
-        CustoAtraso = CustoFinal * 1.2m;
+        if (Convenio == null)
+            return Custo * 1.05m;
+
+        return CustoFinal * 1.05m;
     }
 
-    public bool Atrasado(DateTime now)
+    public virtual bool Atrasado(DateTime now)
     {
         return DataHora.AddMinutes(30) < now;
     }
 
-    public bool Ausente(DateTime now)
+    public virtual bool Ausente(DateTime now)
     {
         return DataHora.AddHours(1) < now;
     }

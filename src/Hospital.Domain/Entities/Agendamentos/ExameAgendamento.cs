@@ -1,6 +1,5 @@
 using Hospital.Domain.Entities.Atendimentos;
 using Hospital.Domain.Entities.Cadastros;
-using Hospital.Domain.Enums;
 using Hospital.Domain.Exceptions;
 
 namespace Hospital.Domain.Entities.Agendamentos;
@@ -9,6 +8,7 @@ public class ExameAgendamento : Agendamento
     public Consulta Consulta { get; set; }
     public Exame Atendimento { get; set; }
 
+    public ExameAgendamento() { }
     public ExameAgendamento(DateTime dataHora, Medico medico,
         Paciente paciente, Convenio? convenio, decimal custo,
         Consulta consulta)
@@ -21,9 +21,7 @@ public class ExameAgendamento : Agendamento
     {
         if (atendimento is Exame exame)
         {
-            PodeSerRealizado();
-            Status = AgendamentoStatus.Realizado;
-            exame.GetInfoAgendamento(this);
+            base.Realizar(atendimento);
             Atendimento = exame;
         }
 

@@ -9,6 +9,8 @@ public class Medico : Cadastro
     public Guid? DocCRMPath { get; set; }
     public string Especialidade { get; set; }
 
+    public Medico() { }
+
     public Medico(
         string email, string passwordHash, bool emailConfirmed,
         string nome, string sobrenome, DateOnly dataNascimento,

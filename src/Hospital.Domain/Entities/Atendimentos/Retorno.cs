@@ -7,6 +7,7 @@ public class Retorno : Atendimento
     public Consulta Consulta { get; set; }
 
     public RetornoStatus Status { get; set; }
+    public Retorno() { }
     public Retorno(Medico medico,
         DateTime inicio, DateTime fim)
     : base(medico, inicio, fim)

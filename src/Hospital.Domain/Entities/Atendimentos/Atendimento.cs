@@ -16,10 +16,12 @@ public abstract class Atendimento : Entity
 
     public TimeSpan Duracao => Fim - Inicio;
 
-    public Atendimento(Medico medico,
+    public Atendimento() { }
+    public Atendimento(Medico? medico,
         DateTime inicio, DateTime fim)
     {
-        Medico = medico;
+        if (medico is not null)
+            Medico = medico;
         Inicio = inicio;
         Fim = fim;
     }

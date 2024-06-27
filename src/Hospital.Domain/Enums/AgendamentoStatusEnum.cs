@@ -1,6 +1,6 @@
 namespace Hospital.Domain.Enums;
 [Flags]
-public enum AgendamentoStatus
+public enum AgendamentoStatusEnum
 {
     Agendado = 1 << 0, // 000001
     Realizado = 1 << 1, // 000010

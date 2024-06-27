@@ -9,6 +9,8 @@ public class Paciente : Cadastro
     public Guid? DocConvenioPath { get; set; }
     public Guid DocIDPath { get; set; }
 
+    public Paciente() { }
+
     public Paciente(
         string email, string passwordHash, bool emailConfirmed,
         string nome, string sobrenome, DateOnly dataNascimento,

@@ -10,7 +10,8 @@ public class Consulta : Atendimento
     public Prescricao? Prescricao { get; set; }
 
     public ConsultaStatus Status { get; set; }
-    public Consulta(Medico medico,
+    public Consulta() { }
+    public Consulta(Medico? medico,
         DateTime inicio, DateTime fim, ConsultaStatus status = ConsultaStatus.Realizado,
         Prescricao? prescricao = null)
     : base(medico, inicio, fim)
@@ -60,4 +61,5 @@ public class Consulta : Atendimento
 
         Laudos.Add(laudo);
     }
+
 }

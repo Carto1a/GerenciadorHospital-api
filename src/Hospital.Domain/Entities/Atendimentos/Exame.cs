@@ -11,6 +11,7 @@ public class Exame : Atendimento
 
     public string? Resultado { get; set; }
     public ExameStatus Status { get; set; }
+    public Exame() { }
     public Exame(Medico medico, DateTime inicio, DateTime fim,
         string? resultado)
     : base(medico, inicio, fim)

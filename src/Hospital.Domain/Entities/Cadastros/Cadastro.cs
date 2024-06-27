@@ -3,7 +3,7 @@ using Hospital.Domain.Enums;
 using Hospital.Domain.Validators;
 
 namespace Hospital.Domain.Entities.Cadastros;
-public abstract class Cadastro : Entity
+public abstract class Cadastro : Entity, ICadastro
 {
     public Email Email { get; set; }
     public string PasswordHash { get; set; }
@@ -16,6 +16,7 @@ public abstract class Cadastro : Entity
     public Cpf CPF { get; set; }
     public Endereco Endereco { get; set; }
 
+    public Cadastro() { }
     public Cadastro(
         string email, string passwordHash, bool emailConfirmed,
         string nome, string sobrenome, DateOnly dataNascimento,

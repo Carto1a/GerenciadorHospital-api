@@ -8,17 +8,17 @@ public class DomainValidator
 {
     private readonly string? _logMessage;
     private readonly List<string> _errors = [];
-    private IDictionary<string, List<string>> _fildErrors = new Dictionary<string, List<string>>();
-    private readonly string _fildNameError;
-    public DomainValidator(string logMessage, string fildNameError)
+    private IDictionary<string, List<string>> _fieldErrors = new Dictionary<string, List<string>>();
+    private readonly string _fieldNameError;
+    public DomainValidator(string logMessage, string fieldNameError)
     {
         _logMessage = logMessage;
-        _fildNameError = fildNameError;
+        _fieldNameError = fieldNameError;
     }
 
-    public DomainValidator(string fildNameError)
+    public DomainValidator(string fieldNameError)
     {
-        _fildNameError = fildNameError;
+        _fieldNameError = fieldNameError;
     }
 
     private void AddError(string message)
@@ -26,157 +26,157 @@ public class DomainValidator
         _errors.Add(message);
     }
 
-    public void IsNome(string? target, string fildName)
+    public void IsNome(string? target, string fieldName)
     {
         if (target == null)
         {
-            AddError($"{fildName} é inválido");
+            AddError($"{fieldName} é inválido");
             return;
         }
 
         if (!Regex.IsMatch(target, @"^[A-Za-z]{3,30}$"))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void NotNull(object? target, string fildName)
+    public void NotNull(object? target, string fieldName)
     {
         if (target is null)
-            _errors.Add($"{fildName} não pode ser nulo");
+            _errors.Add($"{fieldName} não pode ser nulo");
     }
 
-    public void DDD(string? target, string fildName)
+    public void DDD(string? target, string fieldName)
     {
         if (target == null)
         {
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
             return;
         }
 
         if (!Regex.IsMatch(target, @"^[0-9]{2}$"))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void NotNullOrEmpty(string? target, string fildName)
+    public void NotNullOrEmpty(string? target, string fieldName)
     {
         if (string.IsNullOrWhiteSpace(target))
-            _errors.Add($"{fildName} não pode ser nulo ou vazio");
+            _errors.Add($"{fieldName} não pode ser nulo ou vazio");
     }
 
-    public void NotEmptyOrWhitespaces(string? target, string fildName)
+    public void NotEmptyOrWhitespaces(string? target, string fieldName)
     {
         if (target!.Trim().Length == 0)
-            _errors.Add($"{fildName} não pode ser vazio ou conter apenas espaços em branco");
+            _errors.Add($"{fieldName} não pode ser vazio ou conter apenas espaços em branco");
     }
 
-    public void MinLength(string? target, int minLenght, string fildName)
+    public void MinLength(string? target, int minLenght, string fieldName)
     {
-        if (target!.Length <= minLenght)
-            _errors.Add($"{fildName} deve ter pelo menos {minLenght} caracteres");
+        if (target!.Length < minLenght)
+            _errors.Add($"{fieldName} deve ter pelo menos {minLenght} caracteres");
     }
 
-    public void MaxLength(string? target, int maxLenght, string fildName)
+    public void MaxLength(string? target, int maxLenght, string fieldName)
     {
-        if (target!.Length >= maxLenght)
-            _errors.Add($"{fildName} deve ter no máximo {maxLenght} caracteres");
+        if (target!.Length > maxLenght)
+            _errors.Add($"{fieldName} deve ter no máximo {maxLenght} caracteres");
     }
 
-    public void MinValue(decimal target, decimal minValue, string fildName)
+    public void MinValue(decimal target, decimal minValue, string fieldName)
     {
-        if (target <= minValue)
-            _errors.Add($"{fildName} deve ser no mínimo {minValue}");
+        if (target < minValue)
+            _errors.Add($"{fieldName} deve ser no mínimo {minValue}");
     }
 
-    public void MaxValue(decimal target, decimal minValue, string fildName)
+    public void MaxValue(decimal target, decimal minValue, string fieldName)
     {
-        if (target >= minValue)
-            _errors.Add($"{fildName} deve ser no máximo {minValue}");
+        if (target > minValue)
+            _errors.Add($"{fieldName} deve ser no máximo {minValue}");
     }
 
-    public void MinDate(DateTime target, DateTime minDate, string fildName)
+    public void MinDate(DateTime target, DateTime minDate, string fieldName)
     {
-        if (target <= minDate)
-            _errors.Add($"{fildName} deve ser no mínimo {minDate}");
+        if (target < minDate)
+            _errors.Add($"{fieldName} deve ser no mínimo {minDate}");
     }
 
-    public void MaxDate(DateTime target, DateTime maxDate, string fildName)
+    public void MaxDate(DateTime target, DateTime maxDate, string fieldName)
     {
-        if (target >= maxDate)
-            _errors.Add($"{fildName} deve ser no máximo {maxDate}");
+        if (target > maxDate)
+            _errors.Add($"{fieldName} deve ser no máximo {maxDate}");
     }
 
-    public void Cpf(string target, string fildName)
+    public void Cpf(string target, string fieldName)
     {
         if (!Regex.IsMatch(target, @"^[0-9]{11}$"))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
 
         // TODO: CPF validation algorithm
     }
 
-    public void Cep(string target, string fildName)
+    public void Cep(string target, string fieldName)
     {
         // TODO: arrumar
 
         if (!Regex.IsMatch(target, @"^[0-9]{8}$"))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void NumeroTelefone(string target, string fildName)
+    public void NumeroTelefone(string target, string fieldName)
     {
         var regexTelefone = @"^[2-5]\d{7}$";
 
         if (!Regex.IsMatch(target, regexTelefone))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void NumeroCelular(string target, string fildName)
+    public void NumeroCelular(string target, string fieldName)
     {
         var regexCelular = @"^9\d{8}$";
 
         if (!Regex.IsMatch(target, regexCelular))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void Cnpj(string target, string fildName)
+    public void Cnpj(string target, string fieldName)
     {
         if (!Regex.IsMatch(target,
             @"^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$"))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void Crm(string target, string fildName)
+    public void Crm(string target, string fieldName)
     {
         var regex = @"^[0-9]{6}$";
         if (!Regex.IsMatch(target, regex))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void CrmUf(string target, string fildName)
+    public void CrmUf(string target, string fieldName)
     {
         // TODO: arrumar
         if (!Regex.IsMatch(target, @"^[A-Z]{2}$"))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void NumeroCasa(string target, string fildName)
+    public void NumeroCasa(string target, string fieldName)
     {
         if (!Regex.IsMatch(target, @"^[0-9]{1,8}([A-Z]{1,10})?$"))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
 
-    public void isInEnum<T>(T target, Type type, string fildName)
+    public void isInEnum<T>(T target, Type type, string fieldName)
     {
         if (!Enum.IsDefined(type, target!))
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
     }
 
-    public void Email(string? target, string fildName)
+    public void Email(string? target, string fieldName)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(target))
             {
-                _errors.Add($"{fildName} é inválido");
+                _errors.Add($"{fieldName} é inválido");
                 return;
             }
 
@@ -184,7 +184,7 @@ public class DomainValidator
         }
         catch
         {
-            _errors.Add($"{fildName} é inválido");
+            _errors.Add($"{fieldName} é inválido");
         }
     }
 
@@ -199,10 +199,10 @@ public class DomainValidator
 
     public virtual void Check()
     {
-        InitializeFildErrors();
-        if (_fildErrors.Count != 0)
+        InitializeFieldErrors();
+        if (_fieldErrors.Count != 0)
         {
-            throw new DomainException(_logMessage!, _fildErrors);
+            throw new DomainException(_logMessage!, _fieldErrors);
         }
     }
 
@@ -210,18 +210,24 @@ public class DomainValidator
         DomainValidator validations)
     {
         var errors = validations._errors;
-        InitializeFildErrors();
-        if (_fildNameError.Contains(validations._fildNameError))
+
+        if (errors.Count == 0)
         {
-            throw new Exception("FildErrors já foi carregado");
+            return;
         }
 
-        _fildErrors.Add(validations._fildNameError, errors);
+        InitializeFieldErrors();
+        if (_fieldErrors.Keys.Any(k => k == validations._fieldNameError))
+        {
+            throw new DomainInternalException("FieldErrors já foi carregado");
+        }
+
+        _fieldErrors.Add(validations._fieldNameError, errors);
     }
 
-    private void InitializeFildErrors()
+    private void InitializeFieldErrors()
     {
-        if (_fildErrors.Count != 0)
+        if (_fieldErrors.Count != 0)
         {
             return;
         }
@@ -231,6 +237,6 @@ public class DomainValidator
             return;
         }
 
-        _fildErrors.Add(_fildNameError, _errors);
+        _fieldErrors.Add(_fieldNameError, _errors);
     }
 }

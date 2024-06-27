@@ -13,6 +13,7 @@ public class Convenio : Entity
     public string? Site { get; set; }
     public decimal Desconto { get; set; }
 
+    public Convenio() { }
     public Convenio(string cnpj, string cep, string rua, string complemento,
         string email, string nome, string descricao, string site,
         decimal desconto)

@@ -3,6 +3,7 @@ using Hospital.Domain.Enums;
 namespace Hospital.Domain.Entities.Cadastros;
 public class Admin : Cadastro
 {
+    public Admin() { }
     public Admin(
         string email, string passwordHash, bool emailConfirmed,
         string nome, string sobrenome, DateOnly dataNascimento,

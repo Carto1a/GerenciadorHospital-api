@@ -12,7 +12,7 @@ public static class UnidadesDosagem
     public const string Spray = "spray";
     public const string Unidades = "unidades";
     public const string Ampolas = "ampolas";
-    public const string mgml = "mg/ml";
-    public const string mcgml = "mcg/ml";
-    public const string ygml = "yg/ml";
+    public const string Mgml = "mg/ml";
+    public const string Mcgml = "mcg/ml";
+    public const string Ygml = "yg/ml";
 }
