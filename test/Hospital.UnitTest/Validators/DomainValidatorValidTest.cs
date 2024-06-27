@@ -74,69 +74,77 @@ public class DomainValidatorValidsTest
         Assert.Null(exception);
     }
 
-    [Fact]
-    public void MinLength()
+    [Theory]
+    [InlineData("carro", 1)]
+    [InlineData("carro", 5)]
+    public void MinLength(string value, int minLenght)
     {
         // Arrange
         var validator = new DomainValidator("Nome");
 
         // Act
-        validator.MinLength("Nome", 1, "Nome");
+        validator.MinLength(value, minLenght, "Nome");
         var exception = Record.Exception(validator.Check);
 
         // Assert
         Assert.Null(exception);
     }
 
-    [Fact]
-    public void MaxLength()
+    [Theory]
+    [InlineData("carro", 5)]
+    [InlineData("carro", 10)]
+    public void MaxLength(string value, int maxLenght)
     {
         // Arrange
         var validator = new DomainValidator("Nome");
 
         // Act
-        validator.MaxLength("Nome", 10, "Nome");
+        validator.MaxLength(value, maxLenght, "Nome");
         var exception = Record.Exception(validator.Check);
 
         // Assert
         Assert.Null(exception);
     }
 
-    [Fact]
-    public void MinValue()
+    [Theory]
+    [InlineData(100, 1)]
+    [InlineData(100, 100)]
+    public void MinValue(int value, int minValue)
     {
         // Arrange
         var validator = new DomainValidator("Quantidade");
 
         // Act
-        validator.MinValue(100, 1, "Quantidade");
+        validator.MinValue(value, minValue, "Quantidade");
         var exception = Record.Exception(validator.Check);
 
         // Assert
         Assert.Null(exception);
     }
 
-    [Fact]
-    public void MaxValue()
+    [Theory]
+    [InlineData(100, 100)]
+    [InlineData(100, 1000)]
+    public void MaxValue(int value, int maxValue)
     {
         // Arrange
         var validator = new DomainValidator("Quantidade");
 
         // Act
-        validator.MaxValue(100, 1000, "Quantidade");
+        validator.MaxValue(value, maxValue, "Quantidade");
         var exception = Record.Exception(validator.Check);
 
         // Assert
         Assert.Null(exception);
     }
 
-    [Fact]
-    public void MinDate()
+    [Theory]
+    [InlineData("2021-01-01", "2020-01-01")]
+    [InlineData("2021-01-01", "2021-01-01")]
+    public void MinDate(DateTime date, DateTime minDate)
     {
         // Arrange
         var validator = new DomainValidator("Data");
-        var date = DateTime.Now;
-        var minDate = DateTime.Now.AddYears(-1);
 
         // Act
         validator.MinDate(date, minDate, "date");
@@ -146,13 +154,13 @@ public class DomainValidatorValidsTest
         Assert.Null(exception);
     }
 
-    [Fact]
-    public void MaxDate()
+    [Theory]
+    [InlineData("2021-01-01", "2022-01-01")]
+    [InlineData("2022-01-01", "2022-01-01")]
+    public void MaxDate(DateTime date, DateTime maxDate)
     {
         // Arrange
         var validator = new DomainValidator("Data");
-        var date = DateTime.Now;
-        var maxDate = DateTime.Now.AddYears(1);
 
         // Act
         validator.MaxDate(date, maxDate, "date");

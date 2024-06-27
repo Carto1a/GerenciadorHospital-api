@@ -2,17 +2,9 @@ using Hospital.Domain.Entities.Cadastros;
 using Hospital.Domain.Enums;
 using Hospital.Domain.Exceptions;
 
-using Xunit.Abstractions;
-
 namespace Hospital.UnitTest.Entities.Cadastros;
 public class AdminConstructorTest
 {
-    private readonly ITestOutputHelper _output;
-    public AdminConstructorTest(ITestOutputHelper output)
-    {
-        _output = output;
-    }
-
     [Fact]
     public void ValidConstructionAdmin()
     {
@@ -45,8 +37,6 @@ public class AdminConstructorTest
         var exceptionCast = exception as DomainException;
 
         // Assert
-        foreach (var error in exceptionCast.ErrorList)
-            _output.WriteLine(error);
         Assert.Null(exception);
     }
 
@@ -59,8 +49,8 @@ public class AdminConstructorTest
         var emailConfirmed = true;
         var nome = "";
         var sobrenome = "";
-        var dataNascimento = new DateOnly(1990, 1, 1);
-        var genero = GeneroEnum.Masculino;
+        var dataNascimento = new DateOnly(1000, 1, 1);
+        var genero = (GeneroEnum)(-1);
         var ddd = "";
         var telefoneNumero = "";
         var tipoTelefone = TipoTelefone.Celular;
@@ -71,7 +61,7 @@ public class AdminConstructorTest
 
         // Act
         // Assert
-        Assert.ThrowsAsync<DomainException>(async () =>
+        var exception = Assert.ThrowsAsync<DomainException>(async () =>
         {
             _ = new Admin(
                 email, passwordHash, emailConfirmed,
@@ -79,5 +69,7 @@ public class AdminConstructorTest
                 genero, ddd, telefoneNumero, tipoTelefone,
                 cpf, cep, numeroCasa, complemento);
         });
+
+
     }
 }
