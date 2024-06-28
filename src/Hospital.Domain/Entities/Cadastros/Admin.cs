@@ -5,12 +5,12 @@ public class Admin : Cadastro
 {
     public Admin() { }
     public Admin(
-        string email, string passwordHash, bool emailConfirmed,
+        string email, bool emailConfirmed,
         string nome, string sobrenome, DateOnly dataNascimento,
         GeneroEnum genero, string? ddd, string? telefoneNumero, TipoTelefone tipoTelefone,
         string cpf, string cep, string numeroCasa, string? complemento)
     : base(
-        email, passwordHash, emailConfirmed,
+        email, emailConfirmed,
         nome, sobrenome, dataNascimento,
         genero, ddd, telefoneNumero, tipoTelefone,
         cpf, cep, numeroCasa, complemento)

@@ -6,7 +6,6 @@ namespace Hospital.Domain.Entities.Cadastros;
 public abstract class Cadastro : Entity, ICadastro
 {
     public Email Email { get; set; }
-    public string PasswordHash { get; set; }
     public bool EmailConfirmed { get; set; }
 
     public NomeCompleto NomeCompleto { get; set; }
@@ -18,13 +17,12 @@ public abstract class Cadastro : Entity, ICadastro
 
     public Cadastro() { }
     public Cadastro(
-        string email, string passwordHash, bool emailConfirmed,
+        string email, bool emailConfirmed,
         string nome, string sobrenome, DateOnly dataNascimento,
         GeneroEnum genero, string? ddd, string? telefoneNumero, TipoTelefone tipoTelefone,
         string cpf, string cep, string numeroCasa, string? complemento)
     {
         Email = new Email(email);
-        PasswordHash = passwordHash;
         EmailConfirmed = emailConfirmed;
 
         NomeCompleto = new NomeCompleto(nome, sobrenome);
