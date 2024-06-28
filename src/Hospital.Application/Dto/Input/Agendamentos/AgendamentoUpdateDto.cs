@@ -8,5 +8,5 @@ public record AgendamentoUpdateDto
     public Guid ConvenioId { get; set; }
     public decimal Custo { get; set; }
     public DateTime DataHora { get; set; }
-    public AgendamentoStatus Status { get; set; }
+    public AgendamentoStatusEnum Status { get; set; }
 }

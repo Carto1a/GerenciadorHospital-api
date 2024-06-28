@@ -8,5 +8,5 @@ public record AgendamentoGetByQueryDto : GetByQueryDto
     public Guid? ConvencioId { get; set; }
     public DateTime? MinDataHora { get; set; }
     public DateTime? MaxDataHora { get; set; }
-    public AgendamentoStatus? Status { get; set; }
+    public AgendamentoStatusEnum? Status { get; set; }
 }

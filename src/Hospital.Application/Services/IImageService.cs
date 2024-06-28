@@ -1,10 +1,10 @@
 namespace Hospital.Application.Services;
 public interface IImageService
 {
-    Guid SavePacienteDocId(IFormFile file);
-    Guid SavePacienteDocConvenio(IFormFile file);
-    Guid SaveLaudoImage(IFormFile file);
-    Guid SaveMedicoDocCRM(IFormFile file);
+    Guid SavePacienteDocId(Stream file);
+    Guid SavePacienteDocConvenio(Stream file);
+    Guid SaveLaudoImage(Stream file);
+    Guid SaveMedicoDocCRM(Stream file);
 
     Stream GetPacienteDocIdPath(Guid id);
     Stream GetPacienteDocConvenioPath(Guid id);

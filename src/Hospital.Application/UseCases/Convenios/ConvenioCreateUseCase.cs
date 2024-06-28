@@ -1,44 +1,46 @@
-using Hospital.Application.Dto.Input.Convenios;
-using Hospital.Domain.Entities;
-using Hospital.Domain.Exceptions;
-using Hospital.Domain.Repositories;
+/* using Hospital.Application.Dto.Input.Convenios; */
+/* using Hospital.Application.Exceptions; */
+/* using Hospital.Domain.Entities; */
+/* using Hospital.Domain.Repositories; */
 
-namespace Hospital.Application.UseCases.Convenios;
-public class ConvenioCreateUseCase
-{
-    private readonly ILogger<ConvenioCreateUseCase> _logger;
-    private readonly IUnitOfWork _uow;
-    private readonly IConvenioRepository _convenioRepository;
-    public ConvenioCreateUseCase(
-        ILogger<ConvenioCreateUseCase> logger,
-        IUnitOfWork uow,
-        IConvenioRepository convenioRepository)
-    {
-        _logger = logger;
-        _uow = uow;
-        _convenioRepository = convenioRepository;
-    }
+/* using Microsoft.Extensions.Logging; */
 
-    public async Task<Guid> Handler(
-        ConvenioCreateDto request)
-    {
-        _logger.LogInformation($"Criando convenio: {request.CNPJ}");
-        var findConvenio = await _convenioRepository
-            .GetByCnpjAsync(request.CNPJ);
-        if (findConvenio != null)
-            throw new DomainException(
-                $"Convenio já existe: {request.CNPJ}",
-                "Convenio já existe");
+/* namespace Hospital.Application.UseCases.Convenios; */
+/* public class ConvenioCreateUseCase */
+/* { */
+/*     private readonly ILogger<ConvenioCreateUseCase> _logger; */
+/*     private readonly IUnitOfWork _uow; */
+/*     private readonly IConvenioRepository _convenioRepository; */
+/*     public ConvenioCreateUseCase( */
+/*         ILogger<ConvenioCreateUseCase> logger, */
+/*         IUnitOfWork uow, */
+/*         IConvenioRepository convenioRepository) */
+/*     { */
+/*         _logger = logger; */
+/*         _uow = uow; */
+/*         _convenioRepository = convenioRepository; */
+/*     } */
 
-        var convenio = new Convenio(request);
+/*     public async Task<Guid> Handler( */
+/*         ConvenioCreateDto request) */
+/*     { */
+/*         _logger.LogInformation($"Criando convenio: {request.CNPJ}"); */
+/*         var findConvenio = await _convenioRepository */
+/*             .GetByCnpjAsync(request.CNPJ); */
+/*         if (findConvenio != null) */
+/*             throw new ApplicationLayerException( */
+/*                 $"Convenio já existe: {request.CNPJ}", */
+/*                 "Convenio já existe"); */
 
-        var id = await _convenioRepository
-            .CreateAsync(convenio);
+/*         var convenio = new Convenio(request); */
 
-        await _uow.SaveAsync();
+/*         var id = await _convenioRepository */
+/*             .CreateAsync(convenio); */
 
-        _logger.LogInformation($"Convenio criado: {request.CNPJ}");
+/*         await _uow.SaveAsync(); */
 
-        return id;
-    }
-}
+/*         _logger.LogInformation($"Convenio criado: {request.CNPJ}"); */
+
+/*         return id; */
+/*     } */
+/* } */
