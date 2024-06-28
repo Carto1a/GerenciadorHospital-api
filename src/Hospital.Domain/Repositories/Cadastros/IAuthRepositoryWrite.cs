@@ -1,7 +1,7 @@
 using Hospital.Domain.Entities.Cadastros;
 
 namespace Hospital.Domain.Repositories.Cadastros;
-public interface IAuthRepository<T>
+public interface IAuthRepositoryWrite<T>
 where T : Cadastro
 {
     Task<T?> GetByIdAsync(Guid id);

@@ -1,6 +1,6 @@
 using Hospital.Domain.Entities;
 
 namespace Hospital.Domain.Repositories;
-public interface ILaudoRepository
-: IRepository<Laudo>
+public interface IConvenioRepositoryWrite
+: IRepositoryWrite<Convenio>
 { }
