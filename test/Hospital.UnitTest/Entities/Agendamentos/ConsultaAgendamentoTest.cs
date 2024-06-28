@@ -60,4 +60,64 @@ public class ConsultaAgendamentoTest
 
         Assert.Equal(custoFinal, agendamento.CustoFinal);
     }
+
+    [Fact]
+    public void QuandoAtrasadoRetornarTrue()
+    {
+        var datahora = DateTime.Now.AddHours(10);
+        var horarioChegada = datahora.AddYears(1);
+
+        var agendamento = new Faker<ConsultaAgendamento>()
+            .RuleFor(a => a.DataHora, f => datahora)
+            .Generate();
+
+        var atrasado = agendamento.EstaAtrasado(horarioChegada);
+
+        Assert.True(atrasado);
+    }
+
+    [Fact]
+    public void QuandoNaoAtrasadoRetornarFalse()
+    {
+        var datahora = DateTime.Now.AddHours(10);
+        var horarioChegada = datahora.AddMinutes(15);
+
+        var agendamento = new Faker<ConsultaAgendamento>()
+            .RuleFor(a => a.DataHora, f => datahora)
+            .Generate();
+
+        var atrasado = agendamento.EstaAtrasado(horarioChegada);
+
+        Assert.False(atrasado);
+    }
+
+    [Fact]
+    public void QuandoAusenteRetornarTrue()
+    {
+        var datahora = DateTime.Now.AddHours(10);
+        var horarioChegada = datahora.AddYears(1);
+
+        var agendamento = new Faker<ConsultaAgendamento>()
+            .RuleFor(a => a.DataHora, f => datahora)
+            .Generate();
+
+        var ausente = agendamento.EstaAusente(horarioChegada);
+
+        Assert.True(ausente);
+    }
+
+    [Fact]
+    public void QuandoNaoAusenteRetornarFalse()
+    {
+        var datahora = DateTime.Now.AddHours(10);
+        var horarioChegada = datahora.AddMinutes(1);
+
+        var agendamento = new Faker<ConsultaAgendamento>()
+            .RuleFor(a => a.DataHora, f => datahora)
+            .Generate();
+
+        var ausente = agendamento.EstaAusente(horarioChegada);
+
+        Assert.False(ausente);
+    }
 }

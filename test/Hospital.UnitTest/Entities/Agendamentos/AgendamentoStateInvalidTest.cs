@@ -1,6 +1,5 @@
 using Bogus;
 
-using Hospital.Domain.Entities.Agendamentos;
 using Hospital.Domain.Entities.Agendamentos.Status;
 using Hospital.Domain.Entities.Atendimentos;
 using Hospital.Domain.Enums;
@@ -292,6 +291,30 @@ public class AgendamentoStateInvalidTest
         var exception = Assert.Throws<DomainException>(() =>
         {
             agendamento.Ausencia();
+        });
+
+        Assert.Equal(message, exception.Message);
+    }
+
+    [Theory]
+    [InlineData(typeof(AgendamentoEmAndamento), AgendamentoStatusEnum.EmAndamento)]
+    [InlineData(typeof(AgendamentoRealizado), AgendamentoStatusEnum.Realizado)]
+    [InlineData(typeof(AgendamentoCancelado), AgendamentoStatusEnum.Cancelado)]
+    [InlineData(typeof(AgendamentoAusente), AgendamentoStatusEnum.Ausencia)]
+    [InlineData(typeof(AgendamentoEmEspera), AgendamentoStatusEnum.EmEspera)]
+    public void QuandoNaoEmAgendadoNaoPoderCalcularMulta(
+        Type state, AgendamentoStatusEnum status)
+    {
+        var agendamento = new Faker<AgendamentoClassTest>()
+            .RuleFor(a => a.Status, f => status)
+            .RuleFor(a => a.State, f => (AgendamentoStatus)Activator.CreateInstance(state))
+            .Generate();
+
+        var message = "A multa não pode ser calculada.";
+
+        var exception = Assert.Throws<DomainException>(() =>
+        {
+            agendamento.State.CalcularMultaAtraso(agendamento, agendamento.CalcularMultaAtraso);
         });
 
         Assert.Equal(message, exception.Message);

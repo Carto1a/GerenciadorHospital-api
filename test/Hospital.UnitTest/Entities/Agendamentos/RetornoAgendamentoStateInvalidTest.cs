@@ -1,4 +1,5 @@
 using Bogus;
+
 using Hospital.Domain.Entities.Agendamentos;
 using Hospital.Domain.Entities.Agendamentos.Status;
 using Hospital.Domain.Entities.Atendimentos;
