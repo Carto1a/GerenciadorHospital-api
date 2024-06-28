@@ -1,4 +1,4 @@
-namespace Hospital.Infrastructure.Filter;
+namespace Hospital.WebApi.Filter;
 public class ResponseDataObject
 {
     public object? Value { get; set; }

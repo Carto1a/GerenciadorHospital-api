@@ -17,21 +17,21 @@
 /*     private readonly AgendamentoConsultaGetByQueryService< */
 /*         T, */
 /*         TAgendamento, */
-/*         TQuery> _service; */
+/*         TQuery> service; */
 /*     public GenericAgendamentoGetByQueryController( */
 /*         AgendamentoConsultaGetByQueryService< */
 /*             T, */
 /*             TAgendamento, */
 /*             TQuery> service) */
 /*     { */
-/*         _service = service; */
+/*         service = service; */
 /*     } */
 
 /*     [HttpGet] */
 /*     public async Task<IActionResult> Execute( */
 /*         [FromQuery] TQuery query) */
 /*     { */
-/*         var result = await _service.Handler(query); */
+/*         var result = await service.Handler(query); */
 /*         return Ok(result); */
 /*     } */
 /* } */

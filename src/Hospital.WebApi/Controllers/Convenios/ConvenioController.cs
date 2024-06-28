@@ -4,7 +4,7 @@
 /*         [FromBody] ConvenioUpdateDto request, */
 /*         [FromRoute] Guid id) */
 /*     { */
-/*         var response = await _service.Update(request, id); */
+/*         var response = await service.Update(request, id); */
 /*         var result = response.ToResultDto(); */
 /*         if (response.IsFailed) */
 /*             return BadRequest(result); */
@@ -17,7 +17,7 @@
 /*     public IActionResult Delete( */
 /*         [FromRoute] Guid id) */
 /*     { */
-/*         var response = _service.Delete(id); */
+/*         var response = service.Delete(id); */
 /*         var result = response.ToResultDto(); */
 /*         if (response.IsFailed) */
 /*             return BadRequest(result); */

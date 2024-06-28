@@ -25,7 +25,7 @@
 /*         T, */
 /*         TAgendamento, */
 /*         TCreation, */
-/*         TUpdate> _service; */
+/*         TUpdate> service; */
 /*     public GenericAtendimentoController( */
 /*         IAtendimentoService< */
 /*             T, */
@@ -34,7 +34,7 @@
 /*             TUpdate> service, */
 /*         ILogger<GenericAtendimentoController<T, TAgendamento, TCreation, TUpdate>> logger) */
 /*     { */
-/*         _service = service; */
+/*         service = service; */
 /*         _logger = logger; */
 /*         _logger.LogDebug(1, $"NLog injected into GenericAtendimentoController {nameof(T)}"); */
 /*     } */
@@ -44,7 +44,7 @@
 /*     public async Task<IActionResult> Creation( */
 /*         [FromForm] TCreation request) */
 /*     { */
-/*         var response = await _service.Create(request); */
+/*         var response = await service.Create(request); */
 /*         var result = response.ToResultDto(); */
 /*         if (result.IsFailed) */
 /*             return BadRequest(result); */
@@ -56,7 +56,7 @@
 /*     [HttpGet("{id}")] */
 /*     public async Task<IActionResult> GetById([FromRoute] Guid id) */
 /*     { */
-/*         var response = await _service.GetById(id); */
+/*         var response = await service.GetById(id); */
 /*         var result = response.ToResultDto(); */
 /*         if (result.IsFailed) */
 /*             return BadRequest(result); */
@@ -69,7 +69,7 @@
 /*     public IActionResult GetByQuery( */
 /*         [FromQuery] AtendimentoGetByQueryDto query) */
 /*     { */
-/*         var response = _service.GetByQuery(query); */
+/*         var response = service.GetByQuery(query); */
 /*         var result = response.ToResultDto(); */
 /*         if (result.IsFailed) */
 /*             return BadRequest(result); */
@@ -82,7 +82,7 @@
 /*     public async Task<IActionResult> Update( */
 /*         [FromRoute] Guid id, [FromForm] TUpdate request) */
 /*     { */
-/*         var response = await _service.Update(request, id); */
+/*         var response = await service.Update(request, id); */
 /*         var result = response.ToResultDto(); */
 /*         if (result.IsFailed) */
 /*             return BadRequest(result); */

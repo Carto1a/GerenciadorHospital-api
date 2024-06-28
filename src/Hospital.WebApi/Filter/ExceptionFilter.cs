@@ -2,7 +2,7 @@ using Hospital.Domain.Exceptions;
 
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Hospital.Infrastructure.Filter;
+namespace Hospital.WebApi.Filter;
 public class ExceptionFilter
 : IExceptionFilter
 {
@@ -30,7 +30,6 @@ public class ExceptionFilter
         {
             context.Result = new RequestErrorResponse(
                 new DomainException(
-                    context.Exception.Message,
                     "Recurso não implementado"
                 ),
                 StatusCodes.Status501NotImplemented
@@ -42,7 +41,6 @@ public class ExceptionFilter
         context.Result =
             new RequestErrorResponse(
                 new DomainException(
-                    context.Exception.Message,
                     "Error interno no servidor"
                 ),
                 StatusCodes.Status500InternalServerError

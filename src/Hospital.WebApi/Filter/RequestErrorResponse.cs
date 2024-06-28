@@ -2,7 +2,7 @@ using Hospital.Domain.Exceptions;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hospital.Infrastructure.Filter;
+namespace Hospital.WebApi.Filter;
 public class RequestErrorResponse
 : IActionResult
 {
