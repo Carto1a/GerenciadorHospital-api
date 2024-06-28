@@ -10,7 +10,6 @@ public class AdminConstructorTest
     {
         // Arrange
         var email = "admin@amin.admin";
-        var passwordHash = "admin";
         var emailConfirmed = true;
         var nome = "Admin";
         var sobrenome = "Admin";
@@ -28,7 +27,7 @@ public class AdminConstructorTest
         var exception = Record.Exception(() =>
         {
             _ = new Admin(
-                email, passwordHash, emailConfirmed,
+                email, emailConfirmed,
                 nome, sobrenome, dataNascimento,
                 genero, ddd, telefoneNumero, tipoTelefone,
                 cpf, cep, numeroCasa, complemento);
@@ -45,7 +44,6 @@ public class AdminConstructorTest
     {
         // Arrange
         var email = "";
-        var passwordHash = "";
         var emailConfirmed = true;
         var nome = "";
         var sobrenome = "";
@@ -64,7 +62,7 @@ public class AdminConstructorTest
         var exception = Assert.ThrowsAsync<DomainException>(async () =>
         {
             _ = new Admin(
-                email, passwordHash, emailConfirmed,
+                email, emailConfirmed,
                 nome, sobrenome, dataNascimento,
                 genero, ddd, telefoneNumero, tipoTelefone,
                 cpf, cep, numeroCasa, complemento);
