@@ -57,7 +57,7 @@ public abstract class Agendamento : Entity
         CustoFinal = custo;
         Status = AgendamentoStatusEnum.Agendado;
         State = new AgendamentoAgendado();
-        State.CalcularDesconto(this);
+        CustoFinal = CalcularDesconto();
 
         if (convenio != null)
         {
@@ -80,7 +80,7 @@ public abstract class Agendamento : Entity
         validate.Check();
     }
 
-    public virtual decimal CalcularDesconto()
+    protected virtual decimal CalcularDesconto()
     {
         if (Convenio == null)
             return Custo;
@@ -91,17 +91,17 @@ public abstract class Agendamento : Entity
     public virtual decimal CalcularMultaAtraso()
     {
         if (Convenio == null)
-            return Custo * 1.05m;
+            return CustoFinal * 1.05m;
 
-        return CustoFinal * 1.05m;
+        return CustoFinal * 1.01m;
     }
 
-    public virtual bool Atrasado(DateTime now)
+    public virtual bool EstaAtrasado(DateTime now)
     {
         return DataHora.AddMinutes(30) < now;
     }
 
-    public virtual bool Ausente(DateTime now)
+    public virtual bool EstaAusente(DateTime now)
     {
         return DataHora.AddHours(1) < now;
     }

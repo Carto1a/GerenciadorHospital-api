@@ -14,6 +14,10 @@ public class ExameAgendamento : Agendamento
         Consulta consulta)
     : base(dataHora, medico, paciente, convenio, custo)
     {
+        if (consulta.Paciente != paciente)
+            throw new DomainException(
+                "O paciente da consulta é diferente do paciente do agendamento.");
+
         Consulta = consulta;
     }
 

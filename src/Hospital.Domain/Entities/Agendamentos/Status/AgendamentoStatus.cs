@@ -7,13 +7,8 @@ public abstract class AgendamentoStatus
 {
     public AgendamentoStatusEnum StatusCode { get; set; }
 
-    public virtual void CalcularDesconto(Agendamento agendamento)
-    {
-        throw new DomainException(
-            "O desconto não pode ser calculado. ");
-    }
-
-    public virtual void CalcularMultaAtraso(Agendamento agendamento)
+    public virtual void CalcularMultaAtraso(
+        Agendamento agendamento, Func<decimal> calculo)
     {
         throw new DomainException(
             "A multa não pode ser calculada.");

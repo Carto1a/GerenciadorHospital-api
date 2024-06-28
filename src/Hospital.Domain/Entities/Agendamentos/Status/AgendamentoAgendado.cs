@@ -1,17 +1,13 @@
 using Hospital.Domain.Enums;
-using Hospital.Domain.Exceptions;
 
 namespace Hospital.Domain.Entities.Agendamentos.Status;
 public class AgendamentoAgendado : AgendamentoStatus
 {
-    public override void CalcularDesconto(Agendamento agendamento)
+    // NOTE: ta feio
+    public override void CalcularMultaAtraso(
+        Agendamento agendamento, Func<decimal> calculo)
     {
-        agendamento.CustoFinal = agendamento.CalcularDesconto();
-    }
-
-    public override void CalcularMultaAtraso(Agendamento agendamento)
-    {
-        agendamento.CustoAtraso = agendamento.CalcularMultaAtraso();
+        agendamento.CustoAtraso = calculo();
     }
 
     public override void EmEspera(Agendamento agendamento)

@@ -15,13 +15,8 @@ public class RetornoAgendamento : Agendamento
     : base(dataHora, medico, paciente, convenio, custo)
     {
         Consulta = consulta;
-    }
 
-    public void GratuidadeRetorno(
-        DateTime fimConsulta, Convenio? convenio)
-    {
-        // TODO: isso não é para estar assim, mudar no futuro
-        if (fimConsulta.AddDays(30) < DateTime.Now)
+        if (consulta.Fim.AddDays(30) < DateTime.Now)
             CustoFinal = Custo;
         else
             CustoFinal = 0;
@@ -37,5 +32,10 @@ public class RetornoAgendamento : Agendamento
 
         throw new DomainException(
             "O atendimento não é um retorno.");
+    }
+
+    protected override decimal CalcularDesconto()
+    {
+        return Custo;
     }
 }
