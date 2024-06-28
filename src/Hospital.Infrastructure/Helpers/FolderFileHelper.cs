@@ -1,4 +1,6 @@
-namespace Hospital.Helpers;
+using Microsoft.Extensions.Configuration;
+
+namespace Hospital.Infrastructure.Helpers;
 public static class FolderFileHelper
 {
     private static void CheckAndCreateFolder(string path)

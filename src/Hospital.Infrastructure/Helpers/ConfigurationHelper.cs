@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+
 namespace Hospital.Infrastructure.Helpers;
 public static class ConfigurationHelper
 {

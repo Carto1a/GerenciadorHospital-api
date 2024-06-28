@@ -5,6 +5,7 @@ using System.Text;
 using Hospital.Application.Services;
 using Hospital.Domain.Entities.Cadastros;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Hospital.Infrastructure.Services;
@@ -39,8 +40,8 @@ public class JwtTokenService : IJwtTokenService
         var authClaims = new List<Claim>
         {
             new("ID", user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName!),
-            new(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.Name, user.NomeCompleto.ToString()),
+            new(ClaimTypes.Email, user.Email.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
@@ -67,7 +68,7 @@ public class JwtTokenService : IJwtTokenService
             audience: _jwtValidAudience,
             expires: DateTime.Now.AddHours(3),
             claims: authClaims,
-            signingCredentials: 
+            signingCredentials:
                 new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
         );
 

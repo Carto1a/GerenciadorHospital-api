@@ -1,28 +1,30 @@
-using Hospital.Application.Dto.Input.Authentications;
-using Hospital.Domain.Entities;
-using Hospital.Domain.Entities.Cadastros;
-using Hospital.Domain.Repositories.Cadastros.Authentications;
+/* using System.Linq; */
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+/* using Hospital.Application.Dto.Input.Authentications; */
+/* using Hospital.Domain.Entities; */
+/* using Hospital.Domain.Entities.Cadastros; */
+/* using Hospital.Domain.Repositories.Cadastros; */
+/* using Hospital.Infrastructure.Database.Models; */
 
-namespace Hospital.Infrastructure.Database.Repositories.Cadastros.Authentications;
+/* using Microsoft.AspNetCore.Identity; */
+/* using Microsoft.EntityFrameworkCore; */
 
-public class AuthAdminRepository : AuthRepository<Admin, RegisterRequestAdminDto>,
-IAuthAdminRepository
-{
-    private readonly UserManager<Admin> _manager;
-    public AuthAdminRepository(
-        UserManager<Admin> userManager) : base(userManager, Roles.Admin)
-    {
-        _manager = userManager;
-    }
+/* namespace Hospital.Infrastructure.Database.Repositories.Cadastros.Authentications; */
 
-    public override async Task<bool> CheckIfCadastroExistsAsync(RegisterRequestAdminDto request)
-    {
-        var result = await _manager.Users.FirstOrDefaultAsync(
-            user => user.Email == request.Email
-                || user.CPF == request.CPF);
-        return result != null;
-    }
-}
+/* public class AuthAdminRepository : AuthRepository<Admin, RegisterRequestAdminDto>, */
+/* IAdminRepository */
+/* { */
+/*     private readonly UserManager<Admin> _manager; */
+/*     public AuthAdminRepository( */
+/*         UserManager<Admin> userManager) : base(userManager, Roles.Admin) */
+/*     { */
+/*         _manager = userManager; */
+/*     } */
+
+/*     public override async Task<bool> CheckIfCadastroExistsAsync(Admin cadastro) */
+/*     { */
+/*         var result = await _manager.Users.FirstOrDefaultAsync(c => */
+/*             c.CheckUniqueness(cadastro)); */
+/*         return result != null; */
+/*     } */
+/* } */

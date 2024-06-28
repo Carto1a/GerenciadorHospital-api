@@ -1,55 +1,65 @@
 using Hospital.Application.Services;
+using Hospital.Infrastructure.Exceptions;
 
 namespace Hospital.Infrastructure.Services;
 public class DiskImageService : IImageService
 {
-    private readonly IConfiguration _configuration;
     private readonly string _imagePath;
-    public DiskImageService(IConfiguration configuration)
+    private readonly string _laudoPath;
+    private readonly string _medicoPath;
+    private readonly string _pacientePath;
+    private readonly string _pacienteConvenioPath;
+    private readonly string _pacienteIdDocPath;
+    public DiskImageService(string basePath, string laudoPath,
+        string medicoPath, string pacientePath, string pacienteConvenioPath,
+        string pacienteIdDocPath)
     {
-        _configuration = configuration;
-        _imagePath = _configuration["Paths:BaseImagens"];
-        if (!Directory.Exists(_imagePath))
-            throw new ArgumentException("Diretório de imagens não existe");
+        _imagePath = basePath;
+        _laudoPath = Path.Combine(_imagePath, laudoPath);
+        _medicoPath = Path.Combine(_imagePath, medicoPath);
+        _pacientePath = Path.Combine(_imagePath, pacientePath);
+        _pacienteConvenioPath = Path.Combine(_pacientePath, pacienteConvenioPath);
+        _pacienteIdDocPath = Path.Combine(_pacientePath, pacienteIdDocPath);
+
+        // NOTE: confiar em quem está chamando para passar os caminhos não vazios?
     }
 
-    public string SaveImage(IFormFile file, string path)
+    private string SaveImage(Stream file, string path)
     {
         try
         {
-            var ImageGuid = Guid.NewGuid();
-            var LoopCount = 0;
-            while(File.Exists(Path.Combine(path, ImageGuid.ToString())))
+            var imageGuid = Guid.NewGuid();
+            var loopCount = 0;
+            while (File.Exists(Path.Combine(path, imageGuid.ToString())))
             {
-                ImageGuid = Guid.NewGuid();
-                LoopCount++;
-                if (LoopCount > 15)
+                imageGuid = Guid.NewGuid();
+                loopCount++;
+                if (loopCount > 15)
                 {
-                    throw new Exception(
+                    throw new ServiceException(
                         "Não foi possível gerar um nome único para a imagem");
                 }
             }
 
-            var ImagePath = Path.Combine(path, ImageGuid.ToString());
+            var imagePath = Path.Combine(path, imageGuid.ToString());
 
             Stream fileStream =
-                new FileStream(ImagePath, FileMode.Create);
+                new FileStream(imagePath, FileMode.Create);
 
-            Task task = file.CopyToAsync(fileStream)
+            var task = file.CopyToAsync(fileStream)
                 .ContinueWith(task => fileStream.Close());
 
-            return ImageGuid.ToString();
+            return imageGuid.ToString();
         }
         catch (Exception error)
         {
-            throw new Exception(error.Message);
+            throw new ServiceException(error.Message);
         }
     }
 
     public Stream GetLaudoImagePath(Guid id)
     {
-        var laudoPath = _configuration["Paths:Laudos"]!;
-        var path = Path.Combine(_imagePath, laudoPath);
+        var path = _laudoPath;
 
         if (!Directory.Exists(path))
             throw new ArgumentException(
@@ -65,8 +75,7 @@ public class DiskImageService : IImageService
 
     public Stream GetMedicoDocCRMPath(Guid id)
     {
-        var medicoBase = _configuration["Paths:MedicoDocumentos"]!;
-        var path = Path.Combine(_imagePath, medicoBase);
+        var path = _medicoPath;
 
         if (!Directory.Exists(path))
             throw new ArgumentException(
@@ -82,9 +91,7 @@ public class DiskImageService : IImageService
 
     public Stream GetPacienteDocConvenioPath(Guid id)
     {
-        var pacienteBase = _configuration["Paths:PacienteBase"]!;
-        var pacientePath = _configuration["Paths:PacienteConvenio"]!;
-        var path = Path.Combine(_imagePath, pacienteBase, pacientePath);
+        var path = _pacienteConvenioPath;
 
         if (!Directory.Exists(path))
             throw new ArgumentException(
@@ -100,9 +107,7 @@ public class DiskImageService : IImageService
 
     public Stream GetPacienteDocIdPath(Guid id)
     {
-        var pacienteBase = _configuration["Paths:PacienteBase"]!;
-        var pacientePath = _configuration["Paths:PacienteDocumentos"]!;
-        var path = Path.Combine(_imagePath, pacienteBase, pacientePath);
+        var path = _pacienteIdDocPath;
 
         if (!Directory.Exists(path))
             throw new ArgumentException(
@@ -116,61 +121,55 @@ public class DiskImageService : IImageService
         return new FileStream(fullImagePath, FileMode.Open);
     }
 
-    public Guid SaveLaudoImage(IFormFile file)
+    public Guid SaveLaudoImage(Stream file)
     {
         try
         {
-            var lautoPath = _configuration["Paths:Laudos"]!;
-            var path = Path.Combine(_imagePath, lautoPath);
+            var path = _laudoPath;
             return Guid.Parse(SaveImage(file, path));
         }
         catch (Exception error)
         {
-            throw new Exception(error.Message);
+            throw new ServiceException(error.Message);
         }
     }
 
-    public Guid SaveMedicoDocCRM(IFormFile file)
+    public Guid SaveMedicoDocCRM(Stream file)
     {
         try
         {
-            var MedicoPath = _configuration["Paths:MedicoDocumentos"]!;
-            var path = Path.Combine(_imagePath, MedicoPath);
+            var path = _medicoPath;
             return Guid.Parse(SaveImage(file, path));
         }
         catch (Exception error)
         {
-            throw new Exception(error.Message);
+            throw new ServiceException(error.Message);
         }
     }
 
-    public Guid SavePacienteDocConvenio(IFormFile file)
+    public Guid SavePacienteDocConvenio(Stream file)
     {
         try
         {
-            var pacienteBase = _configuration["Paths:PacienteBase"]!;
-            var pacientePath = _configuration["Paths:PacienteConvenio"]!;
-            var path = Path.Combine(_imagePath, pacienteBase, pacientePath);
+            var path = _pacienteConvenioPath;
             return Guid.Parse(SaveImage(file, path));
         }
         catch (Exception error)
         {
-            throw new Exception(error.Message);
+            throw new ServiceException(error.Message);
         }
     }
 
-    public Guid SavePacienteDocId(IFormFile file)
+    public Guid SavePacienteDocId(Stream file)
     {
         try
         {
-            var pacienteBase = _configuration["Paths:PacienteBase"]!;
-            var pacientePath = _configuration["Paths:PacienteDocumentos"]!;
-            var path = Path.Combine(_imagePath, pacienteBase, pacientePath);
+            var path = _pacienteIdDocPath;
             return Guid.Parse(SaveImage(file, path));
         }
         catch (Exception error)
         {
-            throw new Exception(error.Message);
+            throw new ServiceException(error.Message);
         }
     }
 }
